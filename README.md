@@ -2,6 +2,6 @@
 
 JIRA Export of Codehaus for all projectes of the PicoContainer umbrella:
 
-+ [PICO](PICO)
-+ [NANO](NANO)
++ [PICO](http://picocontainer.github.io/Old_JIRA_Issues/PICO)
++ [NANO](http://picocontainer.github.io/Old_JIRA_Issues/NANO)
 
