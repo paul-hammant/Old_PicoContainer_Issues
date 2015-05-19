@@ -1,0 +1,937 @@
+<!DOCTYPE html><html class="mozilla"><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+    
+
+
+
+
+
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<title>[NANO-175] Parent ClassLoaders are not being properly passed into the groovy scripts. - jira.codehaus.org</title>
+<script type="text/javascript"><!--
+/* Script removed by snapshot save */
+--></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+<link rel="shortcut icon" href="index_files/favicon.ico">
+<link rel="search" type="application/opensearchdescription+xml" href="https://jira.codehaus.org/osd.jsp" title="[NANO-175] Parent ClassLoaders are not being properly passed into the groovy scripts. - jira.codehaus.org">
+
+    
+
+
+<!--[if IE]><![endif]-->
+<script type="text/javascript"><!--
+/* Script removed by snapshot save */
+--></script>
+<link type="text/css" rel="stylesheet" href="index_files/batch.css" media="all">
+<!--[if lte IE 8]>
+<link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e/en_UK-huda6k-1988229788/6162/7/7/_/download/superbatch/css/batch.css?conditionalComment=lte+IE+8" media="all">
+<![endif]-->
+<!--[if lte IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e/en_UK-huda6k-1988229788/6162/7/7/_/download/superbatch/css/batch.css?conditionalComment=lte+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="index_files/batch-1.css" media="all">
+<script type="text/javascript" src="index_files/batch.js"></script><style type="text/css"></style>
+<!--[if lte IE 8]>
+<script type="text/javascript" src="/s/d41d8cd98f00b204e9800998ecf8427e/en_UK-huda6k-1988229788/6162/7/7/_/download/superbatch/js/batch.js?conditionalComment=lte+IE+8" ></script>
+<![endif]-->
+<script type="text/javascript" src="index_files/batch-1.js"></script>
+<script type="text/javascript" src="index_files/jira.webresources_calendar-en.js"></script>
+<script type="text/javascript" src="index_files/com.atlassian.administraticksearch-webresources.js"></script>
+
+<script type="text/javascript" src="index_files/shortcuts.js"></script>
+
+
+    
+    
+    
+    <meta name="decorator" content="atl.general">
+    <meta id="isNavigator" name="isNavigator" content="true">
+    <meta name="ajs-user.search.mode" content="basic">
+    <meta name="ajs-issue-search-help-title" content="Searching for Issues">
+    <meta name="ajs-issue-search-help-url" content="https://docs.atlassian.com/jira/docs-061/Searching+for+Issues">
+    <meta name="ajs-advanced-search-help-title" content="Performing Advanced Searches">
+    <meta name="ajs-advanced-search-help-url" content="https://docs.atlassian.com/jira/docs-061/Advanced+Searching">
+    
+</head>
+<body data-aui-version="5.1.8" id="jira" class="aui-layout aui-theme-default ka ajax-issue-search-and-view page-type-navigator navigator-issue-only" data-version="6.1.6">
+<div id="page">
+    <header id="header" style="display:none" role="banner">
+        
+
+
+
+    
+        
+            
+        
+    
+
+
+
+
+
+
+
+        
+
+
+
+
+        
+
+
+
+
+
+<fieldset class="parameters hidden dont-default-focus">
+    <input title="tzdetect.pref.tzid" value="America/Chicago" type="hidden">
+    <input title="tzdetect.pref.tzname" value="(GMT-06:00) Chicago" type="hidden">
+    <input title="tzdetect.pref.tzoffset" value="(GMT-06:00)" type="hidden">
+    <input title="tzdetect.pref.tzdst" value="true" type="hidden">
+    <input title="tzdetect.pref.nothanks" value="" type="hidden">
+</fieldset>
+<nav data-aui-responsive="true" class="aui-header aui-dropdown2-trigger-group" role="navigation"><div class="aui-header-inner"><div class="aui-header-before"><a class="aui-dropdown2-trigger app-switcher-trigger" aria-owns="app-switcher" aria-haspopup="true" tabindex="0"><span class="aui-icon aui-icon-small aui-iconfont-appswitcher">Linked Applications</span></a><div id="app-switcher" class="aui-dropdown2 aui-style-default"><div class="aui-dropdown2-section"><ul class="nav-links"><li class="nav-link nav-link-local"><a href="https://jira.codehaus.org/" class="aui-dropdown2-radio interactive checked" title="https://jira.codehaus.org/"><span class="nav-link-label">jira.codehaus.org</span></a></li><li class="nav-link"><a href="http://jira.sonarsource.com/" class="aui-dropdown2-radio interactive" title="http://jira.sonarsource.com/"><span class="nav-link-label">SonarSource</span></a></li><li class="nav-link"><a href="http://docs.codehaus.org/" class="aui-dropdown2-radio interactive" title="http://docs.codehaus.org/"><span class="nav-link-label">Codehaus</span></a></li><li class="nav-link"><a href="http://xircles.codehaus.org/" class="aui-dropdown2-radio interactive" title="http://xircles.codehaus.org"><span class="nav-link-label">Xircles</span></a></li></ul></div></div><script><!--
+/* Script removed by snapshot save */
+--></script></div><div class="aui-header-primary"><h1 id="logo" class="aui-header-logo aui-header-logo-custom"><a href="https://jira.codehaus.org/secure/MyJiraHome.jspa"><img data-aui-responsive-header-index="0" src="urn:download-error:http://www.codehaus.org/codehaus-small.gif" alt="jira.codehaus.org"></a></h1><ul style="width: auto;" class="aui-nav">
+
+
+
+
+<li><a class="aui-nav-link aui-dropdown2-ajax jira-ajax-menu aui-dropdown2-trigger " href="https://jira.codehaus.org/secure/Dashboard.jspa" id="home_link" accesskey="d" title="View and manage your dashboards" aria-haspopup="true" aria-owns="home_link-content">Dashboards</a><div id="home_link-content" class="aui-dropdown2 aui-style-default" data-aui-dropdown2-ajax-key="home_link"></div></li><li><a class="aui-nav-link aui-dropdown2-ajax jira-ajax-menu aui-dropdown2-trigger " href="/Old_NanoContainer_Issues/index.html" id="browse_link" accesskey="p" title="View recent projects and browse a list of projects" aria-haspopup="true" aria-owns="browse_link-content">Projects</a><div id="browse_link-content" class="aui-dropdown2 aui-style-default" data-aui-dropdown2-ajax-key="browse_link"></div></li><li><a class="aui-nav-link aui-dropdown2-ajax jira-ajax-menu aui-dropdown2-trigger " href="https://jira.codehaus.org/secure/IssueNavigator.jspa" id="find_link" accesskey="i" title="Search for issues and view recent issues" aria-haspopup="true" aria-owns="find_link-content">Issues</a><div id="find_link-content" class="aui-dropdown2 aui-style-default" data-aui-dropdown2-ajax-key="find_link"></div></li>
+<li style="display: none;"><a id="aui-responsive-header-dropdown-trigger-0" class="aui-dropdown2-trigger" aria-owns="aui-responsive-header-dropdown-content-0" aria-haspopup="true" href="#">More<span class="icon aui-icon-dropdown"></span></a><div id="aui-responsive-header-dropdown-content-0" class="aui-dropdown2 aui-style-default"><div class="aui-dropdown2-section"><ul id="aui-responsive-header-dropdown-list-0"></ul></div></div></li></ul></div><div class="aui-header-secondary"><ul class="aui-nav"><li>
+    <form action="https://jira.codehaus.org/secure/QuickSearch.jspa" method="post" id="quicksearch" class="aui-quicksearch dont-default-focus ajs-dirty-warning-exempt">
+        <input id="quickSearchInput" class="search" title="Quick Search ( Type '/' )" placeholder="Quick Search" name="searchString" accesskey="q" type="text">
+        <input class="hidden" value="Search" type="submit">
+    </form>
+</li>
+
+
+
+    <li id="system-help-menu">
+        <a class="aui-nav-link aui-dropdown2-trigger" aria-haspopup="true" aria-owns="system-help-menu-content" href="https://docs.atlassian.com/jira/docs-061/JIRA+Documentation" target="_blank" title="Help"><span class="aui-icon aui-icon-small aui-iconfont-help">Help</span></a>
+        <div id="system-help-menu-content" class="aui-dropdown2 aui-style-default">
+                            <div class="aui-dropdown2-section">
+                                                                <ul id="jira-help" class="aui-list-truncate">
+                                                            <li>
+                                    <a id="view_help" class="interactive" title="Goto the online documentation for JIRA" href="https://docs.atlassian.com/jira/docs-061/JIRA+Documentation" target="_blank">Online Help</a>
+                                </li>
+                                                            <li>
+                                    <a id="keyshortscuthelp" class="interactive" title="Get more information about JIRA's Keyboard Shortcuts ( Type '?' )" href="https://jira.codehaus.org/secure/ViewKeyboardShortcuts%21default.jspa" target="_blank">Keyboard Shortcuts</a>
+                                </li>
+                                                            <li>
+                                    <a id="view_about" class="interactive" title="Get more information about JIRA" href="https://jira.codehaus.org/secure/AboutPage.jspa">About JIRA</a>
+                                </li>
+                                                            <li>
+                                    <a id="view_credits" class="interactive" title="See who did what" href="https://jira.codehaus.org/secure/JiraCreditsPage%21default.jspa" target="_blank">JIRA Credits</a>
+                                </li>
+                                                            <li>
+                                    <a id="whats-new-menu-link" class="interactive" href="https://docs.atlassian.com/jira/docs-061/whatsnew/iframe">What?s New</a>
+                                </li>
+                                                    </ul>
+                                    </div>
+                    </div>
+    </li>
+
+
+
+
+
+
+
+
+
+<li id="user-options">
+            <a class="aui-nav-link login-link" href="https://jira.codehaus.org/login.jsp?os_destination=%2Fbrowse%2FNANO-175">Log In</a>
+                <div id="user-options-content" class="aui-dropdown2 aui-style-default">
+                            <div class="aui-dropdown2-section">
+                                                        </div>
+                    </div>
+    </li>
+</ul></div></div><!-- .aui-header-inner--></nav><!-- .aui-header -->
+    </header>
+    
+
+
+<div id="announcement-banner" class="alertHeader">
+    <div style="position: absolute; right: 20em; top: -2em">
+  <a href="https://xircles.codehaus.org/signup">Signup</a>
+</div>
+</div>
+
+
+    <section id="content" role="main">
+        
+    
+
+    <div class="issue-container ">
+                                    <div id="issue-content" class="issue-edit-form">
+                    <header id="stalker" class="issue-header js-stalker">
+                        <div class="issue-header-content"><header class="aui-page-header"><div class="aui-page-header-inner"><div class="aui-page-header-image"><span id="10121" class="aui-avatar aui-avatar-large aui-avatar-project jira-system-avatar"><span class="aui-avatar-inner"><img id="project-avatar" alt="NanoContainer" src="index_files/projectavatar.png"></span></span></div><!-- .aui-page-header-image --><div class="aui-page-header-main"><ol class="aui-nav aui-nav-breadcrumbs"><li><a id="project-name-val" href="/Old_NanoContainer_Issues/index.html">NanoContainer</a></li><li><a class="issue-link" data-issue-key="NANO-175" href="#" id="key-val" rel="34968">NANO-175</a></li></ol><h1 id="summary-val">Parent ClassLoaders are not being properly passed into the groovy scripts.</h1></div><!-- .aui-page-header-main --><div class="aui-page-header-actions"><div id="issue-header-pager"></div></div><!-- .aui-page-header-actions --></div><!-- .aui-page-header-inner --></header><!-- .aui-page-header --><div class="command-bar"><div class="ops-cont"><div class="ops-menus aui-toolbar"><div class="toolbar-split toolbar-split-left"><ul id="opsbar-ops-login-lnk_container" class="toolbar-group pluggable-ops"><li class="toolbar-item"><a id="ops-login-lnk" style="display:none" title="Log In" class="toolbar-trigger" href="https://jira.codehaus.org/login.jsp?os_destination=%2Fbrowse%2FNANO-175"><span class="trigger-label">Log In</span></a></li></ul><ul id="opsbar-opsbar-operations" class="toolbar-group pluggable-ops"></ul><ul id="opsbar-opsbar-transitions" class="toolbar-group pluggable-ops"></ul><ul id="opsbar-opsbar-admin" class="toolbar-group pluggable-ops"></ul></div><div class="toolbar-split toolbar-split-right"><ul id="opsbar-jira.issue.tools" style="display:none" class="toolbar-group pluggable-ops"><li class="toolbar-item toolbar-dropdown"><div><a href="#" id="viewissue-export" title="Export this issue in another format" data-hide-on-scroll=".split-view .issue-container" data-contain-to-window="true" class="toolbar-trigger  js-default-dropdown"><span class="icon icon-export viewissue-export"></span> <span class="dropdown-text">Export</span><span class="icon drop-menu"></span></a><div class="aui-list hidden"><ul class="aui-list-section aui-first aui-last"><li class="aui-list-item"><a href="https://jira.codehaus.org/si/jira.issueviews:issue-xml/NANO-175/NANO-175.xml" class="aui-list-item-link" id="jira.issueviews:issue-xml"><span class="trigger-label">XML</span></a></li><li class="aui-list-item"><a href="https://jira.codehaus.org/si/jira.issueviews:issue-word/NANO-175/NANO-175.doc" class="aui-list-item-link" id="jira.issueviews:issue-word"><span class="trigger-label">Word</span></a></li><li class="aui-list-item"><a href="https://jira.codehaus.org/si/jira.issueviews:issue-html/NANO-175/NANO-175.html" class="aui-list-item-link" id="jira.issueviews:issue-html"><span class="trigger-label">Printable</span></a></li></ul></div></div></li></ul></div></div></div></div></div>
+                    </header>
+                    <div class="issue-body-content">
+                        <div class="aui-group issue-body"><div class="aui-item issue-main-column"><div id="details-module" class="module toggle-wrap"><div id="details-module_heading" class="mod-header"><ul class="ops"></ul><h2 class="toggle-title">Details</h2></div><div class="mod-content">
+
+
+
+
+<ul id="issuedetails" class="property-list two-cols">
+    <li class="item">
+        <div class="wrap">
+            <strong class="name">Type:</strong>
+            <span id="type-val" class="value">
+                                <img alt="Bug" src="index_files/bug.png" title="Bug - A problem which impairs or prevents the functions of the product." height="16" width="16"> Bug
+            </span>
+        </div>
+    </li>
+    <li class="item item-right">
+        <div class="wrap">
+            <strong class="name">Status:</strong>
+            <span id="status-val" class="value">
+                                
+
+<img src="index_files/open.png" alt="Open" title="Open - The issue is open and ready for the assignee to start work on it." height="16" width="16"> Open
+            </span>
+                    </div>
+    </li>
+            <li class="item">
+            <div class="wrap">
+                <strong class="name">Priority:</strong>
+                <span id="priority-val" class="value">
+                                        <img alt="Major" src="index_files/major.png" title="Major - Major loss of function." height="16" width="16"> Major
+                </span>
+            </div>
+        </li>
+                                <li class="item item-right">
+            <div class="wrap">
+                <strong class="name">Resolution:</strong>
+                <span id="resolution-val" class="value unresolved">
+                                    Unresolved
+                                </span>
+            </div>
+        </li>
+                <li class="item">
+            <div class="wrap">
+                <strong class="name">Affects Version/s:</strong>
+                <span id="versions-val" class="value">
+                                            None
+                                    </span>
+            </div>
+        </li>
+                <li class="item item-right">
+            <div class="wrap">
+                <strong class="name">Fix Version/s:</strong>
+                <span id="fixfor-val" class="value">
+                                            None
+                                    </span>
+            </div>
+        </li>
+                <li class="item">
+            <div class="wrap">
+                <strong class="name">Component/s:</strong>
+                <span id="components-val" class="value">
+                                            <span style="height: auto;" class="shorten" id="components-field">
+                                                            <a href="/Old_NanoContainer_Issues/index.html/component/11631" title="groovy ">groovy</a>                                                    </span>
+                                    </span>
+            </div>
+        </li>
+                    <li class="item full-width">
+            <div class="wrap" id="wrap-labels">
+                <strong class="name">Labels:</strong>
+                    <div class="labels-wrap value">
+            <span class="labels" id="labels-34968-value">None</span>
+                </div>
+            </div>
+        </li>
+        </ul>
+
+<div id="customfieldmodule">
+    <div class="aui-tabs horizontal-tabs" id="customfield-tabs">
+                    <div id="customfield-panel-1" class="tabs-pane active-pane">
+                        <ul class="property-list">
+                                                <li id="rowForcustomfield_10110" class="item">
+                        <div class="wrap">
+                            <strong title="Testcase included" class="name">Testcase included:</strong>
+                            <div id="customfield_10110-val" class="value type-radiobuttons" data-fieldtype="radiobuttons" data-fieldtypecompletekey="com.atlassian.jira.plugin.system.customfieldtypes:radiobuttons">
+                                    yes
+
+                            </div>
+                        </div>
+                    </li>
+                                                                <li id="rowForcustomfield_10210" class="item">
+                        <div class="wrap">
+                            <strong title="Number of attachments " class="name">Number of attachments :</strong>
+                            <div id="customfield_10210-val" class="value type-attachments" data-fieldtype="attachments" data-fieldtypecompletekey="com.atlassian.jira.toolkit:attachments">
+                                    1
+
+                            </div>
+                        </div>
+                    </li>
+                                        </ul>
+        </div>
+        </div></div>
+</div></div><div id="descriptionmodule" class="module toggle-wrap"><div id="descriptionmodule_heading" class="mod-header"><ul class="ops"></ul><h2 class="toggle-title">Description</h2></div><div class="mod-content"><div id="description-val" class="field-ignore-highlight">
+    <div class="user-content-block">
+                    <p>The following test case shows the problem:</p>
+
+
+<p>    public void testWithParentClassPathPropagatesWithNoParentContainer()throws IOException {<br>
+        File testCompJar = new File(System.getProperty("testcomp.jar"));<br>
+        URLClassLoader classLoader = new URLClassLoader(new URL[] </p>
+{testCompJar.toURL()}
+<p>, this.getClass().getClassLoader());<br>
+        Class testComp = null;</p>
+
+<p>        try </p>
+{
+            testComp = classLoader.loadClass("TestComp");
+        }
+<p> catch (ClassNotFoundException ex) </p>
+{
+            fail("Unable to load test component from the jar using a url classloader");
+        }
+<p>        Reader script = new StringReader(<br>
+                          ""<br>
+                        + "        pico = builder.container(parent:parent) </p>
+{\n"
+                        + "            component(class:\"TestComp\")\n"
+                        + "        }
+<p>" <br>
+                        + "");        </p>
+
+<p>        PicoContainer pico = buildContainer(new GroovyContainerBuilder(script, classLoader), null, null); <br>
+        Object testCompInstance = pico.getComponentInstance(testComp);<br>
+        assertEquals(testCompInstance.getClass().getName(), testComp.getName());</p>
+
+<p>    }</p>
+
+<p>It fails claiming that the TestComp class is not found and the classloader stack trace does not show the URL classloader.</p>
+
+<p>I was under the impression that the groovy container builder's classpath SHOULD get passed into the script somehow, otherwise, groovy scripts are always loaded under the basic system classpath.  </p>
+
+<p>I am working on a solution, but I wanted to make sure that I understood that the GroovyContainerBuilder classpath passed in SHOULD be the classpath used for building containers. (Aside from dynamic classpaths, of course!)</p>
+
+<p>Thanks for taking a look at it.  If people don't think I'm misunderstanding the use of the API, I'll check in a fix shortly.</p>
+            </div>
+</div>
+</div></div><div id="attachmentmodule" class="module toggle-wrap"><div id="attachmentmodule_heading" class="mod-header"><ul class="ops"><li class="drop"><div class="aui-dd-parent"><a href="#" class="icon drop-menu js-default-dropdown" title="Options"><span>Options</span></a><div class="aui-dropdown-content aui-list"><ul id="attachment-sorting-options" class="aui-list-section aui-first"><li class="aui-list-item"><a id="attachment-sort-key-name" href="/Old_NanoContainer_Issues/175?attachmentSortBy=fileName#attachmentmodule" class="aui-list-checked aui-checked aui-list-item-link" title="viewissue.subtasks.tab.show.all.name"><span>Sort By Name</span></a></li><li class="aui-list-item"><a id="attachment-sort-key-date" href="/Old_NanoContainer_Issues/175?attachmentSortBy=dateTime#attachmentmodule" class="aui-list-checked aui-list-item-link" title="Sort By Date"><span>Sort By Date</span></a></li></ul><ul id="attachment-sorting-order-options" class="aui-list-section"><li class="aui-list-item"><a id="attachment-sort-direction-asc" href="/Old_NanoContainer_Issues/175?attachmentOrder=asc#attachmentmodule" class="aui-list-checked aui-checked aui-list-item-link" title="Ascending"><span>Ascending</span></a></li><li class="aui-list-item"><a id="attachment-sort-direction-desc" href="/Old_NanoContainer_Issues/175?attachmentOrder=desc#attachmentmodule" class="aui-list-checked aui-list-item-link" title="Descending"><span>Descending</span></a></li></ul><ul id="attachment-manage-options" class="aui-list-section aui-last"><li class="aui-list-item"><a id="aszip" href="/Old_NanoContainer_Issues/attachmentzip/34968.zip" class="aui-list-checked aui-list-item-link" title="Download all attachments as a ZIP file"><span>Download All</span></a></li></ul></div></div></li></ul><h2 class="toggle-title">Attachments</h2></div><div class="mod-content">
+            <ol id="file_attachments" class="item-attachments">
+                            <li class="attachment-content">
+                                            <div class="attachment-thumb">
+                            <a href="/Old_NanoContainer_Issues/attachment/20240/nano-175.patch" draggable="true" data-downloadurl="${fileAttachment.mimetype}:nano-175.patch:/Old_NanoContainer_Issues/attachment/20240/nano-175.patch">
+                                    <img src="index_files/text.gif" alt="Text File" height="16" border="0" width="16">
+                            </a>
+                        </div>
+                        <dl>
+                                <dt class="attachment-title">
+        <a href="/Old_NanoContainer_Issues/attachment/20240/nano-175.patch" title="Latest  24/Apr/06 2:58 PM - Michael Rimov" draggable="true" data-downloadurl="${attachment.mimetype}:nano-175.patch:/Old_NanoContainer_Issues/attachment/20240/nano-175.patch">nano-175.patch
+        </a>
+    </dt>
+    <dd class="attachment-delete">
+                    <span class="icon"></span>
+            </dd>
+    <dd class="attachment-date"><time class="livestamp" datetime="2006-04-24T14:58-0500">24/Apr/06 2:58 PM</time></dd>
+    <dd class="attachment-size">6 kB</dd>
+    <dd class="attachment-author">Michael Rimov</dd>
+                        </dl>
+                                    </li>
+                    </ol>
+        </div></div><div id="activitymodule" class="module toggle-wrap"><div id="activitymodule_heading" class="mod-header"><ul class="ops"></ul><h2 class="toggle-title">Activity</h2></div><div class="mod-content">
+
+
+
+
+
+
+
+
+
+
+    <div class="tabwrap tabs2" style="display:none">
+                    <div class="sortwrap">
+                                    <a class="icon icon-sort-down ajax-activity-content" rel="nofollow" href="/Old_NanoContainer_Issues/175?actionOrder=desc" title="Ascending order - Click to sort in descending order"><span>Ascending order - Click to sort in descending order</span></a>
+                            </div>
+                <ul id="issue-tabs" class="tabs horizontal">
+                                
+            <li class="active" id="all-tabpanel" data-id="all-tabpanel" data-key="com.atlassian.jira.plugin.system.issuetabpanels:all-tabpanel" data-label="All" data-href="/browse/NANO-175">
+                            <strong>All</strong>
+                        </li>
+                                
+            <li data-id="comment-tabpanel" data-key="com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel" data-label="Comments" data-href="/browse/NANO-175">
+                            <a class="ajax-activity-content" id="comment-tabpanel" href="/Old_NanoContainer_Issues/175"><strong>Comments</strong></a>
+                        </li>
+                                
+            <li data-id="worklog-tabpanel" data-key="com.atlassian.jira.plugin.system.issuetabpanels:worklog-tabpanel" data-label="Work Log" data-href="/browse/NANO-175">
+                            <a class="ajax-activity-content" id="worklog-tabpanel" href="/Old_NanoContainer_Issues/175"><strong>Work Log</strong></a>
+                        </li>
+                                
+            <li data-id="changehistory-tabpanel" data-key="com.atlassian.jira.plugin.system.issuetabpanels:changehistory-tabpanel" data-label="History" data-href="/browse/NANO-175">
+                            <a class="ajax-activity-content" id="changehistory-tabpanel" href="/Old_NanoContainer_Issues/175"><strong>History</strong></a>
+                        </li>
+                                
+            <li data-id="activity-stream-issue-tab" data-key="com.atlassian.streams.streams-jira-plugin:activity-stream-issue-tab" data-label="Activity" data-href="/browse/NANO-175">
+                            <a class="ajax-activity-content" id="activity-stream-issue-tab" href="/Old_NanoContainer_Issues/175"><strong>Activity</strong></a>
+                        </li>
+                </ul>
+    </div>
+    <div class="issuePanelWrapper">
+        <div class="issuePanelProgress"></div>
+        <div class="issuePanelContainer" id="issue_actions_container">
+                                    
+
+
+<div id="comment-61329" class="issue-data-block activity-comment twixi-block  expanded">
+    <div class="twixi-wrap verbose actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-opened"><span>Hide</span></span></a>
+            <div class="action-links">
+                <a href="/Old_NanoContainer_Issues/175?focusedCommentId=61329&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-61329" title="A permanent link to this comment." class="icon icon-perma activitymodule-link"><span>Permalink</span></a>
+                                            </div>
+            <div class="action-details">        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="rimovm" id="commentauthor_61329_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=rimovm"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Michael Rimov</a>
+ added a comment  - <span class="commentdate_61329_verbose subText"><span class="date user-tz" title="16/Mar/06 8:00 PM"><time class="livestamp" datetime="2006-03-16T20:00-0600">16/Mar/06 8:00 PM</time></span></span>  </div>
+        </div>
+        <div class="action-body flooded"><p>One minor clarification:  The SCRIPT execution is where the failure is occuring.</p> </div>
+    </div>
+    <div class="twixi-wrap concise actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-closed"><span>Show</span></span></a>
+            <div class="action-details flooded">
+                        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="rimovm" id="commentauthor_61329_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=rimovm"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Michael Rimov</a>
+ added a comment  - <span class="commentdate_61329_concise subText"><span class="date user-tz" title="16/Mar/06 8:00 PM"><time class="livestamp" datetime="2006-03-16T20:00-0600">16/Mar/06 8:00 PM</time></span></span>                    One minor clarification:  The SCRIPT execution is where the failure is occuring.              </div>
+        </div>
+    </div>
+</div>
+                             
+
+
+<div id="comment-64070" class="issue-data-block activity-comment twixi-block  expanded">
+    <div class="twixi-wrap verbose actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-opened"><span>Hide</span></span></a>
+            <div class="action-links">
+                <a href="/Old_NanoContainer_Issues/175?focusedCommentId=64070&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-64070" title="A permanent link to this comment." class="icon icon-perma activitymodule-link"><span>Permalink</span></a>
+                                            </div>
+            <div class="action-details">        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="rimovm" id="commentauthor_64070_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=rimovm"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Michael Rimov</a>
+ added a comment  - <span class="commentdate_64070_verbose subText"><span class="date user-tz" title="24/Apr/06 2:58 PM"><time class="livestamp" datetime="2006-04-24T14:58-0500">24/Apr/06 2:58 PM</time></span></span>  </div>
+        </div>
+        <div class="action-body flooded"><p>Proposed NanoContainer Patch to properly propagate classloaders from the creator to the createe.</p> </div>
+    </div>
+    <div class="twixi-wrap concise actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-closed"><span>Show</span></span></a>
+            <div class="action-details flooded">
+                        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="rimovm" id="commentauthor_64070_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=rimovm"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Michael Rimov</a>
+ added a comment  - <span class="commentdate_64070_concise subText"><span class="date user-tz" title="24/Apr/06 2:58 PM"><time class="livestamp" datetime="2006-04-24T14:58-0500">24/Apr/06 2:58 PM</time></span></span>                    Proposed NanoContainer Patch to properly propagate classloaders from the creator to the createe.              </div>
+        </div>
+    </div>
+</div>
+                             
+
+<div class="issue-data-block" id="changehistory-80441">
+    <div class="actionContainer">
+        <div class="action-details" id="changehistorydetails_80441">
+                                
+
+    <a class="user-hover user-avatar" rel="rimovm" id="changehistoryauthor_80441" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=rimovm"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Michael Rimov</a>
+ made changes  - <span class="date" title="24/Apr/06 2:58 PM"><time class="livestamp" datetime="2006-04-24T14:58-0500">24/Apr/06 2:58 PM</time></span>
+        </div>
+        <div class="changehistory action-body">
+            <table id="changehistory_80441" border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <thead>
+                    <tr>
+                        <th width="20%">Field</th>
+                        <th width="40%">Original Value</th>
+                        <th width="40%">New Value</th>
+                    </tr>
+                </thead>
+                            <tbody>
+                            <tr>
+                <td class="activity-name" width="20%">
+                                    Attachment
+                                </td>
+                <td class="activity-old-val" width="40%">
+                                                </td>
+                <td class="activity-new-val" width="40%">
+                                                                                        <a href="/Old_NanoContainer_Issues/attachment/20240/nano-175.patch">nano-175.patch</a>
+                                                                                                                       <span class="hist-value">[    20240
+]</span>
+                                                    </td>
+                </tr>
+                            </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+                             
+
+<div class="issue-data-block" id="changehistory-106781">
+    <div class="actionContainer">
+        <div class="action-details" id="changehistorydetails_106781">
+                                
+
+    <a class="user-hover user-avatar" rel="proyal" id="changehistoryauthor_106781" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=proyal"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> peter royal</a>
+ made changes  - <span class="date" title="03/Feb/07 1:30 PM"><time class="livestamp" datetime="2007-02-03T13:30-0600">03/Feb/07 1:30 PM</time></span>
+        </div>
+        <div class="changehistory action-body">
+            <table id="changehistory_106781" border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tbody>
+                            <tr>
+                <td class="activity-name" width="20%">
+                                    Comment
+                                </td>
+                <td class="activity-old-val" width="40%">
+                                                                            <span class="hist-value">[    <a href="http://www.kostenloses-forum.com/board/nurse-handjobs-nurse-rubber-glove-handjob-panty-handjob-p-,nxu,49987818nx3449,t,95.html">http://www.kostenloses-forum.com/board/nurse-handjobs-nurse-rubber-glove-handjob-panty-handjob-p-,nxu,49987818nx3449,t,95.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/houswives-hairy-pussy-how-buy-hairy-indian-hardcore-vhs-vid-,nxu,49987818nx3449,t,94.html">http://www.kostenloses-forum.com/board/houswives-hairy-pussy-how-buy-hairy-indian-hardcore-vhs-vid-,nxu,49987818nx3449,t,94.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/senior-hairy-aged-pussy-sex-free-pictures-hairy-women-eroti-,nxu,49987818nx3449,t,93.html">http://www.kostenloses-forum.com/board/senior-hairy-aged-pussy-sex-free-pictures-hairy-women-eroti-,nxu,49987818nx3449,t,93.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/allteens-hadcore-amatuer-adult-hadcore-amature-archives-ha-,nxu,49987818nx3449,t,92.html">http://www.kostenloses-forum.com/board/allteens-hadcore-amatuer-adult-hadcore-amature-archives-ha-,nxu,49987818nx3449,t,92.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/anal-fucking-gyno-sex-bondage-bizzare-anal-gynocologist-an-,nxu,49987818nx3449,t,91.html">http://www.kostenloses-forum.com/board/anal-fucking-gyno-sex-bondage-bizzare-anal-gynocologist-an-,nxu,49987818nx3449,t,91.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/cunt-pussy-ass-amature-gyno-danish-gyno-exam-galleries-dem-,nxu,49987818nx3449,t,90.html">http://www.kostenloses-forum.com/board/cunt-pussy-ass-amature-gyno-danish-gyno-exam-galleries-dem-,nxu,49987818nx3449,t,90.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/webferret-frame-grannys-big-fat-tits-teen-tastyhotpussy-teen-,nxu,49987818nx3449,t,89.html">http://www.kostenloses-forum.com/board/webferret-frame-grannys-big-fat-tits-teen-tastyhotpussy-teen-,nxu,49987818nx3449,t,89.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-pixs-hairy-old-grannies-free-pornographic-pics-old-gra-,nxu,49987818nx3449,t,88.html">http://www.kostenloses-forum.com/board/free-pixs-hairy-old-grannies-free-pornographic-pics-old-gra-,nxu,49987818nx3449,t,88.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/hony-grannies-horney-grannies-humping-grannies-japanese-g-,nxu,49987818nx3449,t,87.html">http://www.kostenloses-forum.com/board/hony-grannies-horney-grannies-humping-grannies-japanese-g-,nxu,49987818nx3449,t,87.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/exhibitionist-nude-amateur-grandmothers-exotic-stories-matu-,nxu,49987818nx3449,t,86.html">http://www.kostenloses-forum.com/board/exhibitionist-nude-amateur-grandmothers-exotic-stories-matu-,nxu,49987818nx3449,t,86.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/horney-grandmothers-horny-grandmother-fucking-pics-horny-g-,nxu,49987818nx3449,t,85.html">http://www.kostenloses-forum.com/board/horney-grandmothers-horny-grandmother-fucking-pics-horny-g-,nxu,49987818nx3449,t,85.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-good-catholic-boys-gay-sex-free-good-full-nude-picture-,nxu,49987818nx3449,t,84.html">http://www.kostenloses-forum.com/board/free-good-catholic-boys-gay-sex-free-good-full-nude-picture-,nxu,49987818nx3449,t,84.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/girls-golden-shower-golden-golden-archieve-golden-boy-go-,nxu,49987818nx3449,t,83.html">http://www.kostenloses-forum.com/board/girls-golden-shower-golden-golden-archieve-golden-boy-go-,nxu,49987818nx3449,t,83.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/britney-spears-giving-blowjob-britney-spears-giving-blowjob-,nxu,49987818nx3449,t,82.html">http://www.kostenloses-forum.com/board/britney-spears-giving-blowjob-britney-spears-giving-blowjob-,nxu,49987818nx3449,t,82.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/nude-photos-briteny-spears-giving-blow-job-nude-photos-brit-,nxu,49987818nx3449,t,81.html">http://www.kostenloses-forum.com/board/nude-photos-briteny-spears-giving-blow-job-nude-photos-brit-,nxu,49987818nx3449,t,81.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-jpegs-pregnant-sluts-giving-birth-free-photos-girls-gi-,nxu,49987818nx3449,t,80.html">http://www.kostenloses-forum.com/board/free-jpegs-pregnant-sluts-giving-birth-free-photos-girls-gi-,nxu,49987818nx3449,t,80.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/asain-girls-sex-asain-girls-spead-asain-girls-thong-bikini-,nxu,49987818nx3449,t,79.html">http://www.kostenloses-forum.com/board/asain-girls-sex-asain-girls-spead-asain-girls-thong-bikini-,nxu,49987818nx3449,t,79.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/anime-girls-sex-realplay-anime-girls-sexy-lengerie-anime-g-,nxu,49987818nx3449,t,78.html">http://www.kostenloses-forum.com/board/anime-girls-sex-realplay-anime-girls-sexy-lengerie-anime-g-,nxu,49987818nx3449,t,78.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/asian-sado-gwy-free-tastyyounggirls-no-no-lolitas-onl-,nxu,49987818nx3449,t,77.html">http://www.kostenloses-forum.com/board/asian-sado-gwy-free-tastyyounggirls-no-no-lolitas-onl-,nxu,49987818nx3449,t,77.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/asain-girls-getting-fucked-asain-girls-hentai-pics-asain-g-,nxu,49987818nx3449,t,76.html">http://www.kostenloses-forum.com/board/asain-girls-getting-fucked-asain-girls-hentai-pics-asain-g-,nxu,49987818nx3449,t,76.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/anime-dickgirls-manga-anime-girls-college-entai-anime-girl-,nxu,49987818nx3449,t,75.html">http://www.kostenloses-forum.com/board/anime-dickgirls-manga-anime-girls-college-entai-anime-girl-,nxu,49987818nx3449,t,75.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/asain-latin-girls-giving-oral-sex-asain-nude-girls-asain-p-,nxu,49987818nx3449,t,74.html">http://www.kostenloses-forum.com/board/asain-latin-girls-giving-oral-sex-asain-nude-girls-asain-p-,nxu,49987818nx3449,t,74.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/asaian-girls-asaian-girls-tortured-asaian-nude-girls-asai-,nxu,49987818nx3449,t,73.html">http://www.kostenloses-forum.com/board/asaian-girls-asaian-girls-tortured-asaian-nude-girls-asai-,nxu,49987818nx3449,t,73.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/anima-ladys-girls-anima-schoolgirls-getting-raped-monsters-,nxu,49987818nx3449,t,72.html">http://www.kostenloses-forum.com/board/anima-ladys-girls-anima-schoolgirls-getting-raped-monsters-,nxu,49987818nx3449,t,72.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/asian-nude-scoolgirls-asian-nuded-girls-asian-nudy-girls-,nxu,49987818nx3449,t,71.html">http://www.kostenloses-forum.com/board/asian-nude-scoolgirls-asian-nuded-girls-asian-nudy-girls-,nxu,49987818nx3449,t,71.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/asian-girls-fucking-men-free-pic-asian-girls-fucking-uncenc-,nxu,49987818nx3449,t,70.html">http://www.kostenloses-forum.com/board/asian-girls-fucking-men-free-pic-asian-girls-fucking-uncenc-,nxu,49987818nx3449,t,70.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/aisian-girles-amateur-pix-free-pitcures-young-girles-amateu-,nxu,49987818nx3449,t,69.html">http://www.kostenloses-forum.com/board/aisian-girles-amateur-pix-free-pitcures-young-girles-amateu-,nxu,49987818nx3449,t,69.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/asian-cute-girld-asian-girld-bad-nude-pic-beautifull-girld-,nxu,49987818nx3449,t,68.html">http://www.kostenloses-forum.com/board/asian-cute-girld-asian-girld-bad-nude-pic-beautifull-girld-,nxu,49987818nx3449,t,68.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-clips-teen-girls-pissing-their-panty-liners-free-colag-,nxu,49987818nx3449,t,67.html">http://www.kostenloses-forum.com/board/free-clips-teen-girls-pissing-their-panty-liners-free-colag-,nxu,49987818nx3449,t,67.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-arabian-girls-porn-pic-free-arabian-nude-girl-pic-fre-,nxu,49987818nx3449,t,66.html">http://www.kostenloses-forum.com/board/free-arabian-girls-porn-pic-free-arabian-nude-girl-pic-fre-,nxu,49987818nx3449,t,66.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/elementary-schoolgirls-nude-elementary-schoolgirls-panties-,nxu,49987818nx3449,t,65.html">http://www.kostenloses-forum.com/board/elementary-schoolgirls-nude-elementary-schoolgirls-panties-,nxu,49987818nx3449,t,65.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-blackgirls-movie-cilps-free-blackgirls-movies-free-bl-,nxu,49987818nx3449,t,64.html">http://www.kostenloses-forum.com/board/free-blackgirls-movie-cilps-free-blackgirls-movies-free-bl-,nxu,49987818nx3449,t,64.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-black-schoolgirls-xxx-free-blackgirl-blowjob-movies-f-,nxu,49987818nx3449,t,63.html">http://www.kostenloses-forum.com/board/free-black-schoolgirls-xxx-free-blackgirl-blowjob-movies-f-,nxu,49987818nx3449,t,63.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-black-girls-porn-galleris-free-black-girls-sreensavers-,nxu,49987818nx3449,t,62.html">http://www.kostenloses-forum.com/board/free-black-girls-porn-galleris-free-black-girls-sreensavers-,nxu,49987818nx3449,t,62.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-bikini-girls-gurlz-grls-free-bikkini-girle-gallery-fr-,nxu,49987818nx3449,t,61.html">http://www.kostenloses-forum.com/board/free-bikini-girls-gurlz-grls-free-bikkini-girle-gallery-fr-,nxu,49987818nx3449,t,61.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-fuck-young-girl-free-fucking-girl-boy-amature-sex-pict-,nxu,49987818nx3449,t,60.html">http://www.kostenloses-forum.com/board/free-fuck-young-girl-free-fucking-girl-boy-amature-sex-pict-,nxu,49987818nx3449,t,60.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-big-mpegs-schoolgirls-no-lolitas-only-teens-best-,nxu,49987818nx3449,t,59.html">http://www.kostenloses-forum.com/board/free-big-mpegs-schoolgirls-no-lolitas-only-teens-best-,nxu,49987818nx3449,t,59.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-beautful-sexy-girl-pics-free-beautyful-nude-desi-girls-,nxu,49987818nx3449,t,58.html">http://www.kostenloses-forum.com/board/free-beautful-sexy-girl-pics-free-beautyful-nude-desi-girls-,nxu,49987818nx3449,t,58.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-fotos-man-fucking-teenaged-girls-free-fourteen-year-ol-,nxu,49987818nx3449,t,57.html">http://www.kostenloses-forum.com/board/free-fotos-man-fucking-teenaged-girls-free-fourteen-year-ol-,nxu,49987818nx3449,t,57.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-bad-girls-free-bad-girlssex-free-balack-girls-suck-wh-,nxu,49987818nx3449,t,56.html">http://www.kostenloses-forum.com/board/free-bad-girls-free-bad-girlssex-free-balack-girls-suck-wh-,nxu,49987818nx3449,t,56.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-forbiden-teeny-asian-girls-blowjobs-free-forced-school-,nxu,49987818nx3449,t,55.html">http://www.kostenloses-forum.com/board/free-forbiden-teeny-asian-girls-blowjobs-free-forced-school-,nxu,49987818nx3449,t,55.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-australian-girls-nude-free-australian-porn-tastyschool-,nxu,49987818nx3449,t,54.html">http://www.kostenloses-forum.com/board/free-australian-girls-nude-free-australian-porn-tastyschool-,nxu,49987818nx3449,t,54.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/ebony-young-girlsex-ebonygirl-ebonygirls-ebonygirls-boom-,nxu,49987818nx3449,t,53.html">http://www.kostenloses-forum.com/board/ebony-young-girlsex-ebonygirl-ebonygirls-ebonygirls-boom-,nxu,49987818nx3449,t,53.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-black-latian-girls-free-black-latin-young-girl-no-l-,nxu,49987818nx3449,t,52.html">http://www.kostenloses-forum.com/board/free-black-latian-girls-free-black-latin-young-girl-no-l-,nxu,49987818nx3449,t,52.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/fat-black-girls-pics-fat-blackgirls-nude-pic-fat-girl-bigt-,nxu,49987818nx3449,t,51.html">http://www.kostenloses-forum.com/board/fat-black-girls-pics-fat-blackgirls-nude-pic-fat-girl-bigt-,nxu,49987818nx3449,t,51.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-download-video-clips-raped-asian-girls-free-download-v-,nxu,49987818nx3449,t,50.html">http://www.kostenloses-forum.com/board/free-download-video-clips-raped-asian-girls-free-download-v-,nxu,49987818nx3449,t,50.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/farmgirl-farmgirl-xxx-farmgirls-farmgirls-fucking-threeso-,nxu,49987818nx3449,t,49.html">http://www.kostenloses-forum.com/board/farmgirl-farmgirl-xxx-farmgirls-farmgirls-fucking-threeso-,nxu,49987818nx3449,t,49.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-asain-school-girls-porn-free-asain-schoolgirl-fucking-,nxu,49987818nx3449,t,48.html">http://www.kostenloses-forum.com/board/free-asain-school-girls-porn-free-asain-schoolgirl-fucking-,nxu,49987818nx3449,t,48.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/extreme-younggirl-exwives-exgirlfriends-photos-exwives-gir-,nxu,49987818nx3449,t,47.html">http://www.kostenloses-forum.com/board/extreme-younggirl-exwives-exgirlfriends-photos-exwives-gir-,nxu,49987818nx3449,t,47.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/exgirlfriends-nude-pict-exgirlfriends-nudes-exgirlfriends-,nxu,49987818nx3449,t,46.html">http://www.kostenloses-forum.com/board/exgirlfriends-nude-pict-exgirlfriends-nudes-exgirlfriends-,nxu,49987818nx3449,t,46.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-college-girls-kucking-free-college-girls-porn-free-co-,nxu,49987818nx3449,t,45.html">http://www.kostenloses-forum.com/board/free-college-girls-kucking-free-college-girls-porn-free-co-,nxu,49987818nx3449,t,45.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-asain-china-girls-school-girls-pantie-picks-free-asain-,nxu,49987818nx3449,t,44.html">http://www.kostenloses-forum.com/board/free-asain-china-girls-school-girls-pantie-picks-free-asain-,nxu,49987818nx3449,t,44.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/exgirlfriends-nude-pict-exgirlfriends-nudes-exgirlfriends-,nxu,49987818nx3449,t,43.html">http://www.kostenloses-forum.com/board/exgirlfriends-nude-pict-exgirlfriends-nudes-exgirlfriends-,nxu,49987818nx3449,t,43.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/lonely-gilrs-singapore-lowrider-gilrs-magazine-american-gi-,nxu,49987818nx3449,t,42.html">http://www.kostenloses-forum.com/board/lonely-gilrs-singapore-lowrider-gilrs-magazine-american-gi-,nxu,49987818nx3449,t,42.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-gilr-free-gilrs-undressing-free-little-gilrls-naked-,nxu,49987818nx3449,t,41.html">http://www.kostenloses-forum.com/board/free-gilr-free-gilrs-undressing-free-little-gilrls-naked-,nxu,49987818nx3449,t,41.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-gillian-anderson-nude-home-video-clips-free-oics-gilli-,nxu,49987818nx3449,t,40.html">http://www.kostenloses-forum.com/board/free-gillian-anderson-nude-home-video-clips-free-oics-gilli-,nxu,49987818nx3449,t,40.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/topless-bulma-gifs-twin-angels-hentai-gifs-unsencored-lesb-,nxu,49987818nx3449,t,39.html">http://www.kostenloses-forum.com/board/topless-bulma-gifs-twin-angels-hentai-gifs-unsencored-lesb-,nxu,49987818nx3449,t,39.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/webferret-frame-kinky-gifs-tastyhotpussy-teengirls-free-wre-,nxu,49987818nx3449,t,38.html">http://www.kostenloses-forum.com/board/webferret-frame-kinky-gifs-tastyhotpussy-teengirls-free-wre-,nxu,49987818nx3449,t,38.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-redhead-gifs-free-sex-porn-anime-gifs-hentai-animated-,nxu,49987818nx3449,t,37.html">http://www.kostenloses-forum.com/board/free-redhead-gifs-free-sex-porn-anime-gifs-hentai-animated-,nxu,49987818nx3449,t,37.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/popeye-gif-adults-porno-gif-animations-porno-spiderman-gif-,nxu,49987818nx3449,t,36.html">http://www.kostenloses-forum.com/board/popeye-gif-adults-porno-gif-animations-porno-spiderman-gif-,nxu,49987818nx3449,t,36.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/naked-baby-gif-dancing-naked-female-masturbating-animated-g-,nxu,49987818nx3449,t,35.html">http://www.kostenloses-forum.com/board/naked-baby-gif-dancing-naked-female-masturbating-animated-g-,nxu,49987818nx3449,t,35.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/strong-gaymen-strong-gaymen-pictures-uniform-gaymen-pics-,nxu,49987818nx3449,t,34.html">http://www.kostenloses-forum.com/board/strong-gaymen-strong-gaymen-pictures-uniform-gaymen-pics-,nxu,49987818nx3449,t,34.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/old-gaymen-haveing-sex-older-gaymen-older-gaymen-cumshots-,nxu,49987818nx3449,t,33.html">http://www.kostenloses-forum.com/board/old-gaymen-haveing-sex-older-gaymen-older-gaymen-cumshots-,nxu,49987818nx3449,t,33.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-websites-gay-hentai-anim-dragonballz-free-websites-pic-,nxu,49987818nx3449,t,32.html">http://www.kostenloses-forum.com/board/free-websites-gay-hentai-anim-dragonballz-free-websites-pic-,nxu,49987818nx3449,t,32.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-vids-gay-hunks-rapeing-college-boys-free-vids-gay-xxxx-,nxu,49987818nx3449,t,31.html">http://www.kostenloses-forum.com/board/free-vids-gay-hunks-rapeing-college-boys-free-vids-gay-xxxx-,nxu,49987818nx3449,t,31.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-male-asians-gays-gaymen-free-male-brasilian-gay-oral-s-,nxu,49987818nx3449,t,30.html">http://www.kostenloses-forum.com/board/free-male-asians-gays-gaymen-free-male-brasilian-gay-oral-s-,nxu,49987818nx3449,t,30.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-videp-downloads-gay-ass-fucking-free-vidio-clips-gay-m-,nxu,49987818nx3449,t,29.html">http://www.kostenloses-forum.com/board/free-videp-downloads-gay-ass-fucking-free-vidio-clips-gay-m-,nxu,49987818nx3449,t,29.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-litle-gay-boy-galery-free-litlle-gay-boy-porno-free-l-,nxu,49987818nx3449,t,28.html">http://www.kostenloses-forum.com/board/free-litle-gay-boy-galery-free-litlle-gay-boy-porno-free-l-,nxu,49987818nx3449,t,28.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-video-streamers-gay-male-porn-free-videofeed-gay-free-,nxu,49987818nx3449,t,27.html">http://www.kostenloses-forum.com/board/free-video-streamers-gay-male-porn-free-videofeed-gay-free-,nxu,49987818nx3449,t,27.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-sex-white-womans-whit-black-gays-free-sights-gay-males-,nxu,49987818nx3449,t,26.html">http://www.kostenloses-forum.com/board/free-sex-white-womans-whit-black-gays-free-sights-gay-males-,nxu,49987818nx3449,t,26.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/nigger-gangbang-nude-gangbang-rapes-nude-marge-simpsons-ga-,nxu,49987818nx3449,t,25.html">http://www.kostenloses-forum.com/board/nigger-gangbang-nude-gangbang-rapes-nude-marge-simpsons-ga-,nxu,49987818nx3449,t,25.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/aisian-gangbang-rape-amatuer-creampie-gangbang-thumbnails-,nxu,49987818nx3449,t,24.html">http://www.kostenloses-forum.com/board/aisian-gangbang-rape-amatuer-creampie-gangbang-thumbnails-,nxu,49987818nx3449,t,24.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/sexgallerys-sexlinks-free-pic-gallerys-sexpic-gallerys-se-,nxu,49987818nx3449,t,23.html">http://www.kostenloses-forum.com/board/sexgallerys-sexlinks-free-pic-gallerys-sexpic-gallerys-se-,nxu,49987818nx3449,t,23.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/sexy-older-womem-thumbnail-gallerys-sheboys-gallerys-shema-,nxu,49987818nx3449,t,22.html">http://www.kostenloses-forum.com/board/sexy-older-womem-thumbnail-gallerys-sheboys-gallerys-shema-,nxu,49987818nx3449,t,22.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/messy-cum-eating-photo-gallerys-midget-gallerys-mindspring-,nxu,49987818nx3449,t,21.html">http://www.kostenloses-forum.com/board/messy-cum-eating-photo-gallerys-midget-gallerys-mindspring-,nxu,49987818nx3449,t,21.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/fucking-youg-girls-gallery-fuckpic-gallery-fujiyama-galler-,nxu,49987818nx3449,t,20.html">http://www.kostenloses-forum.com/board/fucking-youg-girls-gallery-fuckpic-gallery-fujiyama-galler-,nxu,49987818nx3449,t,20.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/fucking-dads-sons-gallerys-fucking-free-gallery-fucking-fr-,nxu,49987818nx3449,t,19.html">http://www.kostenloses-forum.com/board/fucking-dads-sons-gallerys-fucking-free-gallery-fucking-fr-,nxu,49987818nx3449,t,19.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-nked-ass-gallery-free-norvegian-gallery-pics-free-nud-,nxu,49987818nx3449,t,18.html">http://www.kostenloses-forum.com/board/free-nked-ass-gallery-free-norvegian-gallery-pics-free-nud-,nxu,49987818nx3449,t,18.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-nasty-amature-photo-gallery-free-nasty-lesbo-fetich-ga-,nxu,49987818nx3449,t,17.html">http://www.kostenloses-forum.com/board/free-nasty-amature-photo-gallery-free-nasty-lesbo-fetich-ga-,nxu,49987818nx3449,t,17.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/fuck-beaver-free-video-gallery-thum-fuck-bondage-gallery-se-,nxu,49987818nx3449,t,16.html">http://www.kostenloses-forum.com/board/fuck-beaver-free-video-gallery-thum-fuck-bondage-gallery-se-,nxu,49987818nx3449,t,16.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-naked-blond-babegallery-free-naked-brunett-gallerys-f-,nxu,49987818nx3449,t,15.html">http://www.kostenloses-forum.com/board/free-naked-blond-babegallery-free-naked-brunett-gallerys-f-,nxu,49987818nx3449,t,15.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/frewe-nude-latina-thumbnail-gallery-frr-black-sex-gallery-,nxu,49987818nx3449,t,14.html">http://www.kostenloses-forum.com/board/frewe-nude-latina-thumbnail-gallery-frr-black-sex-gallery-,nxu,49987818nx3449,t,14.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-mpg-gallery-totally-free-anal-free-mpge-downloads-gall-,nxu,49987818nx3449,t,13.html">http://www.kostenloses-forum.com/board/free-mpg-gallery-totally-free-anal-free-mpge-downloads-gall-,nxu,49987818nx3449,t,13.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/freexxxporn-picture-gallerys-freeyoung-cheerleader-gallery-,nxu,49987818nx3449,t,12.html">http://www.kostenloses-forum.com/board/freexxxporn-picture-gallerys-freeyoung-cheerleader-gallery-,nxu,49987818nx3449,t,12.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/stockings-beatiful-gallery-stockings-free-galleris-stockin-,nxu,49987818nx3449,t,11.html">http://www.kostenloses-forum.com/board/stockings-beatiful-gallery-stockings-free-galleris-stockin-,nxu,49987818nx3449,t,11.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/srilanka-sex-pictures-gallery-srilankan-picture-gallery-gir-,nxu,49987818nx3449,t,10.html">http://www.kostenloses-forum.com/board/srilanka-sex-pictures-gallery-srilankan-picture-gallery-gir-,nxu,49987818nx3449,t,10.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/spreeding-galleries-spring-break-download-videos-galleryes-,nxu,49987818nx3449,t,9.html">http://www.kostenloses-forum.com/board/spreeding-galleries-spring-break-download-videos-galleryes-,nxu,49987818nx3449,t,9.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/blonde-blowjobs-gallers-blonde-picture-gallerys-blondes-fr-,nxu,49987818nx3449,t,8.html">http://www.kostenloses-forum.com/board/blonde-blowjobs-gallers-blonde-picture-gallerys-blondes-fr-,nxu,49987818nx3449,t,8.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/speculum-image-gallerys-free-speculum-pics-free-visitor-gal-,nxu,49987818nx3449,t,7.html">http://www.kostenloses-forum.com/board/speculum-image-gallerys-free-speculum-pics-free-visitor-gal-,nxu,49987818nx3449,t,7.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/spanish-hardcore-galleries-thumnails-spank-free-porn-galler-,nxu,49987818nx3449,t,6.html">http://www.kostenloses-forum.com/board/spanish-hardcore-galleries-thumnails-spank-free-porn-galler-,nxu,49987818nx3449,t,6.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/asian-girls-gallary-asian-girls-photo-gallary-asian-girls-,nxu,49987818nx3449,t,5.html">http://www.kostenloses-forum.com/board/asian-girls-gallary-asian-girls-photo-gallary-asian-girls-,nxu,49987818nx3449,t,5.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/free-nude-galeries-black-girls-shaved-pussies-free-nude-gal-,nxu,49987818nx3449,t,4.html">http://www.kostenloses-forum.com/board/free-nude-galeries-black-girls-shaved-pussies-free-nude-gal-,nxu,49987818nx3449,t,4.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/thumnail-galeries-thumnail-galeries-hot-naked-teen-lesbians-,nxu,49987818nx3449,t,3.html">http://www.kostenloses-forum.com/board/thumnail-galeries-thumnail-galeries-hot-naked-teen-lesbians-,nxu,49987818nx3449,t,3.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/bollywood-actors-actresses-photoes-bollywood-actors-naked-,nxu,49987818nx3449,t,2.html">http://www.kostenloses-forum.com/board/bollywood-actors-actresses-photoes-bollywood-actors-naked-,nxu,49987818nx3449,t,2.html</a><br>
+<a href="http://www.kostenloses-forum.com/board/willkommen-in-deinem-phpbb-2-,nxu,49987818nx3449,t,1.html">http://www.kostenloses-forum.com/board/willkommen-in-deinem-phpbb-2-,nxu,49987818nx3449,t,1.html</a><br>
+<br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=101">http://cisco21.mybbland.com/viewtopic.php?t=101</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=100">http://cisco21.mybbland.com/viewtopic.php?t=100</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=99">http://cisco21.mybbland.com/viewtopic.php?t=99</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=98">http://cisco21.mybbland.com/viewtopic.php?t=98</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=97">http://cisco21.mybbland.com/viewtopic.php?t=97</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=96">http://cisco21.mybbland.com/viewtopic.php?t=96</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=95">http://cisco21.mybbland.com/viewtopic.php?t=95</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=94">http://cisco21.mybbland.com/viewtopic.php?t=94</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=93">http://cisco21.mybbland.com/viewtopic.php?t=93</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=92">http://cisco21.mybbland.com/viewtopic.php?t=92</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=91">http://cisco21.mybbland.com/viewtopic.php?t=91</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=90">http://cisco21.mybbland.com/viewtopic.php?t=90</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=89">http://cisco21.mybbland.com/viewtopic.php?t=89</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=88">http://cisco21.mybbland.com/viewtopic.php?t=88</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=87">http://cisco21.mybbland.com/viewtopic.php?t=87</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=86">http://cisco21.mybbland.com/viewtopic.php?t=86</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=85">http://cisco21.mybbland.com/viewtopic.php?t=85</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=84">http://cisco21.mybbland.com/viewtopic.php?t=84</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=83">http://cisco21.mybbland.com/viewtopic.php?t=83</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=82">http://cisco21.mybbland.com/viewtopic.php?t=82</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=81">http://cisco21.mybbland.com/viewtopic.php?t=81</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=80">http://cisco21.mybbland.com/viewtopic.php?t=80</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=79">http://cisco21.mybbland.com/viewtopic.php?t=79</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=78">http://cisco21.mybbland.com/viewtopic.php?t=78</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=77">http://cisco21.mybbland.com/viewtopic.php?t=77</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=76">http://cisco21.mybbland.com/viewtopic.php?t=76</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=75">http://cisco21.mybbland.com/viewtopic.php?t=75</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=74">http://cisco21.mybbland.com/viewtopic.php?t=74</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=73">http://cisco21.mybbland.com/viewtopic.php?t=73</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=72">http://cisco21.mybbland.com/viewtopic.php?t=72</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=71">http://cisco21.mybbland.com/viewtopic.php?t=71</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=70">http://cisco21.mybbland.com/viewtopic.php?t=70</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=69">http://cisco21.mybbland.com/viewtopic.php?t=69</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=68">http://cisco21.mybbland.com/viewtopic.php?t=68</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=67">http://cisco21.mybbland.com/viewtopic.php?t=67</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=66">http://cisco21.mybbland.com/viewtopic.php?t=66</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=65">http://cisco21.mybbland.com/viewtopic.php?t=65</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=64">http://cisco21.mybbland.com/viewtopic.php?t=64</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=63">http://cisco21.mybbland.com/viewtopic.php?t=63</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=62">http://cisco21.mybbland.com/viewtopic.php?t=62</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=61">http://cisco21.mybbland.com/viewtopic.php?t=61</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=60">http://cisco21.mybbland.com/viewtopic.php?t=60</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=59">http://cisco21.mybbland.com/viewtopic.php?t=59</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=58">http://cisco21.mybbland.com/viewtopic.php?t=58</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=57">http://cisco21.mybbland.com/viewtopic.php?t=57</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=56">http://cisco21.mybbland.com/viewtopic.php?t=56</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=55">http://cisco21.mybbland.com/viewtopic.php?t=55</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=54">http://cisco21.mybbland.com/viewtopic.php?t=54</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=53">http://cisco21.mybbland.com/viewtopic.php?t=53</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=52">http://cisco21.mybbland.com/viewtopic.php?t=52</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=51">http://cisco21.mybbland.com/viewtopic.php?t=51</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=50">http://cisco21.mybbland.com/viewtopic.php?t=50</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=49">http://cisco21.mybbland.com/viewtopic.php?t=49</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=48">http://cisco21.mybbland.com/viewtopic.php?t=48</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=47">http://cisco21.mybbland.com/viewtopic.php?t=47</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=46">http://cisco21.mybbland.com/viewtopic.php?t=46</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=45">http://cisco21.mybbland.com/viewtopic.php?t=45</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=44">http://cisco21.mybbland.com/viewtopic.php?t=44</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=43">http://cisco21.mybbland.com/viewtopic.php?t=43</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=42">http://cisco21.mybbland.com/viewtopic.php?t=42</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=41">http://cisco21.mybbland.com/viewtopic.php?t=41</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=40">http://cisco21.mybbland.com/viewtopic.php?t=40</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=39">http://cisco21.mybbland.com/viewtopic.php?t=39</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=38">http://cisco21.mybbland.com/viewtopic.php?t=38</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=37">http://cisco21.mybbland.com/viewtopic.php?t=37</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=36">http://cisco21.mybbland.com/viewtopic.php?t=36</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=35">http://cisco21.mybbland.com/viewtopic.php?t=35</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=34">http://cisco21.mybbland.com/viewtopic.php?t=34</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=33">http://cisco21.mybbland.com/viewtopic.php?t=33</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=32">http://cisco21.mybbland.com/viewtopic.php?t=32</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=31">http://cisco21.mybbland.com/viewtopic.php?t=31</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=30">http://cisco21.mybbland.com/viewtopic.php?t=30</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=29">http://cisco21.mybbland.com/viewtopic.php?t=29</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=28">http://cisco21.mybbland.com/viewtopic.php?t=28</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=27">http://cisco21.mybbland.com/viewtopic.php?t=27</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=26">http://cisco21.mybbland.com/viewtopic.php?t=26</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=25">http://cisco21.mybbland.com/viewtopic.php?t=25</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=24">http://cisco21.mybbland.com/viewtopic.php?t=24</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=23">http://cisco21.mybbland.com/viewtopic.php?t=23</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=22">http://cisco21.mybbland.com/viewtopic.php?t=22</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=21">http://cisco21.mybbland.com/viewtopic.php?t=21</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=20">http://cisco21.mybbland.com/viewtopic.php?t=20</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=19">http://cisco21.mybbland.com/viewtopic.php?t=19</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=18">http://cisco21.mybbland.com/viewtopic.php?t=18</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=17">http://cisco21.mybbland.com/viewtopic.php?t=17</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=16">http://cisco21.mybbland.com/viewtopic.php?t=16</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=15">http://cisco21.mybbland.com/viewtopic.php?t=15</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=14">http://cisco21.mybbland.com/viewtopic.php?t=14</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=13">http://cisco21.mybbland.com/viewtopic.php?t=13</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=12">http://cisco21.mybbland.com/viewtopic.php?t=12</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=11">http://cisco21.mybbland.com/viewtopic.php?t=11</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=10">http://cisco21.mybbland.com/viewtopic.php?t=10</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=9">http://cisco21.mybbland.com/viewtopic.php?t=9</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=8">http://cisco21.mybbland.com/viewtopic.php?t=8</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=7">http://cisco21.mybbland.com/viewtopic.php?t=7</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=6">http://cisco21.mybbland.com/viewtopic.php?t=6</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=5">http://cisco21.mybbland.com/viewtopic.php?t=5</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=4">http://cisco21.mybbland.com/viewtopic.php?t=4</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=3">http://cisco21.mybbland.com/viewtopic.php?t=3</a><br>
+<a href="http://cisco21.mybbland.com/viewtopic.php?t=1">http://cisco21.mybbland.com/viewtopic.php?t=1</a>
+]</span>
+                                                    </td>
+                <td class="activity-new-val" width="40%">
+                                                </td>
+                </tr>
+                            </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+                             </div>
+    </div>
+</div></div></div><div id="viewissuesidebar" class="aui-item issue-side-column"><div id="peoplemodule" class="module toggle-wrap"><div id="peoplemodule_heading" class="mod-header"><ul class="ops"></ul><h2 class="toggle-title">People</h2></div><div class="mod-content"><ul class="item-details" id="peopledetails">
+    <li class="people-details">
+                <dl>
+            <dt>Assignee:</dt>
+            <dd>
+                <span id="assignee-val" class="view-issue-field">
+
+    <span class="aui-avatar aui-avatar-small"><span class="aui-avatar-inner"><img src="index_files/useravatar-1.png"></span></span>
+    Unassigned
+</span>
+                            </dd>
+        </dl>
+                        <dl>
+            <dt>Reporter:</dt>
+            <dd>
+                <span id="reporter-val" class="view-issue-field">
+
+            <span class="user-hover" id="issue_summary_reporter_rimovm" rel="rimovm">
+            <span class="aui-avatar aui-avatar-small"><span class="aui-avatar-inner"><img src="index_files/useravatar-2.png"></span></span>
+            Michael Rimov
+        </span>
+    </span>
+            </dd>
+        </dl>
+                    </li>
+</ul>
+    <ul class="item-details">
+        <li>
+                            <dl>
+                    <dt>Votes:</dt>
+                    <dd>
+                                                                            <span id="vote-data" class="aui-badge vote-state-off">0</span>
+                        
+                                                                                                        <span id="vote-label" title="You have to be logged in to vote for an issue.">Vote for this issue</span>
+                                            </dd>
+                </dl>
+                                        <dl>
+                    <dt>Watchers:</dt>
+                    <dd>
+                                                                        
+                                                                            <span id="watcher-data" class="aui-badge watch-state-off">0</span>
+                        
+                                                                                <span id="watch-label" title="You have to be logged in to watch an issue.">Start watching this issue</span>
+                                            </dd>
+                </dl>
+                    </li>
+    </ul>
+</div></div><div id="datesmodule" class="module toggle-wrap"><div id="datesmodule_heading" class="mod-header"><ul class="ops"></ul><h2 class="toggle-title">Dates</h2></div><div class="mod-content"><ul class="item-details">
+    <li>
+            <dl class="dates">
+            <dt>Created:</dt>
+            <dd class="date user-tz" title="16/Mar/06 7:58 PM">
+
+                <span data-name="Created" id="create-date" data-fieldtype="datetime">
+                                                                        <time class="livestamp" datetime="2006-03-16T19:58-0600">16/Mar/06 7:58 PM</time>                                                             </span>
+            </dd>
+        </dl>
+            <dl class="dates">
+            <dt>Updated:</dt>
+            <dd class="date user-tz" title="03/Feb/07 1:30 PM">
+
+                <span data-name="Updated" id="updated-date" data-fieldtype="datetime">
+                                                                        <time class="livestamp" datetime="2007-02-03T13:30-0600">03/Feb/07 1:30 PM</time>                                                             </span>
+            </dd>
+        </dl>
+        </li>
+</ul>
+</div></div></div></div>
+                    </div>
+                </div>
+                        </div>
+
+    <fieldset class="hidden parameters">
+        <input title="autocompleteEnabled" value="true" type="hidden">
+    </fieldset>
+    
+    </section>
+    <footer id="footer" role="contentinfo">
+        
+        
+
+
+
+<div class="footer-body">
+    <ul>
+        <li>
+                        <a href="http://www.atlassian.com/software/jira">Atlassian JIRA</a>
+
+                                                    
+                        
+            <span id="footer-build-information">(v6.1.6#6162-<span title="7af547ce7c84dbb7c1e345a65437ed7b85efffa2" data-commit-id="7af547ce7c84dbb7c1e345a65437ed7b85efffa2}">sha1:7af547c</span>)</span>
+        </li>
+        <li>
+            <a id="about-link" href="https://jira.codehaus.org/secure/AboutPage.jspa">About JIRA</a>
+        </li>
+        <li>
+                                    <a id="footer-report-problem-link" href="https://jira.codehaus.org/secure/CreateIssue%21default.jspa">Report a problem</a>
+        </li>
+    </ul>
+            <ul>
+            <li class="licensemessage">
+                                    Powered by a free Atlassian <a href="http://www.atlassian.com/software/jira">JIRA</a> open source license for Codehaus. Try JIRA - <a href="http://www.atlassian.com/software/jira">bug tracking software</a> for <i>your</i> team.
+
+                            </li>
+        </ul>
+    </div>
+
+<form id="jira_request_timing_info" class="dont-default-focus">
+	<fieldset class="parameters hidden">
+
+
+
+
+		<input title="jira.session.expiry.in.mins" value="299" type="hidden">
+
+	</fieldset>
+</form>
+<!--
+	                 
+	          
+	               
+	                 
+	        CONCURRENT REQUESTS : 4
+
+
+
+-->
+
+
+
+
+
+
+
+
+
+
+<fieldset class="hidden parameters">
+    <input title="loggedInUser" value="" type="hidden">
+    <input title="ajaxTimeout" value="The call to the JIRA server did not complete within the timeout period.  We are unsure of the result of this operation." type="hidden">
+    <input title="JiraVersion" value="6.1.6" type="hidden">
+    <input title="ajaxUnauthorised" value="You are not authorised to perform this operation.  Please log in." type="hidden">
+    <input title="baseURL" value="https://jira.codehaus.org:443" type="hidden">
+    <input title="ajaxCommsError" value="The JIRA server could not be contacted.  This may be a temporary glitch or the server may be down." type="hidden">
+    <input title="ajaxServerError" value="The JIRA server was contacted but has returned an error response. We are unsure of the result of this operation." type="hidden">
+    <input title="ajaxErrorCloseDialog" value="Close this dialog and press refresh in your browser" type="hidden">
+    <input title="ajaxErrorDialogHeading" value="Communications Breakdown" type="hidden">
+
+    <input title="dirtyMessage" value="You have entered new data on this page. If you navigate away from this page without first saving your data, the changes will be lost." type="hidden">
+    <input title="dirtyDialogMessage" value="You have entered new data in this dialog. If you navigate away from this dialog without first saving your data, the changes will be lost. Click cancel to return to the dialog." type="hidden">
+    <input title="keyType" value="Type" type="hidden">
+    <input title="keyThen" value="then" type="hidden">
+    <input title="dblClickToExpand" value="Double click to expand" type="hidden">
+    <input title="actions" value="Actions" type="hidden">
+    <input title="removeItem" value="Remove" type="hidden">
+    <input title="workflow" value="Workflow" type="hidden">
+    <input title="labelNew" value="New Label" type="hidden">
+    <input title="issueActionsHint" value="Begin typing for available operations or press down to see all" type="hidden">
+    <input title="closelink" value="Close" type="hidden">
+    <input title="dotOperations" value="Operations" type="hidden">
+    <input title="dotLoading" value="Loading..." type="hidden">
+    <input title="frotherSuggestions" value="Suggestions" type="hidden">
+    <input title="frotherNomatches" value="No Matches" type="hidden">
+    <input title="multiselectVersionsError" value="{0} is not a valid version." type="hidden">
+    <input title="multiselectComponentsError" value="{0} is not a valid component." type="hidden">
+    <input title="multiselectGenericError" value="The value {0} is invalid." type="hidden">
+</fieldset>
+
+    </footer>
+</div>
+
+
+<div id="fancybox-tmp"></div><div id="fancybox-loading"><div></div></div><div id="fancybox-overlay"></div><div id="fancybox-wrap"><div id="fancybox-outer"><div class="fancybox-bg" id="fancybox-bg-n"></div><div class="fancybox-bg" id="fancybox-bg-ne"></div><div class="fancybox-bg" id="fancybox-bg-e"></div><div class="fancybox-bg" id="fancybox-bg-se"></div><div class="fancybox-bg" id="fancybox-bg-s"></div><div class="fancybox-bg" id="fancybox-bg-sw"></div><div class="fancybox-bg" id="fancybox-bg-w"></div><div class="fancybox-bg" id="fancybox-bg-nw"></div><div id="fancybox-content"></div><a id="fancybox-close"></a><div id="fancybox-title"></div><a href="javascript:void(0);" id="fancybox-left"><span class="fancy-ico" id="fancybox-left-ico"></span></a><a href="javascript:void(0);" id="fancybox-right"><span class="fancy-ico" id="fancybox-right-ico"></span></a></div></div><div class="navigator-sidebar collapsed ui-popout ui-popout-detached ui-popout-collapsed" id="navigator-sidebar"><a class="toggle-filter-panel" href="#" title="Dock the filters panel ([)"></a></div><div style="display: none;" class="jira-dialog box-shadow" id="edit-issue-dialog"><div class="jira-dialog-content"></div></div><div style="display: none;" class="jira-dialog box-shadow" id="create-subtask-dialog"><div class="jira-dialog-content"></div></div></body></html>

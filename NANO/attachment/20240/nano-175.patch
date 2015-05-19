@@ -1,0 +1,133 @@
+Index: src/java/org/nanocontainer/script/groovy/GroovyContainerBuilder.java
+===================================================================
+--- src/java/org/nanocontainer/script/groovy/GroovyContainerBuilder.java	(revision 2952)
++++ src/java/org/nanocontainer/script/groovy/GroovyContainerBuilder.java	(working copy)
+@@ -28,6 +28,7 @@
+ import org.nanocontainer.script.ScriptedContainerBuilder;
+ import org.picocontainer.PicoContainer;
+ import org.picocontainer.alternatives.EmptyPicoContainer;
++import org.nanocontainer.reflection.DefaultNanoPicoContainer;
+ 
+ /**
+  * {@inheritDoc}
+@@ -59,7 +60,7 @@
+ 
+         Binding binding = new Binding();
+         if ( parentContainer == null ){
+-            parentContainer = new EmptyPicoContainer();
++            parentContainer = new DefaultNanoPicoContainer(getClassLoader(), new EmptyPicoContainer());
+         }
+         binding.setVariable("parent", parentContainer);
+         binding.setVariable("builder", createGroovyNodeBuilder());
+Index: src/java/org/nanocontainer/script/ScriptedContainerBuilderFactory.java
+===================================================================
+--- src/java/org/nanocontainer/script/ScriptedContainerBuilderFactory.java	(revision 2952)
++++ src/java/org/nanocontainer/script/ScriptedContainerBuilderFactory.java	(working copy)
+@@ -167,10 +167,20 @@
+ 
+             if(classLoader == null) {
+                 // on some weird JVMs (like jeode) Thread.currentThread().getContextClassLoader() returns null !?!?
++                //Found out on JDK 1.5 javadocs that Thread.currentThread().getContextClassLoader() MAY return null
++                //while Class.getClassLoader() should NEVER return null.  -MR
++                //
++                //
+                 classLoader = getClass().getClassLoader();
+             }
+             factory.registerComponentInstance(classLoader);
+-            defaultNanoContainer = new DefaultNanoContainer(factory);
++
++            //
++            //If we don't specify the classloader here, some of the things that make
++            //up a nanocontainer may bomb. And we're only talking a reload
++            //within a webapp!  -MR
++            //
++            defaultNanoContainer = new DefaultNanoContainer(classLoader,factory);
+         }
+         ComponentAdapter componentAdapter = defaultNanoContainer.registerComponentImplementation(builderClass);
+         containerBuilder = (ScriptedContainerBuilder) componentAdapter.getComponentInstance(defaultNanoContainer.getPico());
+Index: src/test/org/nanocontainer/script/groovy/GroovyNodeBuilderTestCase.java
+===================================================================
+--- src/test/org/nanocontainer/script/groovy/GroovyNodeBuilderTestCase.java	(revision 2952)
++++ src/test/org/nanocontainer/script/groovy/GroovyNodeBuilderTestCase.java	(working copy)
+@@ -24,6 +24,9 @@
+ import org.picocontainer.defaults.SetterInjectionComponentAdapter;
+ import org.picocontainer.defaults.SetterInjectionComponentAdapterFactory;
+ import org.picocontainer.defaults.UnsatisfiableDependenciesException;
++import java.io.File;
++import java.net.URLClassLoader;
++import java.net.URL;
+ 
+ /**
+  *
+@@ -522,6 +525,9 @@
+                 .getName());
+     }
+ 
++
++
++
+     public void testWithDynamicClassPathWithPermissions() {
+         DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
+         Reader script = new StringReader(
+@@ -544,6 +550,7 @@
+         // testing the syntax here.
+     }
+ 
++
+     public void testGrantPermissionInWrongPlace() {
+         DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
+         try {
+@@ -565,7 +572,44 @@
+ 
+     }
+ 
++    /**
++     * Santity check to make sure testcomp doesn't exist in the testing classpath
++     * otherwise all the tests that depend on the custom classpaths are suspect.
++     */
++    public void testTestCompIsNotAvailableViaSystemClassPath() {
++        try {
++            Class testComp = getClass().getClassLoader().loadClass("TestComp");
++            fail("Invalid configuration TestComp exists in system classpath. ");
++        } catch (ClassNotFoundException ex) {
++            //ok.
++        }
+ 
++    }
++
++    public void testWithParentClassPathPropagatesWithNoParentContainer()throws IOException {
++        File testCompJar = new File(System.getProperty("testcomp.jar"));
++        URLClassLoader classLoader = new URLClassLoader(new URL[] {testCompJar.toURL()}, this.getClass().getClassLoader());
++        Class testComp = null;
++
++        try {
++            testComp = classLoader.loadClass("TestComp");
++        } catch (ClassNotFoundException ex) {
++            fail("Unable to load test component from the jar using a url classloader");
++        }
++        Reader script = new StringReader(
++                          ""
++                        + "        pico = builder.container(parent:parent) {\n"
++                        + "            component(class:\"TestComp\")\n"
++                        + "        }"
++                        + "");
++
++        PicoContainer pico = buildContainer(new GroovyContainerBuilder(script, classLoader), null, null);
++        assertNotNull(pico);
++        Object testCompInstance = pico.getComponentInstance(testComp.getName());
++        assertEquals(testCompInstance.getClass().getName(), testComp.getName());
++
++    }
++
+     public void testValidationTurnedOnThrowsExceptionForUnknownAttributes() {
+         DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
+         Reader script = new StringReader(
+@@ -654,4 +698,8 @@
+ 
+ 
+ 
++
++
++
++
+ }

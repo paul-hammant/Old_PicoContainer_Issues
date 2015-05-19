@@ -1,0 +1,18 @@
+Index: src/java/org/nanocontainer/webwork/PicoActionFactory.java
+===================================================================
+RCS file: /cvsroot/picocontainer/java/webwork/src/java/org/nanocontainer/webwork/PicoActionFactory.java,v
+retrieving revision 1.6
+diff -r1.6 PicoActionFactory.java
+70a71,73
+> 	/**
+> 	 * obtain parent container. first try in servlet, than in action context
+> 	 */
+73c76,81
+<         ObjectReference ref = new RequestScopeObjectReference(request, REQUEST_CONTAINER);
+---
+>         ObjectReference ref;
+> 		if(request != null) {
+> 			ref = new RequestScopeObjectReference(request, REQUEST_CONTAINER);
+> 		} else {
+> 			ref = new ActionContextScopeObjectReference(REQUEST_CONTAINER);
+> 		}

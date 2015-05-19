@@ -1,0 +1,291 @@
+Index: project.xml
+===================================================================
+RCS file: /home/projects/picocontainer/scm/java/nanocontainer/project.xml,v
+retrieving revision 1.56
+diff -u -r1.56 project.xml
+--- project.xml	25 Jun 2004 13:40:15 -0000	1.56
++++ project.xml	10 Jul 2004 18:35:22 -0000
+@@ -94,8 +94,7 @@
+         </dependency>
+ 
+         <dependency>
+-            <groupId>spice</groupId>
+-            <artifactId>spice-cli</artifactId>
++        	<id>commons-cli</id>
+             <version>1.0</version>
+         </dependency>
+ 
+Index: src/java/org/nanocontainer/Standalone.java
+===================================================================
+RCS file: /home/projects/picocontainer/scm/java/nanocontainer/src/java/org/nanocontainer/Standalone.java,v
+retrieving revision 1.5
+diff -u -r1.5 Standalone.java
+--- src/java/org/nanocontainer/Standalone.java	10 Jul 2004 12:33:35 -0000	1.5
++++ src/java/org/nanocontainer/Standalone.java	10 Jul 2004 18:35:22 -0000
+@@ -9,80 +9,62 @@
+ 
+ package org.nanocontainer;
+ 
+-import org.picocontainer.defaults.ObjectReference;
+-import org.picocontainer.defaults.SimpleReference;
+-import org.realityforge.cli.CLArgsParser;
+-import org.realityforge.cli.CLOption;
+-import org.realityforge.cli.CLOptionDescriptor;
+-import org.realityforge.cli.CLUtil;
+-
+ import java.io.File;
+ import java.io.IOException;
+-import java.util.Iterator;
+-import java.util.List;
++import org.apache.commons.cli.CommandLine;
++import org.apache.commons.cli.CommandLineParser;
++import org.apache.commons.cli.Options;
++import org.apache.commons.cli.ParseException;
++import org.apache.commons.cli.PosixParser;
++import org.picocontainer.defaults.ObjectReference;
++import org.picocontainer.defaults.SimpleReference;
+ 
+ public class Standalone {
+ 
+-    private static final int HELP_OPT = 'h';
+-    private static final int VERSION_OPT = 'v';
+-    private static final int COMPOSITION_OPT = 'c';
+-    private static final int QUIET_OPT = 'q';
+-
+-    private static final CLOptionDescriptor[] OPTIONS = new CLOptionDescriptor[]
+-    {
+-        new CLOptionDescriptor("help",
+-                CLOptionDescriptor.ARGUMENT_DISALLOWED,
+-                HELP_OPT,
+-                "print this message and exit"),
+-        new CLOptionDescriptor("version",
+-                CLOptionDescriptor.ARGUMENT_DISALLOWED,
+-                VERSION_OPT,
+-                "print the version information and exit"),
+-        new CLOptionDescriptor("composition",
+-                CLOptionDescriptor.ARGUMENT_REQUIRED,
+-                COMPOSITION_OPT,
+-                "specify the composition file"),
+-        new CLOptionDescriptor("quiet",
+-                CLOptionDescriptor.ARGUMENT_DISALLOWED,
+-                QUIET_OPT,
+-                "forces NanoContainer to be quiet")
+-    };
++    private static final char HELP_OPT = 'h';
++    private static final char VERSION_OPT = 'v';
++    private static final char COMPOSITION_OPT = 'c';
++    private static final char QUIET_OPT = 'q';
++    private static final Options OPTIONS = createOptions();
++
++    private static final Options createOptions(){
++        Options options = new Options();
++        options.addOption(String.valueOf(HELP_OPT), "help", false,
++                "print this message and exit");
++        options.addOption(String.valueOf(VERSION_OPT), "version", false,
++                "print the version information and exit");
++        options.addOption(String.valueOf(COMPOSITION_OPT), "composition", true,
++                "specify the composition file");
++        options.addOption(String.valueOf(QUIET_OPT), "quiet", false,
++                "forces NanoContainer to be quiet");
++        return options;
++    }
+ 
+     public static void main(String[] args) {
+-        List options = getOptions(args);
+-
+-        String composition = "";
+-        boolean quiet = false;
+-
+-        for (Iterator iterator = options.iterator(); iterator.hasNext();) {
+-            CLOption option = (CLOption) iterator.next();
+-
+-            switch (option.getId()) {
+-                case CLOption.TEXT_ARGUMENT:
+-                    //This occurs when a user supplies an argument that
+-                    //is not an option
+-                    System.out.println("Unknown argument: " + option.getArgument());
+-                    break;
+-
+-                case HELP_OPT:
+-                    printUsage();
+-                    break;
+-
+-                case VERSION_OPT:
+-                    printVersion();
+-                    break;
+-
+-                case COMPOSITION_OPT:
+-                    composition = option.getArgument();
+-                    break;
+-
+-                case QUIET_OPT:
+-                    quiet = true;
+-                    break;
+-
+-            }
++        CommandLine cl = null;
++        try {
++            cl = getCommandLine(args );
++        } catch ( ParseException e ) {
++            System.out.println( "Error in parsing arguments: ");
++            e.printStackTrace();
++            System.exit( -1 );
+         }
+ 
++        if ( cl.hasOption(HELP_OPT) ){
++            printUsage();
++            System.exit(0);
++        }
++        if ( cl.hasOption(VERSION_OPT) ){
++            printVersion();
++            System.exit(0);
++        }
++        
++        boolean quiet = cl.hasOption(QUIET_OPT);
++        String composition = cl.getOptionValue(COMPOSITION_OPT);
++        if ( composition == null ) {
++            printUsage();
++            System.exit(0);
++        }
+         try {
+             buildAndStartContainer(composition, quiet);
+         } catch (RuntimeException e) {
+@@ -145,49 +127,28 @@
+ 
+     }
+ 
+-    private static List getOptions(String[] args) {
++    static CommandLine getCommandLine(String[] args) throws ParseException {
+         if (args.length == 0) {
+-            System.err.println("No arguments specified");
+-            printUsage();
+-            System.exit(10);
++            throw new ParseException("No arguments specified");
+         }
++        CommandLineParser parser = new PosixParser();
++        return parser.parse( OPTIONS, args );
++    }
+ 
+-        CLArgsParser parser = new CLArgsParser(args, OPTIONS);
+-
+-        //Make sure that there was no errors parsing
+-        //arguments
+-        if (null != parser.getErrorString()) {
+-            System.err.println("Error: " + parser.getErrorString());
+-            System.exit(20);
+-        }
++    private static void printUsage() {
++        final String lineSeparator = System.getProperty("line.separator");
+ 
+-        // Get a list of parsed options
+-        final List options = parser.getArguments();
+-        return options;
++        final StringBuffer usage = new StringBuffer();
++        usage.append(lineSeparator);
++        usage.append("NanoContainer: Standalone -c <composition> [-q|-h|-v]");
++        usage.append(OPTIONS.getOptions());
++        System.out.println(usage.toString());
+     }
+ 
+     private static void printVersion() {
+         System.out.println("1.0");
+-        System.exit(0);
+     }
+ 
+-    private static void printUsage() {
+-        final String lineSeparator = System.getProperty("line.separator");
+-
+-        final StringBuffer msg = new StringBuffer();
+-
+-        msg.append(lineSeparator);
+-
+-        /*
+-         * Notice that the next line uses CLUtil.describeOptions to generate the
+-         * list of descriptions for each option
+-         */
+-        msg.append(CLUtil.describeOptions(OPTIONS).toString());
+-
+-        System.out.println(msg.toString());
+-
+-        System.exit(0);
+-    }
+ }
+ 
+ 
+Index: src/test/org/nanocontainer/StandaloneTestCase.java
+===================================================================
+RCS file: src/test/org/nanocontainer/StandaloneTestCase.java
+diff -N src/test/org/nanocontainer/StandaloneTestCase.java
+--- /dev/null	1 Jan 1970 00:00:00 -0000
++++ src/test/org/nanocontainer/StandaloneTestCase.java	1 Jan 1970 00:00:00 -0000
+@@ -0,0 +1,70 @@
++/*****************************************************************************
++ * Copyright (C) NanoContainer Organization. All rights reserved.            *
++ * ------------------------------------------------------------------------- *
++ * The software in this package is published under the terms of the BSD      *
++ * style license a copy of which has been included with this distribution in *
++ * the LICENSE.txt file.                                                     *
++ *                                                                           *
++ *****************************************************************************/
++
++package org.nanocontainer;
++
++import junit.framework.TestCase;
++import org.apache.commons.cli.CommandLine;
++import org.apache.commons.cli.ParseException;
++
++
++/**
++ * @author Mauro Talevi
++ */
++public class StandaloneTestCase extends TestCase {
++
++    public void testCommandLineWithNoArgs() throws Exception {
++        try {
++            Standalone.getCommandLine(new String[]{});
++        } catch ( ParseException e ){
++            assertEquals("Exception message", "No arguments specified", e.getMessage() );
++        }
++    }
++    
++    public void testCommandLineWithHelp() throws Exception {
++        CommandLine cl = Standalone.getCommandLine(new String[]{"-h"});
++        assertTrue(cl.hasOption('h'));
++        assertFalse(cl.hasOption('v'));
++        assertNull(cl.getOptionValue('c'));
++        assertFalse(cl.hasOption('q'));
++    }
++
++    public void testCommandLineWithVersion() throws Exception {
++        CommandLine cl = Standalone.getCommandLine(new String[]{"-v"});
++        assertFalse(cl.hasOption('h'));
++        assertTrue(cl.hasOption('v'));
++        assertNull(cl.getOptionValue('c'));
++        assertFalse(cl.hasOption('q'));
++    }
++
++    public void testCommandLineWithQuiet() throws Exception {
++        CommandLine cl = Standalone.getCommandLine(new String[]{"-q"});
++        assertFalse(cl.hasOption('h'));
++        assertFalse(cl.hasOption('v'));
++        assertNull(cl.getOptionValue('c'));
++        assertTrue(cl.hasOption('q'));
++    }
++    
++    public void testCommandLineWithCompostion() throws Exception {
++        CommandLine cl = Standalone.getCommandLine(new String[]{"-cpath"});
++        assertFalse(cl.hasOption('h'));
++        assertFalse(cl.hasOption('v'));
++        assertEquals("path",cl.getOptionValue('c'));
++        assertFalse(cl.hasOption('q'));
++    }
++
++    public void testCommandLineWithCompostionAndQuiet() throws Exception {
++        CommandLine cl = Standalone.getCommandLine(new String[]{"-cpath","-q"});
++        assertFalse(cl.hasOption('h'));
++        assertFalse(cl.hasOption('v'));
++        assertEquals("path",cl.getOptionValue('c'));
++        assertTrue(cl.hasOption('q'));
++    }
++    
++}

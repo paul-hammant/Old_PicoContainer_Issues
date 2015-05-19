@@ -1,0 +1,375 @@
+Index: deployer/project.xml
+===================================================================
+RCS file: /scm/picocontainer/java/deployer/project.xml,v
+retrieving revision 1.17
+diff -u -r1.17 project.xml
+--- deployer/project.xml	6 Jun 2004 03:09:16 -0000	1.17
++++ deployer/project.xml	6 Jun 2004 23:26:51 -0000
+@@ -47,11 +47,17 @@
+ 
+         <dependency>
+             <id>groovy</id>
+-            <version>1.0-beta-4</version>
++            <version>1.0-beta-5</version>
+         </dependency>
+ 
+         <dependency>
+             <id>asm</id>
++            <version>1.4.1</version>
++        </dependency>
++
++        <dependency>
++            <groupId>asm</groupId>
++            <artifactId>asm-util</artifactId>
+             <version>1.4.1</version>
+         </dependency>
+ 
+Index: groovy/project.xml
+===================================================================
+RCS file: /scm/picocontainer/java/groovy/project.xml,v
+retrieving revision 1.20
+diff -u -r1.20 project.xml
+--- groovy/project.xml	6 Jun 2004 03:09:16 -0000	1.20
++++ groovy/project.xml	6 Jun 2004 23:26:51 -0000
+@@ -25,13 +25,30 @@
+         </dependency>
+ 
+         <dependency>
++            <groupId>nanocontainer</groupId>
++            <artifactId>nanocontainer-proxytoys</artifactId>
++            <version>${pom.currentVersion}</version>
++        </dependency>
++
++        <dependency>
+             <id>groovy</id>
+-            <version>1.0-beta-4</version>
++            <version>1.0-beta-5</version>
+         </dependency>
+ 
+         <dependency>
+             <id>asm</id>
+             <version>1.4.1</version>
++        </dependency>
++
++        <dependency>
++            <groupId>asm</groupId>
++            <artifactId>asm-util</artifactId>
++            <version>1.4.1</version>
++        </dependency>
++
++        <dependency>
++            <id>proxytoys</id>
++            <version>0.1</version>
+         </dependency>
+ 
+     </dependencies>
+Index: groovy/src/java/org/nanocontainer/groovy/PicoBuilder.java
+===================================================================
+RCS file: /scm/picocontainer/java/groovy/src/java/org/nanocontainer/groovy/PicoBuilder.java,v
+retrieving revision 1.8
+diff -u -r1.8 PicoBuilder.java
+--- groovy/src/java/org/nanocontainer/groovy/PicoBuilder.java	30 Mar 2004 14:13:29 -0000	1.8
++++ groovy/src/java/org/nanocontainer/groovy/PicoBuilder.java	6 Jun 2004 23:26:51 -0000
+@@ -42,9 +42,6 @@
+         }
+     }
+ 
+-    protected void nodeCompleted(Object parent, Object node) {
+-    }
+-
+     protected Object createNode(Object name) {
+         return createNode(name, Collections.EMPTY_MAP);
+     }
+@@ -100,6 +97,10 @@
+             }
+         }
+         throw new PicoBuilderException("uknown method: " + name);
++    }
++
++    protected Object createNode(Object name, Map attributes, Object value) {
++        return createNode(name, attributes);
+     }
+ 
+     protected MutablePicoContainer createContainer(Map attributes) {
+Index: groovy/src/test/org/nanocontainer/groovy/ExampleTest.groovy
+===================================================================
+RCS file: /scm/picocontainer/java/groovy/src/test/org/nanocontainer/groovy/ExampleTest.groovy,v
+retrieving revision 1.4
+diff -u -r1.4 ExampleTest.groovy
+--- groovy/src/test/org/nanocontainer/groovy/ExampleTest.groovy	30 Mar 2004 14:13:29 -0000	1.4
++++ groovy/src/test/org/nanocontainer/groovy/ExampleTest.groovy	6 Jun 2004 23:26:51 -0000
+@@ -1,7 +1,8 @@
+ package org.nanocontainer.groovy
+ 
+-import org.picocontainer.extras.ImplementationHidingComponentAdapterFactory
+-import org.picocontainer.defaults.LifecycleAdapter
++import org.picocontainer.defaults.UnsatisfiableDependenciesException
++
++import org.nanocontainer.proxytoys.HotSwappingComponentAdapterFactory
+ 
+ import org.nanocontainer.testmodel.DefaultWebServerConfig
+ import org.nanocontainer.testmodel.WebServer
+@@ -61,16 +62,16 @@
+ 
+             fail("Should not have been able to instansiate component tree due to visibility/parent reasons.")
+         } 
+-        catch (NoSatisfiableConstructorsException e) {
++        catch (UnsatisfiableDependenciesException e) {
+         }
+     }
+ 
+     void testInstantiateWithBespokeComponentAdaptor() {
+ 
+         builder = new PicoBuilder()
+-        pico = builder.container(adapterFactory:new ImplementationHidingComponentAdapterFactory()) {
+-            component(key:WebServerConfig, componentClass:DefaultWebServerConfig)
+-            component(key:WebServer, componentClass:WebServerImpl)
++        pico = builder.container(adapterFactory:new HotSwappingComponentAdapterFactory()) {
++            component(key:WebServerConfig, class:DefaultWebServerConfig)
++            component(key:WebServer, class:WebServerImpl)
+         }
+ 
+         startAndStop(pico)
+@@ -78,17 +79,12 @@
+         Object ws = pico.getComponentInstance(WebServer)
+ 
+         assert ws instanceof WebServer
+-        //assertFalse(ws instanceof WebServerImpl)
+-        
++        assertFalse(ws instanceof WebServerImpl)
++
+         ws = pico.getComponentInstances().get(1)
+ 
+         assert ws instanceof WebServer
+-
+-		/*
+-        //TODO - should be assertFalse( ), we're implementation hiding here !
+-        assertTrue(ws instanceof WebServerImpl)
+-        */
+-        //assertFalse(ws instanceof WebServerImpl)
++        assertFalse(ws instanceof WebServerImpl)
+     }
+ 
+     void testInstantiateWithInlineConfiguration() {
+@@ -96,22 +92,20 @@
+         builder = new PicoBuilder()
+         pico = builder.container {
+             bean(beanClass:WebServerConfigBean, host:'foobar.com', port:4321)
+-            component(key:WebServer, componentClass:WebServerImpl)
++            component(key:WebServer, class:WebServerImpl)
+         }
+ 
+         startAndStop(pico)
+ 
+-        
+-        assertEquals("WebServerConfigBean and WebServerImpl expected", 2, pico.getComponentInstances().size())
++        assertTrue("WebServerConfigBean and WebServerImpl expected", pico.getComponentInstances().size() == 2)
+ 
+-        wsc = pico.getComponentInstance(WebServerConfig)
++        wsc = pico.getComponentInstanceOfType(WebServerConfig)
+         assertEquals("foobar.com", wsc.getHost())
+-        assertEquals(4321, wsc.getPort())
++        assertTrue(wsc.getPort() == 4321)
+     }
+     
+     protected void startAndStop(pico) {
+-        adapter = new DefaultLifecyclePicoAdapter(pico)
+-        adapter.start()
+-        adapter.dispose()
++        pico.start()
++        pico.dispose()
+     }
+ }
+Index: nanocontainer/project.xml
+===================================================================
+RCS file: /scm/picocontainer/java/nanocontainer/project.xml,v
+retrieving revision 1.53
+diff -u -r1.53 project.xml
+--- nanocontainer/project.xml	6 Jun 2004 03:09:16 -0000	1.53
++++ nanocontainer/project.xml	6 Jun 2004 23:26:52 -0000
+@@ -57,11 +57,17 @@
+ 
+         <dependency>
+             <id>groovy</id>
+-            <version>1.0-beta-4</version>
++            <version>1.0-beta-5</version>
+         </dependency>
+ 
+         <dependency>
+             <id>asm</id>
++            <version>1.4.1</version>
++        </dependency>
++
++        <dependency>
++            <groupId>asm</groupId>
++            <artifactId>asm-util</artifactId>
+             <version>1.4.1</version>
+         </dependency>
+ 
+Index: nanocontainer/src/java/org/nanocontainer/script/groovy/GroovyContainerBuilder.java
+===================================================================
+RCS file: /scm/picocontainer/java/nanocontainer/src/java/org/nanocontainer/script/groovy/GroovyContainerBuilder.java,v
+retrieving revision 1.14
+diff -u -r1.14 GroovyContainerBuilder.java
+--- nanocontainer/src/java/org/nanocontainer/script/groovy/GroovyContainerBuilder.java	24 May 2004 21:28:21 -0000	1.14
++++ nanocontainer/src/java/org/nanocontainer/script/groovy/GroovyContainerBuilder.java	6 Jun 2004 23:26:52 -0000
+@@ -16,8 +16,8 @@
+ import groovy.lang.Binding;
+ import groovy.lang.GroovyClassLoader;
+ import groovy.lang.Script;
++import org.codehaus.groovy.control.CompilationFailedException;
+ import org.codehaus.groovy.runtime.InvokerHelper;
+-import org.codehaus.groovy.syntax.SyntaxException;
+ import org.nanocontainer.integrationkit.PicoCompositionException;
+ import org.nanocontainer.script.ScriptedContainerBuilder;
+ import org.picocontainer.PicoContainer;
+@@ -71,7 +71,7 @@
+                             };
+             Class scriptClass = loader.parseClass(scriptIs, "nanocontainer.groovy");
+             groovyScript = InvokerHelper.createScript(scriptClass, null);
+-        } catch (SyntaxException e) {
++        } catch (CompilationFailedException e) {
+             throw new PicoCompositionException(e);
+         } catch (IOException e) {
+             throw new PicoCompositionException(e);
+Index: nanoweb/project.xml
+===================================================================
+RCS file: /scm/picocontainer/java/nanoweb/project.xml,v
+retrieving revision 1.9
+diff -u -r1.9 project.xml
+--- nanoweb/project.xml	6 Jun 2004 03:09:16 -0000	1.9
++++ nanoweb/project.xml	6 Jun 2004 23:26:52 -0000
+@@ -32,11 +32,17 @@
+ 
+         <dependency>
+             <id>groovy</id>
+-            <version>1.0-beta-4</version>
++            <version>1.0-beta-5</version>
+         </dependency>
+ 
+         <dependency>
+             <id>asm</id>
++            <version>1.4.1</version>
++        </dependency>
++
++        <dependency>
++            <groupId>asm</groupId>
++            <artifactId>asm-util</artifactId>
+             <version>1.4.1</version>
+         </dependency>
+ 
+Index: nanoweb/src/java/org/nanocontainer/nanoweb/CachingScriptClassLoader.java
+===================================================================
+RCS file: /scm/picocontainer/java/nanoweb/src/java/org/nanocontainer/nanoweb/CachingScriptClassLoader.java,v
+retrieving revision 1.6
+diff -u -r1.6 CachingScriptClassLoader.java
+--- nanoweb/src/java/org/nanocontainer/nanoweb/CachingScriptClassLoader.java	30 May 2004 00:20:01 -0000	1.6
++++ nanoweb/src/java/org/nanocontainer/nanoweb/CachingScriptClassLoader.java	6 Jun 2004 23:26:52 -0000
+@@ -1,7 +1,7 @@
+ package org.nanocontainer.nanoweb;
+ 
+ import groovy.lang.GroovyClassLoader;
+-import org.codehaus.groovy.syntax.SyntaxException;
++import org.codehaus.groovy.control.CompilationFailedException;
+ 
+ import java.io.IOException;
+ import java.net.URL;
+@@ -58,7 +58,7 @@
+         try {
+             Class scriptClass = loader.parseClass(urlConnection.getInputStream(), scriptURL.getFile());
+             return scriptClass;
+-        } catch (SyntaxException e) {
++        } catch (CompilationFailedException e) {
+             throw new ScriptException(scriptURL, e);
+         }
+     }
+Index: sample-nanoweb/project.xml
+===================================================================
+RCS file: /scm/picocontainer/java/sample-nanoweb/project.xml,v
+retrieving revision 1.9
+diff -u -r1.9 project.xml
+--- sample-nanoweb/project.xml	6 Jun 2004 03:09:16 -0000	1.9
++++ sample-nanoweb/project.xml	6 Jun 2004 23:26:52 -0000
+@@ -53,7 +53,7 @@
+         -->
+         <dependency>
+             <id>groovy</id>
+-            <version>1.0-beta-4</version>
++            <version>1.0-beta-5</version>
+             <properties>
+                 <war.bundle>true</war.bundle>
+             </properties>
+@@ -61,6 +61,15 @@
+ 
+         <dependency>
+             <id>asm</id>
++            <version>1.4.1</version>
++            <properties>
++                <war.bundle>true</war.bundle>
++            </properties>
++        </dependency>
++
++        <dependency>
++            <groupId>asm</groupId>
++            <artifactId>asm-util</artifactId>
+             <version>1.4.1</version>
+             <properties>
+                 <war.bundle>true</war.bundle>
+Index: sample-webwork/project.xml
+===================================================================
+RCS file: /scm/picocontainer/java/sample-webwork/project.xml,v
+retrieving revision 1.13
+diff -u -r1.13 project.xml
+--- sample-webwork/project.xml	6 Jun 2004 03:09:16 -0000	1.13
++++ sample-webwork/project.xml	6 Jun 2004 23:26:53 -0000
+@@ -53,7 +53,7 @@
+         -->
+         <dependency>
+             <id>groovy</id>
+-            <version>1.0-beta-4</version>
++            <version>1.0-beta-5</version>
+             <properties>
+                 <war.bundle>true</war.bundle>
+             </properties>
+@@ -61,6 +61,15 @@
+ 
+         <dependency>
+             <id>asm</id>
++            <version>1.4.1</version>
++            <properties>
++                <war.bundle>true</war.bundle>
++            </properties>
++        </dependency>
++
++        <dependency>
++            <groupId>asm</groupId>
++            <artifactId>asm-util</artifactId>
+             <version>1.4.1</version>
+             <properties>
+                 <war.bundle>true</war.bundle>
+Index: servlet/project.xml
+===================================================================
+RCS file: /scm/picocontainer/java/servlet/project.xml,v
+retrieving revision 1.32
+diff -u -r1.32 project.xml
+--- servlet/project.xml	6 Jun 2004 03:09:16 -0000	1.32
++++ servlet/project.xml	6 Jun 2004 23:26:53 -0000
+@@ -26,11 +26,17 @@
+ 
+         <dependency>
+             <id>groovy</id>
+-            <version>1.0-beta-4</version>
++            <version>1.0-beta-5</version>
+         </dependency>
+ 
+         <dependency>
+             <id>asm</id>
++            <version>1.4.1</version>
++        </dependency>
++
++        <dependency>
++            <groupId>asm</groupId>
++            <artifactId>asm-util</artifactId>
+             <version>1.4.1</version>
+         </dependency>
+ 

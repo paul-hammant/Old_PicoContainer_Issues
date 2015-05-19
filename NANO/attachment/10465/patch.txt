@@ -1,0 +1,230 @@
+Index: picocontainer/defaults/RegistryStyleContainerTestCase.java
+===================================================================
+RCS file: picocontainer/defaults/RegistryStyleContainerTestCase.java
+diff -N picocontainer/defaults/RegistryStyleContainerTestCase.java
+--- /dev/null	1 Jan 1970 00:00:00 -0000
++++ picocontainer/defaults/RegistryStyleContainerTestCase.java	16 Jul 2003 16:41:08 -0000
+@@ -0,0 +1,222 @@
++/*****************************************************************************
++ * Copyright (Cc) PicoContainer Organization. All rights reserved.            *
++ * ------------------------------------------------------------------------- *
++ * The software in this package is published under the terms of the BSD      *
++ * style license a copy of which has been included with this distribution in *
++ * the LICENSE.txt file.                                                     *
++ *                                                                           *
++ * Idea by Rachel Davies, Original code by Aslak Hellesoy and Paul Hammant   *
++ *****************************************************************************/
++
++package picocontainer.defaults;
++
++import java.util.ArrayList;
++import java.util.List;
++
++import junit.framework.TestCase;
++import picocontainer.RegistrationPicoContainer;
++import picocontainer.testmodel.FredImpl;
++import picocontainer.testmodel.Webster;
++import picocontainer.testmodel.Wilma;
++import picocontainer.testmodel.WilmaImpl;
++
++/**
++ * A test case for the registry style methods, registering components via 
++ * arbitrary keys rather than just interface classes
++ * 
++ * @author James Strachan
++ * @version $Revision: $
++ */
++public class RegistryStyleContainerTestCase extends TestCase {
++
++    public void testRegistrationByName() throws Exception {
++        DefaultPicoContainer pico = createPicoContainer();
++
++        Webster one = new Webster(new ArrayList());
++        Wilma two = new WilmaImpl();
++
++        pico.registerComponent("one", one);
++        pico.registerComponent("two", two);
++
++        pico.instantiateComponents();
++
++        assertEquals("Wrong number of comps in the container", 2, pico.getComponents().length);
++
++        assertEquals("Looking up one Wilma", one, pico.getComponent("one"));
++        assertEquals("Looking up two Wilma", two, pico.getComponent("two"));
++
++        assertTrue("Object one the same", one == pico.getComponent("one"));
++        assertTrue("Object two the same", two == pico.getComponent("two"));
++
++        assertEquals("Lookup of unknown key should return null", null, pico.getComponent("unknown"));
++    }
++
++    public void testRegistrationByNameAndClassWithResolving() throws Exception {
++        DefaultPicoContainer pico = createPicoContainer();
++
++        pico.registerComponent(List.class, new ArrayList());
++        pico.registerComponent("one", Webster.class);
++        pico.registerComponent("two", WilmaImpl.class);
++
++        pico.instantiateComponents();
++
++        assertEquals("Wrong number of comps in the container", 3, pico.getComponents().length);
++
++        assertTrue("Object one the same", pico.getComponent("one") != null);
++        assertTrue("Object two the same", pico.getComponent("two") != null);
++
++        assertEquals("Lookup of unknown key should return null", null, pico.getComponent("unknown"));
++    }
++
++    public void testRegistrationByInterfaceAndName() throws Exception {
++        DefaultPicoContainer pico = createPicoContainer();
++
++        Webster one = new Webster(new ArrayList());
++        Webster two = new Webster(new ArrayList());
++
++        pico.registerComponentByClass(FredImpl.class);
++        pico.registerComponent(Wilma.class, WilmaImpl.class);
++        pico.registerComponent("one", one);
++        pico.registerComponent("two", two);
++
++        pico.instantiateComponents();
++
++        assertEquals("Wrong number of comps in the container", 4, pico.getComponents().length);
++
++        assertTrue("There should have been a Fred in the container", pico.hasComponent(FredImpl.class));
++        assertTrue(
++            "There should have been a WilmaImpl in the container",
++            pico.findImplementingComponent(WilmaImpl.class) != null);
++
++        assertEquals("Looking up one Wilma", one, pico.getComponent("one"));
++        assertEquals("Looking up two Wilma", two, pico.getComponent("two"));
++
++        assertTrue("Object one the same", one == pico.getComponent("one"));
++        assertTrue("Object two the same", two == pico.getComponent("two"));
++
++        assertEquals("Lookup of unknown key should return null", null, pico.getComponent("unknown"));
++    }
++
++    public void testRegisterByNameResolvesToInterfaceRegisteredComponents() throws Exception {
++        /** @todo we should add some kind of findImplementatingComponents() method to PicoContainer! */
++
++        //RegistrationPicoContainer pico = createPicoContainer();
++        DefaultPicoContainer pico = createPicoContainer();
++
++        pico.registerComponent(Wilma.class, WilmaImpl.class);
++        pico.registerComponent("fred", FredImpl.class);
++        pico.registerComponent("fred2", FredImpl.class);
++
++        pico.instantiateComponents();
++
++        assertEquals("Wrong number of comps in the container", 3, pico.getComponents().length);
++
++        assertTrue("There should have been a Wilma in the container", pico.hasComponent(Wilma.class));
++        assertTrue(
++            "There should have been a WilmaImpl in the container",
++            pico.findImplementingComponent(WilmaImpl.class) != null);
++
++        FredImpl fred = (FredImpl) pico.getComponent("fred");
++        FredImpl fred2 = (FredImpl) pico.getComponent("fred2");
++
++        assertTrue("Found fred", fred != null);
++        assertTrue("Found fred2", fred2 != null);
++
++        // lets check that the wilma's have been resolved
++        assertTrue("fred should have a wilma", fred.getWilma() != null);
++        assertTrue("fred2 should have a wilma", fred2.getWilma() != null);
++
++        assertEquals("Lookup of unknown key should return null", null, pico.getComponent("unknown"));
++    }
++
++    public void testDuplicateRegistration() throws Exception {
++        RegistrationPicoContainer pico = createPicoContainer();
++
++        pico.registerComponent("one", new WilmaImpl());
++        try {
++            pico.registerComponent("one", new WilmaImpl());
++            fail("Should have barfed with dupe registration");
++        }
++        catch (Exception e) {
++            // expected
++            //            assertTrue("Wrong key", e.getKey() == "one");
++            //            assertTrue("Wrong component", e.getComponent() instanceof WilmaImpl);
++            //            assertTrue("Wrong message: " + e.getMessage(), e.getMessage().startsWith("Key: one duplicated, cannot register:"));
++        }
++    }
++
++    public void testHasComponentByKeyForObjectRegistration() throws Exception {
++        RegistrationPicoContainer pico = createPicoContainer();
++
++        assertTrue("should not have non existent component", !pico.hasComponent("doesNotExist"));
++
++        pico.registerComponent("foo", new WilmaImpl());
++
++        assertTrue("has component", pico.hasComponent("foo"));
++    }
++
++    public void testHasComponentByKeyForClassRegistration() throws Exception {
++        RegistrationPicoContainer pico = createPicoContainer();
++
++        assertTrue("should not have non existent component", !pico.hasComponent("doesNotExist"));
++
++        pico.registerComponent("foo", WilmaImpl.class);
++
++        assertTrue("has component", pico.hasComponent("foo"));
++    }
++
++    public void testGetComponentByKeyForObjectRegistration() throws Exception {
++        RegistrationPicoContainer pico = createPicoContainer();
++
++        assertTrue("should not have non existent component", pico.getComponent("doesNotExist") == null);
++
++        pico.registerComponent("foo", new WilmaImpl());
++
++        assertTrue("has component", pico.getComponent("foo") != null);
++    }
++
++    public void testGetComponentByKeyForClassRegistration() throws Exception {
++        RegistrationPicoContainer pico = createPicoContainer();
++
++        assertTrue("should not have non existent component", pico.getComponent("doesNotExist") == null);
++
++        pico.registerComponent("foo", WilmaImpl.class);
++
++        assertTrue("has component", pico.getComponent("foo") != null);
++    }
++
++    // This method is not available yet!
++    //    
++    //    public void testRemoveComponent() throws Exception {
++    //        RegistrationPicoContainer pico = createPicoContainer();
++    //
++    //        // remove non existent doesn't throw exception
++    //        pico.removeComponent("doesNotExist");
++    //
++    //        pico.registerComponent("foo", new WilmaImpl());
++    //
++    //        assertTrue("has component", pico.getComponent("foo") != null);
++    //
++    //        pico.removeComponent("foo");
++    //
++    //        assertEquals(
++    //            "hasComponent(foo)",
++    //            false,
++    //            pico.hasComponent("foo"));
++    //        assertEquals(
++    //            "getComponent(foo)",
++    //            null,
++    //            pico.getComponent("foo"));
++    //    }
++
++    /**
++     * Factory method to create a new container. This method allows this 
++     * test case to be reused by other PicoContainer implementations by overloading
++     * this single method
++     * 
++     * @return
++     */
++    protected DefaultPicoContainer createPicoContainer() {
++        return new DefaultPicoContainer.Default();
++    }
++}
+\ No newline at end of file

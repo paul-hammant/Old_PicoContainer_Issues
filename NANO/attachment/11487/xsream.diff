@@ -1,0 +1,37 @@
+Index: nanocontainer/src/java/org/nanocontainer/script/xml/XStreamContainerBuilder.java
+===================================================================
+RCS file: /cvsroot/picocontainer/java/nanocontainer/src/java/org/nanocontainer/script/xml/XStreamContainerBuilder.java,v
+retrieving revision 1.7
+diff -r1.7 XStreamContainerBuilder.java
+73c73
+<     private void populateContainer(MutablePicoContainer container) {
+---
+>     public void populateContainer(MutablePicoContainer container) {
+152,159c152,169
+< 
+<         if (key == null || "".equals(key)) {
+<             // without  key. clazz is our key
+<             container.registerComponentImplementation(clazz, clazz, parameterArray);
+<         } else {
+<             // with key
+<             container.registerComponentImplementation(key, clazz, parameterArray);
+<         }
+---
+> 		if(parameters.size() > 0) {
+> 			if (key == null || "".equals(key)) {
+> 				// without  key. clazz is our key
+> 				container.registerComponentImplementation(clazz, clazz, parameterArray);
+> 			} else {
+> 				// with key
+> 				container.registerComponentImplementation(key, clazz, parameterArray);
+> 			}
+> 		} else {
+> 			if (key == null || "".equals(key)) {
+> 				// without  key. clazz is our key
+> 				container.registerComponentImplementation(clazz, clazz);
+> 			} else {
+> 				// with key
+> 				container.registerComponentImplementation(key, clazz);
+> 			}
+> 			
+> 		}

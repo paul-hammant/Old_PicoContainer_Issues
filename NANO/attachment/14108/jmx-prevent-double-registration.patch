@@ -1,0 +1,73 @@
+? jmx-prevent-double-registration.patch
+Index: src/java/org/nanocontainer/jmx/JMXVisitor.java
+===================================================================
+RCS file: /home/projects/picocontainer/scm/java/jmx/src/java/org/nanocontainer/jmx/JMXVisitor.java,v
+retrieving revision 1.12
+diff -b -u -r1.12 JMXVisitor.java
+--- src/java/org/nanocontainer/jmx/JMXVisitor.java	16 Feb 2005 11:59:33 -0000	1.12
++++ src/java/org/nanocontainer/jmx/JMXVisitor.java	14 Mar 2005 14:16:26 -0000
+@@ -113,6 +113,9 @@
+      */
+     protected void register(final DynamicMBean dynamicMBean, final ObjectName objectName) throws JMXRegistrationException {
+         try {
++            if (mBeanServer.isRegistered(objectName)) {
++                mBeanServer.unregisterMBean(objectName);
++            }
+             mBeanServer.registerMBean(dynamicMBean, objectName);
+         } catch (final JMException e) {
+             throw new JMXRegistrationException("Unable to register MBean to MBean Server", e);
+Index: src/test/org/nanocontainer/jmx/JMXVisitorTestCase.java
+===================================================================
+RCS file: /home/projects/picocontainer/scm/java/jmx/src/test/org/nanocontainer/jmx/JMXVisitorTestCase.java,v
+retrieving revision 1.7
+diff -b -u -r1.7 JMXVisitorTestCase.java
+--- src/test/org/nanocontainer/jmx/JMXVisitorTestCase.java	15 Feb 2005 17:05:01 -0000	1.7
++++ src/test/org/nanocontainer/jmx/JMXVisitorTestCase.java	14 Mar 2005 14:16:26 -0000
+@@ -75,6 +75,31 @@
+ 
+         dynamicMBeanProviderMock.expects(once()).method("provide").with(same(picoContainer), same(componentAdapter)).will(
+                 returnValue(registrationInfo));
++        mBeanServerMock.expects(once()).method("isRegistered").with(same(registrationInfo.getObjectName())).will(returnValue(false));
++        mBeanServerMock.expects(once()).method("registerMBean").with(
++                same(registrationInfo.getMBean()), same(registrationInfo.getObjectName()));
++
++        picoContainer.accept(jmxVisitor);
++    }
++
++    /**
++     * This was copied from testVisitWithRegistration and adapted to simulate
++     * the fact that the Person mbean would already be registered.
++     * @throws MalformedObjectNameException
++     */
++    public void testVisitShouldNotRegisterAlreadyRegisteredComponents() throws MalformedObjectNameException {
++        final JMXVisitor jmxVisitor = createVisitor(1);
++        final JMXRegistrationInfo registrationInfo = new JMXRegistrationInfo(
++                new ObjectName(":type=JUnit"), (DynamicMBean)dynamicMBeanMock.proxy());
++
++        // parameter fixes coverage of visitParameter !!
++        final ComponentAdapter componentAdapter = picoContainer.registerComponentImplementation(
++                Person.class, Person.class, new Parameter[]{new ConstantParameter("John Doe")});
++
++        dynamicMBeanProviderMock.expects(once()).method("provide").with(same(picoContainer), same(componentAdapter)).will(
++                returnValue(registrationInfo));
++        mBeanServerMock.expects(once()).method("isRegistered").with(same(registrationInfo.getObjectName())).will(returnValue(true));
++        mBeanServerMock.expects(once()).method("unregisterMBean").with(same(registrationInfo.getObjectName())).isVoid();
+         mBeanServerMock.expects(once()).method("registerMBean").with(
+                 same(registrationInfo.getMBean()), same(registrationInfo.getObjectName()));
+ 
+@@ -99,6 +124,7 @@
+                 returnValue(null));
+         dynamicMBeanProviderMock.expects(once()).method("provide").with(same(picoContainer), same(componentAdapter2)).will(
+                 returnValue(registrationInfo));
++        mBeanServerMock.expects(once()).method("isRegistered").with(same(registrationInfo.getObjectName())).will(returnValue(false));
+         mBeanServerMock.expects(once()).method("registerMBean").with(
+                 same(registrationInfo.getMBean()), same(registrationInfo.getObjectName()));
+ 
+@@ -174,6 +200,7 @@
+ 
+         dynamicMBeanProviderMock.expects(once()).method("provide").with(same(picoContainer), same(componentAdapter)).will(
+                 returnValue(registrationInfo));
++        mBeanServerMock.expects(once()).method("isRegistered").with(same(registrationInfo.getObjectName())).will(returnValue(false));
+         mBeanServerMock.expects(once()).method("registerMBean").with(
+                 same(registrationInfo.getMBean()), same(registrationInfo.getObjectName())).will(throwException(exception));
+ 

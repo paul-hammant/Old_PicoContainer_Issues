@@ -1,0 +1,32 @@
+Index: src/java/org/nanocontainer/nanoweb/NanoWebServlet.java
+===================================================================
+RCS file: /cvsroot/picocontainer/java/nanoweb/src/java/org/nanocontainer/nanoweb/NanoWebServlet.java,v
+retrieving revision 1.4
+diff -u -r1.4 NanoWebServlet.java
+--- src/java/org/nanocontainer/nanoweb/NanoWebServlet.java	26 Mar 2004 11:40:03 -0000	1.4
++++ src/java/org/nanocontainer/nanoweb/NanoWebServlet.java	27 Mar 2004 21:20:37 -0000
+@@ -93,7 +93,7 @@
+     }
+ 
+     private Object getScriptAction(String key, MutablePicoContainer container) throws SyntaxException, IOException {
+-        URL scriptURL = getClass().getResource(key);
++        URL scriptURL = getServletContext().getResource(key);
+         Object result = null;
+         if (scriptURL != null) {
+             Class scriptClass = cachingScriptClassLoader.getClass(scriptURL);
+Index: src/test/org/nanocontainer/nanoweb/NanoWebServletTestCase.java
+===================================================================
+RCS file: /cvsroot/picocontainer/java/nanoweb/src/test/org/nanocontainer/nanoweb/NanoWebServletTestCase.java,v
+retrieving revision 1.3
+diff -u -r1.3 NanoWebServletTestCase.java
+--- src/test/org/nanocontainer/nanoweb/NanoWebServletTestCase.java	26 Mar 2004 11:40:03 -0000	1.3
++++ src/test/org/nanocontainer/nanoweb/NanoWebServletTestCase.java	27 Mar 2004 21:20:38 -0000
+@@ -97,6 +97,8 @@
+ 
+         // path, action and view
+         requestMock.expectAndReturn("getServletPath", "/test.groovy");
++        servletConfigMock.expectAndReturn("getServletContext", servletContextMock.proxy());
++        servletContextMock.expectAndReturn("getResource", C.args(C.eq("/test.groovy")), getClass().getResource("/test.groovy"));
+         requestMock.expect("setAttribute", C.args(C.eq("action"), C.isA(Object.class)));
+         requestMock.expectAndReturn("getRequestDispatcher", C.args(C.eq("/test_success.vm")), requestDispatcherMock.proxy());
+ 

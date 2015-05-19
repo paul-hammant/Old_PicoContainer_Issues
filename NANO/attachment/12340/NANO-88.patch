@@ -1,0 +1,32 @@
+Index: sample-struts/project.xml
+===================================================================
+RCS file: /scm/picocontainer/java/sample-struts/project.xml,v
+retrieving revision 1.2
+diff -u -r1.2 project.xml
+--- sample-struts/project.xml	20 Jun 2004 01:57:33 -0000	1.2
++++ sample-struts/project.xml	23 Jun 2004 06:36:23 -0000
+@@ -41,7 +41,7 @@
+ 
+         <dependency>
+             <id>groovy</id>
+-            <version>1.0-beta-4</version>
++            <version>1.0-beta-5</version>
+             <properties>
+                 <war.bundle>true</war.bundle>
+             </properties>
+@@ -49,6 +49,15 @@
+ 
+         <dependency>
+             <id>asm</id>
++            <version>1.4.1</version>
++            <properties>
++                <war.bundle>true</war.bundle>
++            </properties>
++        </dependency>
++
++        <dependency>
++            <groupId>asm</groupId>
++            <artifactId>asm-util</artifactId>
+             <version>1.4.1</version>
+             <properties>
+                 <war.bundle>true</war.bundle>

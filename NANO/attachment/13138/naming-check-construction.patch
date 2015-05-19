@@ -1,0 +1,23 @@
+Index: remoting/src/java/org/nanocontainer/remoting/NanoNamingImpl.java
+===================================================================
+RCS file: /home/projects/picocontainer/scm/java/remoting/src/java/org/nanocontainer/remoting/NanoNamingImpl.java,v
+retrieving revision 1.5
+diff -u -r1.5 NanoNamingImpl.java
+--- remoting/src/java/org/nanocontainer/remoting/NanoNamingImpl.java	7 Aug 2004 20:04:30 -0000	1.5
++++ remoting/src/java/org/nanocontainer/remoting/NanoNamingImpl.java	4 Oct 2004 15:52:33 -0000
+@@ -20,6 +20,15 @@
+     private final ProxyFactory proxyFactory;
+ 
+     public NanoNamingImpl(Registry registry, PicoContainer pico, ProxyFactory proxyFactory) throws RemoteException {
++        if(registry == null) {
++            throw new NullPointerException("Registry must not be null");
++        }
++        if(pico == null) {
++            throw new NullPointerException("PicoContainer must not be null");
++        }
++        if(proxyFactory == null) {
++            throw new NullPointerException("ProxyFactory must not be null");
++        }
+         this.registry = registry;
+         this.pico = pico;
+         this.proxyFactory = proxyFactory;

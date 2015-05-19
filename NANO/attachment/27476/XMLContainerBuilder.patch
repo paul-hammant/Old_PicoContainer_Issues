@@ -1,0 +1,304 @@
+Index: container/src/java/org/nanocontainer/script/xml/nanocontainer-xml-1_0.dtd
+===================================================================
+--- container/src/java/org/nanocontainer/script/xml/nanocontainer-xml-1_0.dtd	(revision 3394)
++++ container/src/java/org/nanocontainer/script/xml/nanocontainer-xml-1_0.dtd	(working copy)
+@@ -171,6 +171,28 @@
+     defined in the container
+ -->
+ <!ATTLIST parameter key CDATA #IMPLIED>
++
++<!--
++    Parameters may specify whether empty-collections are allowed or not.  This is used, for example, in this constructor:
++    http://www.picocontainer.org/picocontainer/latest/picocontainer/apidocs/org/picocontainer/defaults/ComponentParameter.html#ComponentParameter(boolean)
++-->
++<!ATTLIST parameter empty-collection CDATA #IMPLIED>
++
++<!--
++    Parameters may specify the component's type.  This is used, for example, in this constructor:
++    http://www.picocontainer.org/picocontainer/latest/picocontainer/apidocs/org/picocontainer/defaults/ComponentParameter.html#ComponentParameter(java.lang.Class,%20boolean)
++    
++    If this is specified, the empty-collection attribute must also be specified.
++-->
++<!ATTLIST parameter component-value-type CDATA #IMPLIED>
++
++<!--
++    Parameters may specify the component adapter's key type.  This is used in this constructor:
++    http://www.picocontainer.org/picocontainer/latest/picocontainer/apidocs/org/picocontainer/defaults/ComponentParameter.html#ComponentParameter(java.lang.Class,%20java.lang.Class,%20boolean)
++    
++    If this is specified, both empty-collection and component-value-type attributes must also be specified.
++-->
++<!ATTLIST parameter component-key-type CDATA #IMPLIED>
+ 
+ <!--
+     Defines the parameter element used by the NanoContainer
+Index: container/src/java/org/nanocontainer/script/xml/XMLContainerBuilder.java
+===================================================================
+--- container/src/java/org/nanocontainer/script/xml/XMLContainerBuilder.java	(revision 3394)
++++ container/src/java/org/nanocontainer/script/xml/XMLContainerBuilder.java	(working copy)
+@@ -80,6 +80,9 @@
+     private final static String FACTORY = "factory";
+     private final static String FILE = "file";
+     private final static String KEY = "key";
++    private final static String EMPTY_COLLECTION = "empty-collection";
++    private final static String COMPONENT_VALUE_TYPE = "component-value-type";
++    private final static String COMPONENT_KEY_TYPE = "component-key-type";
+     private final static String PARAMETER = "parameter";
+     private final static String URL = "url";
+ 
+@@ -351,12 +354,83 @@
+         return parameters;
+     }
+ 
++    /**
++     * Build the org.picocontainer.Parameter from the <code>parameter</code> element. This could
++     * create either a ComponentParameter or ConstantParameter instance,
++     * depending on the values of the element's attributes. This is somewhat
++     * complex because there are five constructors for ComponentParameter and one for 
++     * ConstantParameter. These are:
++     * 
++     * <a href="http://www.picocontainer.org/picocontainer/latest/picocontainer/apidocs/org/picocontainer/defaults/ComponentParameter.html">ComponentParameter Javadocs</a>:
++     * 
++     * <code>ComponentParameter() - Expect any scalar paramter of the appropriate type or an Array.
++     *       ComponentParameter(boolean emptyCollection) - Expect any scalar paramter of the appropriate type or an Array.
++     *       ComponentParameter(Class componentValueType, boolean emptyCollection) - Expect any scalar paramter of the appropriate type or the collecting type Array,Collectionor Map.
++     *       ComponentParameter(Class componentKeyType, Class componentValueType, boolean emptyCollection) - Expect any scalar paramter of the appropriate type or the collecting type Array,Collectionor Map.
++     *       ComponentParameter(Object componentKey) - Expect a parameter matching a component of a specific key.</code>
++     * 
++     * and
++     * 
++     * <a href="http://www.picocontainer.org/picocontainer/latest/picocontainer/apidocs/org/picocontainer/defaults/ConstantParameter.html">ConstantParameter Javadocs</a>:
++     * 
++     * <code>ConstantParameter(Object value)</code>
++     * 
++     * The rules for this are, in order:
++     * 
++     * 1) If the <code>key</code> attribute is not null/empty, the fifth constructor will be used.
++     * 2) If the <code>componentKeyType</code> attribute is not null/empty, the fourth constructor will be used.  
++     *    In this case, both the <code>componentValueType</code> and <code>emptyCollection</code> attributes must be non-null/empty or an exception will be thrown.
++     * 3) If the <code>componentValueType</code> attribute is not null/empty, the third constructor will be used.
++     *    In this case, the <code>emptyCollection</code> attribute must be non-null/empty.
++     * 4) If the <code>emptyCollection</code> attribute is not null/empty, the second constructor will be used.
++     * 5) If there is no child element of the parameter, the first constructor will be used.
++     * 6) Otherwise, the return value will be a ConstantParameter with the return from the createInstance value. 
++     */
+     private Parameter createParameter(PicoContainer pico, Element element) throws ClassNotFoundException, MalformedURLException {
+         final Parameter parameter;
+         String key = element.getAttribute(KEY);
++        String emptyCollectionString = element.getAttribute(EMPTY_COLLECTION);
++        String componentValueTypeString = element.getAttribute(COMPONENT_VALUE_TYPE);
++        String componentKeyTypeString = element.getAttribute(COMPONENT_KEY_TYPE);
++
++        // key not null/empty takes precidence 
+         if (key != null && !EMPTY.equals(key)) {
+             parameter = new ComponentParameter(key);
+-        } else if (getFirstChildElement(element, false) == null) {
++        } else if (componentKeyTypeString != null && !EMPTY.equals(componentKeyTypeString)) {
++            if (emptyCollectionString == null || componentValueTypeString == null || 
++                    EMPTY.equals(emptyCollectionString) || EMPTY.equals(componentValueTypeString)) {
++                
++                throw new NanoContainerMarkupException("The componentKeyType attribute was specified (" +
++                        componentKeyTypeString + ") but one or both of the emptyCollection (" + 
++                        emptyCollectionString + ") or componentValueType (" + componentValueTypeString + 
++                        ") was empty or null.");
++            }
++            
++            Class componentKeyType = getClassLoader().loadClass(componentKeyTypeString);
++            Class componentValueType = getClassLoader().loadClass(componentValueTypeString);
++            
++            boolean emptyCollection = Boolean.valueOf(emptyCollectionString).booleanValue();
++            
++            parameter = new ComponentParameter(componentKeyType, componentValueType, emptyCollection);
++        } else if (componentValueTypeString != null && !EMPTY.equals(componentValueTypeString)) {
++            if (emptyCollectionString == null || EMPTY.equals(emptyCollectionString)) {
++                
++                throw new NanoContainerMarkupException("The componentValueType attribute was specified (" +
++                        componentValueTypeString + ") but the emptyCollection (" + 
++                        emptyCollectionString + ") was empty or null.");
++            }
++            
++            Class componentValueType = getClassLoader().loadClass(componentValueTypeString);
++            
++            boolean emptyCollection = Boolean.valueOf(emptyCollectionString).booleanValue();
++            
++            parameter = new ComponentParameter(componentValueType, emptyCollection);
++        } else if (emptyCollectionString != null && !EMPTY.equals(emptyCollectionString)) {
++            boolean emptyCollection = Boolean.valueOf(emptyCollectionString).booleanValue();
++            
++            parameter = new ComponentParameter(emptyCollection);
++        }
++        else if (getFirstChildElement(element, false) == null) {
+             parameter = new ComponentParameter();
+         } else {
+             Object instance = createInstance(pico, element);
+Index: container/src/test/org/nanocontainer/script/xml/XMLContainerBuilderTestCase.java
+===================================================================
+--- container/src/test/org/nanocontainer/script/xml/XMLContainerBuilderTestCase.java	(revision 3394)
++++ container/src/test/org/nanocontainer/script/xml/XMLContainerBuilderTestCase.java	(working copy)
+@@ -19,6 +19,7 @@
+ import java.text.SimpleDateFormat;
+ import java.util.ArrayList;
+ import java.util.Date;
++import java.util.Iterator;
+ import java.util.Map;
+ import java.util.Vector;
+ 
+@@ -28,7 +29,12 @@
+ import org.nanocontainer.script.BarDecoratingPicoContainer;
+ import org.nanocontainer.script.FooDecoratingPicoContainer;
+ import org.nanocontainer.script.NanoContainerMarkupException;
++import org.nanocontainer.testmodel.CustomerEntityImpl;
+ import org.nanocontainer.testmodel.DefaultWebServerConfig;
++import org.nanocontainer.testmodel.Entity;
++import org.nanocontainer.testmodel.ListSupport;
++import org.nanocontainer.testmodel.MapSupport;
++import org.nanocontainer.testmodel.OrderEntityImpl;
+ import org.nanocontainer.testmodel.WebServerConfig;
+ import org.nanocontainer.testmodel.WebServerConfigComp;
+ import org.picocontainer.ComponentAdapter;
+@@ -733,7 +739,95 @@
+         // decorators are fairly dirty - they replace a very select implementation in this TestCase.
+         assertNotNull(pico.getComponentInstanceOfType(Touchable.class));
+     }
++    
++    public void testListSupport() {
+ 
++        Reader script = new StringReader("" +
++                 "<container>\n" +
++                "   <component-implementation class='"+ListSupport.class.getName()+"'>" +
++                "       <parameter empty-collection='false' component-value-type='"+Entity.class.getName()+"'/>" +
++                "   </component-implementation>" +               
++                "   <component-implementation class=\'"+CustomerEntityImpl.class.getName()+"\'/>" +
++                "   <component-implementation class=\'"+OrderEntityImpl.class.getName()+"\'/>" +
++                 "</container>");
++
++         PicoContainer pico = buildContainer(script);
++         
++         ListSupport listSupport = (ListSupport)pico.getComponentInstanceOfType(ListSupport.class);
++
++         assertNotNull(listSupport);
++         assertNotNull(listSupport.getAListOfEntityObjects());
++         assertEquals(2, listSupport.getAListOfEntityObjects().size());
++
++         Entity entity1 = (Entity)listSupport.getAListOfEntityObjects().get(0);
++         Entity entity2 = (Entity)listSupport.getAListOfEntityObjects().get(1);
++         
++         assertNotNull(entity1);
++         assertEquals(CustomerEntityImpl.class, entity1.getClass());
++         
++         assertNotNull(entity2);
++         assertEquals(OrderEntityImpl.class, entity2.getClass());
++     }
++    
++    public void testNoEmptyCollectionWithComponentKeyTypeFailure() {
++
++        Reader script = new StringReader("" +
++                 "<container>\n" +
++                "   <component-implementation class='"+ MapSupport.class.getName()+ "'>" +
++                "       <parameter empty-collection='false' component-key-type='"+Entity.class.getName()+"'/>" +
++                "   </component-implementation>" +               
++                "   <component-implementation key='customer' class=\'"+CustomerEntityImpl.class.getName()+"\'/>" +
++                "   <component-implementation key='order' class=\'"+OrderEntityImpl.class.getName()+"\'/>" +
++                 "</container>");
++
++        try {
++            buildContainer(script);
++            fail("Thrown " + PicoException.class.getName() + " expected");
++        } catch (final PicoException e) {
++            assertTrue(e.getMessage().indexOf("one or both of the emptyCollection")>0);
++        }
++     }
++    
++    public void testNoComponentValueTypeWithComponentKeyTypeFailure() {
++
++        Reader script = new StringReader("" +
++                 "<container>\n" +
++                "   <component-implementation class='"+ MapSupport.class.getName()+ "'>" +
++                "       <parameter component-value-type='"+Entity.class.getName()+"' component-key-type='"+Entity.class.getName()+"'/>" +
++                "   </component-implementation>" +               
++                "   <component-implementation key='customer' class=\'"+CustomerEntityImpl.class.getName()+"\'/>" +
++                "   <component-implementation key='order' class=\'"+OrderEntityImpl.class.getName()+"\'/>" +
++                 "</container>");
++
++        try {
++            buildContainer(script);
++            fail("Thrown " + PicoException.class.getName() + " expected");
++        } catch (final PicoException e) {
++            assertTrue(e.getMessage().indexOf("but one or both of the emptyCollection")>0);
++        }
++     }   
++    
++    public void testNoEmptyCollectionWithComponentValueTypeFailure() {
++
++        Reader script = new StringReader("" +
++                 "<container>\n" +
++                "   <component-implementation class='"+ MapSupport.class.getName()+ "'>" +
++                "       <parameter component-value-type='"+Entity.class.getName()+"'/>" +
++                "   </component-implementation>" +               
++                "   <component-implementation key='customer' class=\'"+CustomerEntityImpl.class.getName()+"\'/>" +
++                "   <component-implementation key='order' class=\'"+OrderEntityImpl.class.getName()+"\'/>" +
++                 "</container>");
++
++        try {
++            buildContainer(script);
++            fail("Thrown " + PicoException.class.getName() + " expected");
++        } catch (final PicoException e) {
++            System.out.println(e);
++            
++            assertTrue(e.getMessage().indexOf("but the emptyCollection () was empty or null")>0);
++        }
++     }
++
+     private PicoContainer buildContainer(Reader script) {
+         return buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
+     }
+Index: testmodel/src/java/org/nanocontainer/testmodel/ListSupport.java
+===================================================================
+--- testmodel/src/java/org/nanocontainer/testmodel/ListSupport.java	(revision 0)
++++ testmodel/src/java/org/nanocontainer/testmodel/ListSupport.java	(revision 0)
+@@ -0,0 +1,23 @@
++package org.nanocontainer.testmodel;
++
++import java.util.List;
++
++/**
++ * Test for list support.
++ * 
++ * @author Jeff Steward
++ */
++public class ListSupport
++{
++    private List aListOfEntityObjects;
++
++    public ListSupport(List aListOfEntityObjects)
++    {
++        this.aListOfEntityObjects = aListOfEntityObjects;
++    }
++    
++    public List getAListOfEntityObjects()
++    {
++        return aListOfEntityObjects;
++    }
++}
+Index: testmodel/src/java/org/nanocontainer/testmodel/MapSupport.java
+===================================================================
+--- testmodel/src/java/org/nanocontainer/testmodel/MapSupport.java	(revision 0)
++++ testmodel/src/java/org/nanocontainer/testmodel/MapSupport.java	(revision 0)
+@@ -0,0 +1,18 @@
++package org.nanocontainer.testmodel;
++
++import java.util.Map;
++
++public class MapSupport
++{
++    private Map aMapOfEntities;
++    
++    public MapSupport(Map aMapOfEntities)
++    {
++        this.aMapOfEntities = aMapOfEntities;
++    }
++    
++    public Map getAMapOfEntities()
++    {
++        return aMapOfEntities;
++    }
++}

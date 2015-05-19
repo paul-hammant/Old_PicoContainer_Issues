@@ -1,0 +1,130 @@
+Index: /home/joehni/src/Codehaus/pico/java/nanocontainer/container/src/test/org/nanocontainer/reflection/DefaultNanoPicoContainerTestCase.java
+===================================================================
+--- /home/joehni/src/Codehaus/pico/java/nanocontainer/container/src/test/org/nanocontainer/reflection/DefaultNanoPicoContainerTestCase.java	(Revision 2961)
++++ /home/joehni/src/Codehaus/pico/java/nanocontainer/container/src/test/org/nanocontainer/reflection/DefaultNanoPicoContainerTestCase.java	(Arbeitskopie)
+@@ -60,5 +60,15 @@
+         assertTrue(sb.toString().indexOf("-instantiated") != -1);
+     }
+ 
++    public void testMakeRemoveChildContainer() {
++        final NanoPicoContainer parent = (NanoPicoContainer)createPicoContainer(null);
++        parent.registerComponentInstance("java.lang.String", "This is a test");
++        MutablePicoContainer pico = parent.makeChildContainer();
++        // Verify they are indeed wired together.
++        assertNotNull(pico.getComponentInstance("java.lang.String"));
++        boolean result = parent.removeChildContainer(pico);
++        assertTrue(result);
++    }
++    
+     // test methods inherited. This container is otherwise fully compliant.
+ }
+Index: /home/joehni/src/Codehaus/pico/java/nanocontainer/container/src/test/org/nanocontainer/reflection/ImplementationHidingNanoPicoContainerTestCase.java
+===================================================================
+--- /home/joehni/src/Codehaus/pico/java/nanocontainer/container/src/test/org/nanocontainer/reflection/ImplementationHidingNanoPicoContainerTestCase.java	(Revision 2961)
++++ /home/joehni/src/Codehaus/pico/java/nanocontainer/container/src/test/org/nanocontainer/reflection/ImplementationHidingNanoPicoContainerTestCase.java	(Arbeitskopie)
+@@ -10,6 +10,7 @@
+ 
+ package org.nanocontainer.reflection;
+ 
++import org.nanocontainer.NanoPicoContainer;
+ import org.picocontainer.MutablePicoContainer;
+ import org.picocontainer.PicoContainer;
+ import org.picocontainer.tck.AbstractImplementationHidingPicoContainerTestCase;
+@@ -28,5 +29,16 @@
+     protected MutablePicoContainer createPicoContainer(PicoContainer parent) {
+         return new ImplementationHidingNanoPicoContainer(this.getClass().getClassLoader(), parent);
+     }
++    
++    public void testMakeRemoveChildContainer() {
++        final NanoPicoContainer parent = (NanoPicoContainer)createPicoContainer(null);
++        parent.registerComponentInstance("java.lang.String", "This is a test");
++        MutablePicoContainer pico = parent.makeChildContainer();
++        // Verify they are indeed wired together.
++        assertNotNull(pico.getComponentInstance("java.lang.String"));
++        boolean result = parent.removeChildContainer(pico);
++        assertTrue(result);
++    }
++    
+     // test methods inherited. This container is part compliant.
+ }
+Index: /home/joehni/src/Codehaus/pico/java/nanocontainer/container/src/java/org/nanocontainer/reflection/ImplementationHidingNanoPicoContainer.java
+===================================================================
+--- /home/joehni/src/Codehaus/pico/java/nanocontainer/container/src/java/org/nanocontainer/reflection/ImplementationHidingNanoPicoContainer.java	(Revision 2961)
++++ /home/joehni/src/Codehaus/pico/java/nanocontainer/container/src/java/org/nanocontainer/reflection/ImplementationHidingNanoPicoContainer.java	(Arbeitskopie)
+@@ -64,18 +64,9 @@
+     protected ImplementationHidingNanoPicoContainer(final ImplementationHidingNanoPicoContainer parent) {
+         super(parent.getDelegate().makeChildContainer(), parent.getComponentClassLoader());
+     }
+-    
+ 
+-    /**
+-     * Makes a child container with the same basic characteristics of <tt>this</tt>
+-     * object (ComponentAdapterFactory, PicoContainer type, LifecycleManager, etc)
+-     * @param name the name of the child container
+-     * @return The child MutablePicoContainer
+-     */    
+-    public MutablePicoContainer makeChildContainer(String name) {
+-        ImplementationHidingNanoPicoContainer child = new ImplementationHidingNanoPicoContainer(this);
+-        namedChildContainers.put(name, child);
+-        return child;
++    protected AbstractNanoPicoContainer createCopy() {
++        return new ImplementationHidingNanoPicoContainer(this);;
+     }
+ 
+ }
+Index: /home/joehni/src/Codehaus/pico/java/nanocontainer/container/src/java/org/nanocontainer/reflection/AbstractNanoPicoContainer.java
+===================================================================
+--- /home/joehni/src/Codehaus/pico/java/nanocontainer/container/src/java/org/nanocontainer/reflection/AbstractNanoPicoContainer.java	(Revision 2961)
++++ /home/joehni/src/Codehaus/pico/java/nanocontainer/container/src/java/org/nanocontainer/reflection/AbstractNanoPicoContainer.java	(Arbeitskopie)
+@@ -100,6 +100,23 @@
+         return makeChildContainer("containers" + namedChildContainers.size());
+     }
+ 
++    /**
++     * Makes a child container with the same basic characteristics of <tt>this</tt>
++     * object (ComponentAdapterFactory, PicoContainer type, LifecycleManager, etc)
++     * @param name the name of the child container
++     * @return The child MutablePicoContainer
++     */
++    public MutablePicoContainer makeChildContainer(String name) {
++        AbstractNanoPicoContainer child = createCopy();
++        MutablePicoContainer parentDelegate = getDelegate();
++        parentDelegate.removeChildContainer(child.getDelegate());
++        parentDelegate.addChildContainer(child);
++        namedChildContainers.put(name, child);
++        return child;
++    }
++    
++    protected abstract AbstractNanoPicoContainer createCopy();
++
+     public boolean removeChildContainer(PicoContainer child) {
+         boolean result = getDelegate().removeChildContainer(child);
+         Iterator children = namedChildContainers.entrySet().iterator();
+Index: /home/joehni/src/Codehaus/pico/java/nanocontainer/container/src/java/org/nanocontainer/reflection/DefaultNanoPicoContainer.java
+===================================================================
+--- /home/joehni/src/Codehaus/pico/java/nanocontainer/container/src/java/org/nanocontainer/reflection/DefaultNanoPicoContainer.java	(Revision 2961)
++++ /home/joehni/src/Codehaus/pico/java/nanocontainer/container/src/java/org/nanocontainer/reflection/DefaultNanoPicoContainer.java	(Arbeitskopie)
+@@ -95,19 +95,11 @@
+     protected DefaultNanoPicoContainer(final DefaultNanoPicoContainer parent) {
+         super(parent.getDelegate().makeChildContainer(),  parent.getComponentClassLoader());
+     }
+-
+-    /**
+-     * Makes a child container with the same basic characteristics of <tt>this</tt>
+-     * object (ComponentAdapterFactory, PicoContainer type, LifecycleManager, etc)
+-     * @param name the name of the child container
+-     * @return The child MutablePicoContainer
+-     */
+-    public MutablePicoContainer makeChildContainer(String name) {
+-        DefaultNanoPicoContainer child = new DefaultNanoPicoContainer(this);
+-        namedChildContainers.put(name, child);
+-        return child;
++    
++    protected AbstractNanoPicoContainer createCopy() {
++        return new DefaultNanoPicoContainer(this);
+     }
+-
++    
+     public void changeMonitor(ComponentMonitor monitor) {
+         ((ComponentMonitorStrategy)getDelegate()).changeMonitor(monitor);
+     }

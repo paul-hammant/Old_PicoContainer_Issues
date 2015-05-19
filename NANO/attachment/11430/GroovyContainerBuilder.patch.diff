@@ -1,0 +1,23 @@
+Index: nanocontainer/src/java/org/nanocontainer/script/groovy/GroovyContainerBuilder.java
+===================================================================
+RCS file: /cvsroot/picocontainer/java/nanocontainer/src/java/org/nanocontainer/script/groovy/GroovyContainerBuilder.java,v
+retrieving revision 1.9
+diff -u -r1.9 GroovyContainerBuilder.java
+--- nanocontainer/src/java/org/nanocontainer/script/groovy/GroovyContainerBuilder.java	12 Feb 2004 01:23:54 -0000	1.9
++++ nanocontainer/src/java/org/nanocontainer/script/groovy/GroovyContainerBuilder.java	15 Feb 2004 00:05:43 -0000
+@@ -37,13 +37,13 @@
+ public class GroovyContainerBuilder extends ScriptedContainerBuilder {
+ 
+     public GroovyContainerBuilder(Reader script, ClassLoader classLoader) {
+-        super(script, classLoader);
++        super(script, new GroovyClassLoader(classLoader));
+     }
+ 
+     protected MutablePicoContainer createContainer(PicoContainer parentContainer, Object assemblyScope) {
+         Object result = null;
+         try {
+-            GroovyClassLoader loader = new GroovyClassLoader(classLoader);
++            GroovyClassLoader loader = (GroovyClassLoader) classLoader;
+             Class groovyClass = loader.parseClass(new InputStream() {
+                 public int read() throws IOException {
+                     return script.read();

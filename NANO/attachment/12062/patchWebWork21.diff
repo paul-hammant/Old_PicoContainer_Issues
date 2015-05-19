@@ -1,0 +1,111 @@
+? nanocontainer-webwork2-1.0-beta-1-SNAPSHOT-src.jar
+? patchWebWork21.diff
+? lib/webwork-2.1.jar
+? lib/xwork-1.0.1.jar
+? src/java/org/nanocontainer/webwork2/PicoObjectFactory.java
+? src/java/org/nanocontainer/webwork2/ThreadLocalContainerReference.java
+Index: src/java/org/nanocontainer/webwork2/PicoServletDispatcher.java
+===================================================================
+RCS file: /home/projects/picocontainer/scm/java/webwork2/src/java/org/nanocontainer/webwork2/PicoServletDispatcher.java,v
+retrieving revision 1.6
+diff -b -u -r1.6 PicoServletDispatcher.java
+--- src/java/org/nanocontainer/webwork2/PicoServletDispatcher.java	19 Feb 2004 01:27:46 -0000	1.6
++++ src/java/org/nanocontainer/webwork2/PicoServletDispatcher.java	8 May 2004 12:33:09 -0000
+@@ -8,38 +8,87 @@
+  *****************************************************************************/
+ package org.nanocontainer.webwork2;
+ 
+-import com.opensymphony.webwork.dispatcher.ServletDispatcher;
+-import com.opensymphony.xwork.ActionProxyFactory;
+-import org.nanocontainer.servlet.ServletRequestContainerLauncher;
+-
+ import javax.servlet.ServletException;
+ import javax.servlet.http.HttpServletRequest;
+ import javax.servlet.http.HttpServletResponse;
+ 
++import org.nanocontainer.servlet.KeyConstants;
++import org.nanocontainer.servlet.RequestScopeObjectReference;
++import org.nanocontainer.servlet.ServletRequestContainerLauncher;
++import org.picocontainer.PicoContainer;
++import org.picocontainer.defaults.ObjectReference;
++
++import com.opensymphony.webwork.dispatcher.ServletDispatcher;
++import com.opensymphony.xwork.ObjectFactory;
++
+ /**
+- * Extension to the standard WebWork2 ServletDispatcher that instantiates a new container in the request
+- * scope for each request and disposes of it correctly at the end of the request.
++ * <p>
++ * Extension to the standard WebWork2 ServletDispatcher that instantiates a new
++ * container in the
++ * {@link org.nanocontainer.webwork2.ThreadLocalContainerReference}for each
++ * request and disposes of it correctly at the end of the request.
++ * </p>
+  *
++ * <p>
+  * To use, replace the WebWork ServletDispatcher in web.xml with this.
++ * </p>
+  *
+- * @author <a href="mailto:joe@thoughtworks.net">Joe Walnes</a>
++ * @author <a href="mailto:joe@thoughtworks.net">Joe Walnes </a>
++ * @author <a href="mailto:cleclerc@pobox.com">Cyrille Le Clerc </a>
+  */
+ public class PicoServletDispatcher extends ServletDispatcher {
+ 
++	/**
++	 * TODO Should <code>containerReference</code> be instantiated in
++	 * {@link ServletDispatcher#init(javax.servlet.ServletConfig)}to follow
++	 * Servlet API spirit or should it be in the constructor for the
++	 * <code>PicoServletDispatcher</code> to follow "Contructor Based
++	 * Dependency Injection" pattern and have a component that is fully
++	 * initialised in its contructor ?
++	 *  
++	 */
+     public PicoServletDispatcher() {
+         super();
+-        ActionProxyFactory.setFactory(new PicoActionProxyFactory());
++		ObjectFactory picoObjectFactory = new PicoObjectFactory();
++		ObjectFactory.setObjectFactory(picoObjectFactory);
+     }
+ 
+-    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+-        ServletRequestContainerLauncher containerLauncher = new ServletRequestContainerLauncher(getServletContext(), request);
++	/**
++	 * @see javax.servlet.http.HttpServlet#service(javax.servlet.http.HttpServletRequest,
++	 *      javax.servlet.http.HttpServletResponse)
++	 */
++	public void service(HttpServletRequest request, HttpServletResponse response)
++			throws ServletException {
++		ServletRequestContainerLauncher containerLauncher = new ServletRequestContainerLauncher(
++				getServletContext(), request);
++		ObjectReference containerReference = new ThreadLocalContainerReference();
+         try {
+             containerLauncher.startContainer();
++
++			/*
++			 * Store the created container in a threadLocal to get it in the
++			 * Object factory
++			 * 
++			 * TODO : should we update ServletRequestContainerLauncher and add a
++			 * getContainerReference() accessor instead of using the
++			 * RequestScopeObjectReference that is not as self explanatory
++			 */
++			ObjectReference requestContainerRef = new RequestScopeObjectReference(request,
++					KeyConstants.REQUEST_CONTAINER);
++			PicoContainer requestContainer = (PicoContainer) requestContainerRef.get();
++			containerReference.set(requestContainer);
++
+             // process the servlet using webwork2
+             super.service(request, response);
+         } catch (Exception e) {
+             throw new ServletException(e);
+         } finally {
++			/*
++			 * Note : setting to null is enough to free memory as threadLocal
++			 * relies on threadLocal.ThreadLocalMap that uses WeakReferences to
++			 * garbage references to Threads (that are internal keys)
++			 */
++			containerReference.set(null);
+             try {
+                 containerLauncher.killContainer();
+             } catch (Exception e) {

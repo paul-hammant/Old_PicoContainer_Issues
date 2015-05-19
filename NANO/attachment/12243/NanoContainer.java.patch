@@ -1,0 +1,31 @@
+Index: nanocontainer/src/java/org/nanocontainer/NanoContainer.java
+===================================================================
+RCS file: /scm/picocontainer/java/nanocontainer/src/java/org/nanocontainer/NanoContainer.java,v
+retrieving revision 1.23
+diff -u -r1.23 NanoContainer.java
+--- nanocontainer/src/java/org/nanocontainer/NanoContainer.java	13 Apr 2004 12:05:06 -0000	1.23
++++ nanocontainer/src/java/org/nanocontainer/NanoContainer.java	10 Jun 2004 08:35:39 -0000
+@@ -29,6 +29,7 @@
+  * <li>.bsh</li>
+  * <li>.js</li>
+  * <li>.py</li>
++ * <li>.pnut</li>
+  * <li>.xml</li>
+  * </ul>
+  * -And the content of the file likewise. See <a href="http://docs.codehaus.org/display/NANO/NanoContainer">NanoContainer documentation</a>
+@@ -43,6 +44,7 @@
+     public static final String BEANSHELL = ".bsh";
+     public static final String JAVASCRIPT = ".js";
+     public static final String JYTHON = ".py";
++    public static final String PNUTS = ".pnut";
+     public static final String XML = ".xml";
+ 
+     private static final Map extensionToBuilders = new HashMap();
+@@ -53,6 +55,7 @@
+         extensionToBuilders.put(JAVASCRIPT, "org.nanocontainer.script.rhino.JavascriptContainerBuilder");
+         extensionToBuilders.put(XML, "org.nanocontainer.script.xml.XMLContainerBuilder");
+         extensionToBuilders.put(JYTHON, "org.nanocontainer.script.jython.JythonContainerBuilder");
++        extensionToBuilders.put(PNUTS, "org.nanocontainer.script.pnuts.PnutsContainerBuilder");
+     }
+ 
+     private ScriptedContainerBuilder containerBuilder;

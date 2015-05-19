@@ -1,0 +1,152 @@
+Index: project.xml
+===================================================================
+RCS file: /cvsroot/picocontainer/java/nanoweb/project.xml,v
+retrieving revision 1.1
+diff -u -r1.1 project.xml
+--- project.xml	21 Mar 2004 16:11:17 -0000	1.1
++++ project.xml	31 Mar 2004 18:15:57 -0000
+@@ -48,6 +48,11 @@
+         </dependency>
+ 
+         <dependency>
++            <id>xwork</id>
++            <version>1.0</version>
++        </dependency>
++
++        <dependency>
+             <id>velocity</id>
+             <version>1.4-rc1</version>
+         </dependency>
+Index: src/java/org/nanocontainer/nanoweb/NanoWebServlet.java
+===================================================================
+RCS file: /cvsroot/picocontainer/java/nanoweb/src/java/org/nanocontainer/nanoweb/NanoWebServlet.java,v
+retrieving revision 1.7
+diff -u -r1.7 NanoWebServlet.java
+--- src/java/org/nanocontainer/nanoweb/NanoWebServlet.java	29 Mar 2004 20:30:29 -0000	1.7
++++ src/java/org/nanocontainer/nanoweb/NanoWebServlet.java	31 Mar 2004 18:15:57 -0000
+@@ -1,5 +1,6 @@
+ package org.nanocontainer.nanoweb;
+ 
++import com.opensymphony.xwork.util.XWorkBasicConverter;
+ import ognl.Ognl;
+ import ognl.OgnlException;
+ import org.nanocontainer.servlet.KeyConstants;
+@@ -21,6 +22,7 @@
+ import java.lang.reflect.Method;
+ import java.net.URL;
+ import java.util.Enumeration;
++import java.util.Map;
+ 
+ /**
+  * Dispatcher servlet for NanoWeb.
+@@ -125,12 +127,14 @@
+     }
+ 
+     private void setPropertiesWithOgnl(HttpServletRequest servletRequest, Object action) throws ServletException {
++        Map context = Ognl.createDefaultContext(action);
++        Ognl.setTypeConverter(context, new XWorkBasicConverter());
+         Enumeration parameterNames = servletRequest.getParameterNames();
+         while (parameterNames.hasMoreElements()) {
+             String parameterName = (String) parameterNames.nextElement();
+-            String parameterValue = servletRequest.getParameter(parameterName);
++            String[] parameterValues = servletRequest.getParameterValues(parameterName);
+             try {
+-                Ognl.setValue(parameterName, action, parameterValue);
++                Ognl.setValue(parameterName, context, action, parameterValues);
+             } catch (OgnlException e) {
+                 log("Failed to set property with OGNL", e);
+                 throw new ServletException(e);
+Index: src/test/test.groovy
+===================================================================
+RCS file: /cvsroot/picocontainer/java/nanoweb/src/test/test.groovy,v
+retrieving revision 1.4
+diff -u -r1.4 test.groovy
+--- src/test/test.groovy	29 Mar 2004 20:30:30 -0000	1.4
++++ src/test/test.groovy	31 Mar 2004 18:15:57 -0000
+@@ -6,7 +6,8 @@
+  */
+ public class MyGroovyAction {
+ 
+-    property year
++    int year
++    int[] months
+ 
+     public doit() {
+         if(year > 2003) {
+Index: src/test/org/nanocontainer/nanoweb/MyAction.java
+===================================================================
+RCS file: /cvsroot/picocontainer/java/nanoweb/src/test/org/nanocontainer/nanoweb/MyAction.java,v
+retrieving revision 1.2
+diff -u -r1.2 MyAction.java
+--- src/test/org/nanocontainer/nanoweb/MyAction.java	29 Mar 2004 20:30:29 -0000	1.2
++++ src/test/org/nanocontainer/nanoweb/MyAction.java	31 Mar 2004 18:15:57 -0000
+@@ -6,6 +6,7 @@
+  */
+ public class MyAction {
+     private int year;
++    private int[] months;
+ 
+     public int getYear() {
+         return year;
+@@ -13,6 +14,14 @@
+ 
+     public void setYear(int year) {
+         this.year = year;
++    }
++
++    public int[] getMonths() {
++        return months;
++    }
++
++    public void setMonths(int[] months) {
++        this.months = months;
+     }
+ 
+     public String doit() {
+Index: src/test/org/nanocontainer/nanoweb/NanoWebServletTestCase.java
+===================================================================
+RCS file: /cvsroot/picocontainer/java/nanoweb/src/test/org/nanocontainer/nanoweb/NanoWebServletTestCase.java,v
+retrieving revision 1.6
+diff -u -r1.6 NanoWebServletTestCase.java
+--- src/test/org/nanocontainer/nanoweb/NanoWebServletTestCase.java	30 Mar 2004 11:46:02 -0000	1.6
++++ src/test/org/nanocontainer/nanoweb/NanoWebServletTestCase.java	31 Mar 2004 18:15:57 -0000
+@@ -18,6 +18,7 @@
+ import java.lang.reflect.InvocationTargetException;
+ import java.lang.reflect.Method;
+ import java.net.URL;
++import java.util.Arrays;
+ import java.util.Vector;
+ import java.beans.IntrospectionException;
+ 
+@@ -72,8 +73,10 @@
+         // url params
+         Vector paramtereNames = new Vector();
+         paramtereNames.add("year");
++        paramtereNames.add("months");
+         requestMock.expectAndReturn("getParameterNames", paramtereNames.elements());
+-        requestMock.expectAndReturn("getParameter", C.args(C.eq("year")), "2004");
++        requestMock.expectAndReturn("getParameterValues", C.args(C.eq("year")), new String[] {"2004"});
++        requestMock.expectAndReturn("getParameterValues", C.args(C.eq("months")), new String[] {"1", "2", "3"});
+ 
+         // path, action and view
+         requestMock.expectAndReturn("getServletPath", "/test/doit.nano");
+@@ -90,6 +93,7 @@
+ 
+         MyAction action = (MyAction) requestContainer.getComponentInstance("/test");
+         assertEquals(2004, action.getYear());
++        assertTrue(Arrays.equals(new int[] {1, 2, 3}, action.getMonths()));
+         assertEquals("success", action.doit());
+ 
+         verifyMocks();
+@@ -105,7 +109,10 @@
+         Object action = requestContainer.getComponentInstance("/test.groovy");
+         Method getYear = action.getClass().getMethod("getYear", null);
+         Object resultYear = getYear.invoke(action, null);
+-        assertEquals("2004", resultYear);
++        assertEquals(new Integer(2004), resultYear);
++        Method getMonths = action.getClass().getMethod("getMonths", null);
++        Object resultMonths = getMonths.invoke(action, null);
++        assertTrue(Arrays.equals(new int[] {1, 2, 3}, (int[]) resultMonths));
+ 
+         verifyMocks();
+     }

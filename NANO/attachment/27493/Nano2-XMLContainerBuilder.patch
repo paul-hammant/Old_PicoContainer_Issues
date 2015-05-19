@@ -1,0 +1,636 @@
+Index: container/src/java/org/nanocontainer/script/xml/nanocontainer-xml-1_0.dtd
+===================================================================
+--- container/src/java/org/nanocontainer/script/xml/nanocontainer-xml-1_0.dtd	(revision 3397)
++++ container/src/java/org/nanocontainer/script/xml/nanocontainer-xml-1_0.dtd	(working copy)
+@@ -2,34 +2,34 @@
+ 
+ <!--
+     NanoContainer XML DTD
+-    Authors: Mauro Talevi
++    Authors: Mauro Talevi
+ 
+-    The doctype for XML documents conforming to this DTD is
+-
+-    <!DOCTYPE container PUBLIC "-//NanoContainer//DTD NanoContainer XML 1.0//EN"
++    The doctype for XML documents conforming to this DTD is
++
++    <!DOCTYPE container PUBLIC "-//NanoContainer//DTD NanoContainer XML 1.0//EN"
+                                  "http://nanocontainer.org/dtd/nanocontainer-xml-1_0.dtd">
+ -->
+ 
+ <!--
+-    The container is the document root.  A container element represents a PicoContainer.
+-    A container allows to specify the classpath for the container, component implementations,
+-    component adapters and component instances.
+-    A container may contain child containers.
++    The container is the document root.  A container element represents a PicoContainer.
++    A container allows to specify the classpath for the container, component implementations,
++    component adapters and component instances.
++    A container may contain child containers.
+ -->
+ <!ELEMENT container (
+     (classpath | container | component-adapter-factory | component-implementation | component-adapter | component-instance )*
+ )>
+-
+-<!--
+-    Specifies the implementation class of the org.picocontainer.ComponentAdapterFactory
+-    used globally by the container
+--->
+-<!ATTLIST container component-adapter-factory CDATA #IMPLIED>
+-
++
+ <!--
+-    Specifies the implementation class of the org.nanocontainer.script.xml.XMLComponentInstanceFactory
++    Specifies the implementation class of the org.picocontainer.ComponentAdapterFactory
+     used globally by the container
+ -->
++<!ATTLIST container component-adapter-factory CDATA #IMPLIED>
++
++<!--
++    Specifies the implementation class of the org.nanocontainer.script.xml.XMLComponentInstanceFactory
++    used globally by the container
++-->
+ <!ATTLIST container component-instance-factory CDATA #IMPLIED>
+ 
+ <!--
+@@ -39,26 +39,26 @@
+ <!ATTLIST container component-monitor CDATA #IMPLIED>
+ 
+ <!--
+-    Defines the classpath for the parent container
++    Defines the classpath for the parent container
+ -->
+ <!ELEMENT classpath (
+     (element)*
+ )>
+-
+-<!--
+-    Defines the classpath element
+--->
+-<!ELEMENT element EMPTY>
+ 
+ <!--
+-    Classpath elements can be specified by file.
++    Defines the classpath element
+ -->
++<!ELEMENT element EMPTY>
++
++<!--
++    Classpath elements can be specified by file.
++-->
+ <!ATTLIST element file CDATA #IMPLIED>
+ 
+-<!--
+-    Classpath elements can be specified by URL.
+--->
+-<!ATTLIST element url CDATA #IMPLIED>
++<!--
++    Classpath elements can be specified by URL.
++-->
++<!ATTLIST element url CDATA #IMPLIED>
+ 
+ <!--
+     Defines a org.picocontainer.defaults.ContainerAdapterFactory
+@@ -76,115 +76,138 @@
+     Component adapter factories may optionally specify a key with to address the adapter factory
+ -->
+ <!ATTLIST component-adapter-factory key CDATA #IMPLIED>
+-
+-<!--
+-    Registers the implemention of a component
+--->
+-<!ELEMENT component-implementation (
+-    (parameter)*
+-)>
+-
+-<!--
+-    Component implementations must specify a class
+--->
+-<!ATTLIST component-implementation class CDATA #REQUIRED>
+-
+-<!--
+-    Component implementations may optionally specify a key with which to register the implementation
+--->
+-<!ATTLIST component-implementation key CDATA #IMPLIED>
+ 
+ <!--
++    Registers the implemention of a component
++-->
++<!ELEMENT component-implementation (
++    (parameter)*
++)>
++
++<!--
++    Component implementations must specify a class
++-->
++<!ATTLIST component-implementation class CDATA #REQUIRED>
++
++<!--
++    Component implementations may optionally specify a key with which to register the implementation
++-->
++<!ATTLIST component-implementation key CDATA #IMPLIED>
++
++<!--
+     Component implementations may optionally specify a key that is the name of a class type with which to register the implementation
+ -->
+ <!ATTLIST component-implementation class-name-key CDATA #IMPLIED>
+-
+-<!--
+-    Registers a org.picocontainer.ContainerAdapter
+--->
+-<!ELEMENT component-adapter (
+-    (parameter)*
+-)>
+-
+-<!--
+-    Component adapters must specify a class
+--->
+-<!ATTLIST component-adapter class CDATA #REQUIRED>
+-
+-<!--
+-    Component adapters must specify a key with which to register the adapter
+--->
+-<!ATTLIST component-adapter key CDATA #IMPLIED>
+ 
+ <!--
++    Registers a org.picocontainer.ContainerAdapter
++-->
++<!ELEMENT component-adapter (
++    (parameter)*
++)>
++
++<!--
++    Component adapters must specify a class
++-->
++<!ATTLIST component-adapter class CDATA #REQUIRED>
++
++<!--
++    Component adapters must specify a key with which to register the adapter
++-->
++<!ATTLIST component-adapter key CDATA #IMPLIED>
++
++<!--
+     Component instances may optionally specify a key that is the name of a class type with which to register the adapter
+ -->
+ <!ATTLIST component-adapter class-name-key CDATA #IMPLIED>
+-
+-<!--
+-    Component adapters may optionally specify s org.picocontainer.ComponentAdapterFactory
++
++<!--
++    Component adapters may optionally specify s org.picocontainer.ComponentAdapterFactory
+     implementation class or a key of an already defined compoennt-adapter-factory
+-    which overrides the globally specified one.
+--->
+-<!ATTLIST component-adapter factory CDATA #IMPLIED>
+-
+-<!--
+-    Registers an instance of a component
+--->
+-<!ELEMENT component-instance (
+-    (parameter)*
+-)>
+-
+-<!--
+-    Component instances may optionally specify a org.nanocontainer.script.xml.XMLComponentInstanceFactory
+-    implementation class which overrides the globally specified one.
+--->
+-<!ATTLIST component-instance factory CDATA #IMPLIED>
+-
+-<!--
+-    Component instances may optionally specify a key with which to register the instance
+--->
+-<!ATTLIST component-instance key CDATA #IMPLIED>
++    which overrides the globally specified one.
++-->
++<!ATTLIST component-adapter factory CDATA #IMPLIED>
+ 
+ <!--
++    Registers an instance of a component
++-->
++<!ELEMENT component-instance (
++    (parameter)*
++)>
++
++<!--
++    Component instances may optionally specify a org.nanocontainer.script.xml.XMLComponentInstanceFactory
++    implementation class which overrides the globally specified one.
++-->
++<!ATTLIST component-instance factory CDATA #IMPLIED>
++
++<!--
++    Component instances may optionally specify a key with which to register the instance
++-->
++<!ATTLIST component-instance key CDATA #IMPLIED>
++
++<!--
+     Component instances may optionally specify a key that is the name of a class type with which to register the instance
+ -->
+ <!ATTLIST component-instance class-name-key CDATA #IMPLIED>
+-
+-<!--
+-    Defines the parameter for component implementations and instances.
+-    The parameter element may contain other elements - which are used by the NanoContainer
+-    default org.nanocontainer.script.xml.XMLComponentInstanceFactory.
+--->
+-<!ELEMENT parameter (
+-    (boolean|short|int|long|float|double|char|string|file|url|class)*
+-)>
+-
+-<!--
+-    Parameters may optionally specify a org.nanocontainer.script.xml.XMLComponentInstanceFactory
+-    implementation class which overrides the globally specified one.
+--->
+-<!ATTLIST parameter factory CDATA #IMPLIED>
+-
+-<!--
+-    Parameters may specify a key which references other component-implementations or component-instances
+-    defined in the container
+--->
+-<!ATTLIST parameter key CDATA #IMPLIED>
+-
+-<!--
+-    Defines the parameter element used by the NanoContainer
+-    default org.nanocontainer.script.xml.XMLComponentInstanceFactory.
+--->
+-<!ELEMENT boolean (#PCDATA)>
+-<!ELEMENT short (#PCDATA)>
+-<!ELEMENT int (#PCDATA)>
+-<!ELEMENT long (#PCDATA)>
+-<!ELEMENT float (#PCDATA)>
+-<!ELEMENT double (#PCDATA)>
+-<!ELEMENT char (#PCDATA)>
+-<!ELEMENT string (#PCDATA)>
+-<!ELEMENT file (#PCDATA)>
+-<!ELEMENT url (#PCDATA)>
+-<!ELEMENT class (#PCDATA)>
+-
++
++<!--
++    Defines the parameter for component implementations and instances.
++    The parameter element may contain other elements - which are used by the NanoContainer
++    default org.nanocontainer.script.xml.XMLComponentInstanceFactory.
++-->
++<!ELEMENT parameter (
++    (boolean|short|int|long|float|double|char|string|file|url|class)*
++)>
++
++<!--
++    Parameters may optionally specify a org.nanocontainer.script.xml.XMLComponentInstanceFactory
++    implementation class which overrides the globally specified one.
++-->
++<!ATTLIST parameter factory CDATA #IMPLIED>
++
++<!--
++    Parameters may specify a key which references other component-implementations or component-instances
++    defined in the container
++-->
++<!ATTLIST parameter key CDATA #IMPLIED>
++
++<!--
++    Parameters may specify whether empty-collections are allowed or not.  This is used, for example, in this constructor:
++    http://www.picocontainer.org/picocontainer/latest/picocontainer/apidocs/org/picocontainer/defaults/ComponentParameter.html#ComponentParameter(boolean)
++-->
++<!ATTLIST parameter empty-collection CDATA #IMPLIED>
++
++<!--
++    Parameters may specify the component's type.  This is used, for example, in this constructor:
++    http://www.picocontainer.org/picocontainer/latest/picocontainer/apidocs/org/picocontainer/defaults/ComponentParameter.html#ComponentParameter(java.lang.Class,%20boolean)
++    
++    If this is specified, the empty-collection attribute must also be specified.
++-->
++<!ATTLIST parameter component-value-type CDATA #IMPLIED>
++
++<!--
++    Parameters may specify the component adapter's key type.  This is used in this constructor:
++    http://www.picocontainer.org/picocontainer/latest/picocontainer/apidocs/org/picocontainer/defaults/ComponentParameter.html#ComponentParameter(java.lang.Class,%20java.lang.Class,%20boolean)
++    
++    If this is specified, both empty-collection and component-value-type attributes must also be specified.
++-->
++<!ATTLIST parameter component-key-type CDATA #IMPLIED>
++
++<!--
++    Defines the parameter element used by the NanoContainer
++    default org.nanocontainer.script.xml.XMLComponentInstanceFactory.
++-->
++<!ELEMENT boolean (#PCDATA)>
++<!ELEMENT short (#PCDATA)>
++<!ELEMENT int (#PCDATA)>
++<!ELEMENT long (#PCDATA)>
++<!ELEMENT float (#PCDATA)>
++<!ELEMENT double (#PCDATA)>
++<!ELEMENT char (#PCDATA)>
++<!ELEMENT string (#PCDATA)>
++<!ELEMENT file (#PCDATA)>
++<!ELEMENT url (#PCDATA)>
++<!ELEMENT class (#PCDATA)>
++
++
+Index: container/src/java/org/nanocontainer/script/xml/XMLContainerBuilder.java
+===================================================================
+--- container/src/java/org/nanocontainer/script/xml/XMLContainerBuilder.java	(revision 3397)
++++ container/src/java/org/nanocontainer/script/xml/XMLContainerBuilder.java	(working copy)
+@@ -83,6 +83,9 @@
+     private final static String FACTORY = "factory";
+     private final static String FILE = "file";
+     private final static String KEY = "key";
++    private final static String EMPTY_COLLECTION = "empty-collection";
++    private final static String COMPONENT_VALUE_TYPE = "component-value-type";
++    private final static String COMPONENT_KEY_TYPE = "component-key-type";
+     private final static String PARAMETER = "parameter";
+     private final static String URL = "url";
+ 
+@@ -346,12 +349,83 @@
+         return parameters;
+     }
+ 
++    /**
++     * Build the org.picocontainer.Parameter from the <code>parameter</code> element. This could
++     * create either a ComponentParameter or ConstantParameter instance,
++     * depending on the values of the element's attributes. This is somewhat
++     * complex because there are five constructors for ComponentParameter and one for 
++     * ConstantParameter. These are:
++     * 
++     * <a href="http://www.picocontainer.org/picocontainer/latest/picocontainer/apidocs/org/picocontainer/defaults/ComponentParameter.html">ComponentParameter Javadocs</a>:
++     * 
++     * <code>ComponentParameter() - Expect any scalar paramter of the appropriate type or an Array.
++     *       ComponentParameter(boolean emptyCollection) - Expect any scalar paramter of the appropriate type or an Array.
++     *       ComponentParameter(Class componentValueType, boolean emptyCollection) - Expect any scalar paramter of the appropriate type or the collecting type Array,Collectionor Map.
++     *       ComponentParameter(Class componentKeyType, Class componentValueType, boolean emptyCollection) - Expect any scalar paramter of the appropriate type or the collecting type Array,Collectionor Map.
++     *       ComponentParameter(Object componentKey) - Expect a parameter matching a component of a specific key.</code>
++     * 
++     * and
++     * 
++     * <a href="http://www.picocontainer.org/picocontainer/latest/picocontainer/apidocs/org/picocontainer/defaults/ConstantParameter.html">ConstantParameter Javadocs</a>:
++     * 
++     * <code>ConstantParameter(Object value)</code>
++     * 
++     * The rules for this are, in order:
++     * 
++     * 1) If the <code>key</code> attribute is not null/empty, the fifth constructor will be used.
++     * 2) If the <code>componentKeyType</code> attribute is not null/empty, the fourth constructor will be used.  
++     *    In this case, both the <code>componentValueType</code> and <code>emptyCollection</code> attributes must be non-null/empty or an exception will be thrown.
++     * 3) If the <code>componentValueType</code> attribute is not null/empty, the third constructor will be used.
++     *    In this case, the <code>emptyCollection</code> attribute must be non-null/empty.
++     * 4) If the <code>emptyCollection</code> attribute is not null/empty, the second constructor will be used.
++     * 5) If there is no child element of the parameter, the first constructor will be used.
++     * 6) Otherwise, the return value will be a ConstantParameter with the return from the createInstance value. 
++     */
+     private Parameter createParameter(PicoContainer pico, Element element) throws ClassNotFoundException, MalformedURLException {
+         final Parameter parameter;
+         String key = element.getAttribute(KEY);
++        String emptyCollectionString = element.getAttribute(EMPTY_COLLECTION);
++        String componentValueTypeString = element.getAttribute(COMPONENT_VALUE_TYPE);
++        String componentKeyTypeString = element.getAttribute(COMPONENT_KEY_TYPE);
++
++        // key not null/empty takes precidence 
+         if (key != null && !EMPTY.equals(key)) {
+             parameter = new ComponentParameter(key);
+-        } else if (getFirstChildElement(element, false) == null) {
++        } else if (componentKeyTypeString != null && !EMPTY.equals(componentKeyTypeString)) {
++            if (emptyCollectionString == null || componentValueTypeString == null || 
++                    EMPTY.equals(emptyCollectionString) || EMPTY.equals(componentValueTypeString)) {
++                
++                throw new NanoContainerMarkupException("The componentKeyType attribute was specified (" +
++                        componentKeyTypeString + ") but one or both of the emptyCollection (" + 
++                        emptyCollectionString + ") or componentValueType (" + componentValueTypeString + 
++                        ") was empty or null.");
++            }
++            
++            Class<?> componentKeyType = getClassLoader().loadClass(componentKeyTypeString);
++            Class<?> componentValueType = getClassLoader().loadClass(componentValueTypeString);
++            
++            boolean emptyCollection = Boolean.valueOf(emptyCollectionString).booleanValue();
++            
++            parameter = new ComponentParameter(componentKeyType, componentValueType, emptyCollection);
++        } else if (componentValueTypeString != null && !EMPTY.equals(componentValueTypeString)) {
++            if (emptyCollectionString == null || EMPTY.equals(emptyCollectionString)) {
++                
++                throw new NanoContainerMarkupException("The componentValueType attribute was specified (" +
++                        componentValueTypeString + ") but the emptyCollection (" + 
++                        emptyCollectionString + ") was empty or null.");
++            }
++            
++            Class<?> componentValueType = getClassLoader().loadClass(componentValueTypeString);
++            
++            boolean emptyCollection = Boolean.valueOf(emptyCollectionString).booleanValue();
++            
++            parameter = new ComponentParameter(componentValueType, emptyCollection);
++        } else if (emptyCollectionString != null && !EMPTY.equals(emptyCollectionString)) {
++            boolean emptyCollection = Boolean.valueOf(emptyCollectionString).booleanValue();
++            
++            parameter = new ComponentParameter(emptyCollection);
++        }
++        else if (getFirstChildElement(element, false) == null) {
+             parameter = new ComponentParameter();
+         } else {
+             Object instance = createInstance(pico, element);
+@@ -360,6 +434,7 @@
+         return parameter;
+     }
+ 
++
+     private void registerComponentInstance(NanoContainer container, Element element) throws ClassNotFoundException, PicoCompositionException, MalformedURLException {
+         Object instance = createInstance(container, element);
+         String key = element.getAttribute(KEY);
+Index: container/src/test/org/nanocontainer/script/xml/XMLContainerBuilderTestCase.java
+===================================================================
+--- container/src/test/org/nanocontainer/script/xml/XMLContainerBuilderTestCase.java	(revision 3397)
++++ container/src/test/org/nanocontainer/script/xml/XMLContainerBuilderTestCase.java	(working copy)
+@@ -24,12 +24,18 @@
+ 
+ import org.nanocontainer.script.AbstractScriptedContainerBuilderTestCase;
+ import org.nanocontainer.script.NanoContainerMarkupException;
++import org.nanocontainer.testmodel.CustomerEntityImpl;
+ import org.nanocontainer.testmodel.DefaultWebServerConfig;
++import org.nanocontainer.testmodel.Entity;
++import org.nanocontainer.testmodel.ListSupport;
++import org.nanocontainer.testmodel.MapSupport;
++import org.nanocontainer.testmodel.OrderEntityImpl;
+ import org.nanocontainer.testmodel.WebServerConfig;
+ import org.nanocontainer.testmodel.WebServerConfigComp;
+ import org.nanocontainer.TestHelper;
+ import org.picocontainer.ComponentAdapter;
+ import org.picocontainer.PicoContainer;
++import org.picocontainer.PicoException;
+ import org.picocontainer.adapters.ConstructorInjectionComponentAdapterFactory;
+ import org.picocontainer.adapters.AnyInjectionComponentAdapterFactory;
+ import org.picocontainer.monitors.WriterComponentMonitor;
+@@ -689,7 +695,126 @@
+         // decorators are fairly dirty - they replace a very select implementation in this TestCase.
+         assertNotNull(pico.getComponent(Touchable.class));
+     }
++    
++    public void testListSupport() {
+ 
++        Reader script = new StringReader("" +
++                 "<container>\n" +
++                "   <component-implementation class='"+ListSupport.class.getName()+"'>" +
++                "       <parameter empty-collection='false' component-value-type='"+Entity.class.getName()+"'/>" +
++                "   </component-implementation>" +               
++                "   <component-implementation class=\'"+CustomerEntityImpl.class.getName()+"\'/>" +
++                "   <component-implementation class=\'"+OrderEntityImpl.class.getName()+"\'/>" +
++                 "</container>");
++
++         PicoContainer pico = buildContainer(script);
++         
++         ListSupport listSupport = (ListSupport)pico.getComponent(ListSupport.class);
++
++         assertNotNull(listSupport);
++         assertNotNull(listSupport.getAListOfEntityObjects());
++         assertEquals(2, listSupport.getAListOfEntityObjects().size());
++
++         Entity entity1 = (Entity)listSupport.getAListOfEntityObjects().get(0);
++         Entity entity2 = (Entity)listSupport.getAListOfEntityObjects().get(1);
++         
++         assertNotNull(entity1);
++         assertEquals(CustomerEntityImpl.class, entity1.getClass());
++         
++         assertNotNull(entity2);
++         assertEquals(OrderEntityImpl.class, entity2.getClass());
++     }
++    
++    public void testMapSupport() {
++        
++        Reader script = new StringReader("" +
++                "<container>\n" +
++               "   <component-implementation class='"+ MapSupport.class.getName()+ "'>" +
++               "       <parameter empty-collection='false' component-value-type='"+Entity.class.getName()+"'/>" +
++               "   </component-implementation>" +               
++               "   <component-implementation key='customer' class=\'"+CustomerEntityImpl.class.getName()+"\'/>" +
++               "   <component-implementation key='order' class=\'"+OrderEntityImpl.class.getName()+"\'/>" +
++                "</container>");
++        
++        PicoContainer pico = buildContainer(script);
++        
++        MapSupport mapSupport = pico.getComponent(MapSupport.class);
++
++        assertNotNull(mapSupport);
++        assertNotNull(mapSupport.getAMapOfEntities());
++        assertEquals(2, mapSupport.getAMapOfEntities().size());
++
++        Map<String, Entity> aMapOfEntities = mapSupport.getAMapOfEntities();
++        
++        Entity entity1 = aMapOfEntities.get("customer");
++        Entity entity2 = aMapOfEntities.get("order");
++        
++        assertNotNull(entity1);
++        assertEquals(CustomerEntityImpl.class, entity1.getClass());
++        
++        assertNotNull(entity2);
++        assertEquals(OrderEntityImpl.class, entity2.getClass()); 
++    }
++    
++    public void testNoEmptyCollectionWithComponentKeyTypeFailure() {
++
++        Reader script = new StringReader("" +
++                 "<container>\n" +
++                "   <component-implementation class='"+ MapSupport.class.getName()+ "'>" +
++                "       <parameter empty-collection='false' component-key-type='"+Entity.class.getName()+"'/>" +
++                "   </component-implementation>" +               
++                "   <component-implementation key='customer' class=\'"+CustomerEntityImpl.class.getName()+"\'/>" +
++                "   <component-implementation key='order' class=\'"+OrderEntityImpl.class.getName()+"\'/>" +
++                 "</container>");
++
++        try {
++            buildContainer(script);
++            fail("Thrown " + PicoException.class.getName() + " expected");
++        } catch (final PicoException e) {
++            assertTrue(e.getMessage().indexOf("one or both of the emptyCollection")>0);
++        }
++     }
++    
++    public void testNoComponentValueTypeWithComponentKeyTypeFailure() {
++
++        Reader script = new StringReader("" +
++                 "<container>\n" +
++                "   <component-implementation class='"+ MapSupport.class.getName()+ "'>" +
++                "       <parameter component-value-type='"+Entity.class.getName()+"' component-key-type='"+Entity.class.getName()+"'/>" +
++                "   </component-implementation>" +               
++                "   <component-implementation key='customer' class=\'"+CustomerEntityImpl.class.getName()+"\'/>" +
++                "   <component-implementation key='order' class=\'"+OrderEntityImpl.class.getName()+"\'/>" +
++                 "</container>");
++
++        try {
++            buildContainer(script);
++            fail("Thrown " + PicoException.class.getName() + " expected");
++        } catch (final PicoException e) {
++            assertTrue(e.getMessage().indexOf("but one or both of the emptyCollection")>0);
++        }
++     }   
++    
++    public void testNoEmptyCollectionWithComponentValueTypeFailure() {
++
++        Reader script = new StringReader("" +
++                 "<container>\n" +
++                "   <component-implementation class='"+ MapSupport.class.getName()+ "'>" +
++                "       <parameter component-value-type='"+Entity.class.getName()+"'/>" +
++                "   </component-implementation>" +               
++                "   <component-implementation key='customer' class=\'"+CustomerEntityImpl.class.getName()+"\'/>" +
++                "   <component-implementation key='order' class=\'"+OrderEntityImpl.class.getName()+"\'/>" +
++                 "</container>");
++
++        try {
++            buildContainer(script);
++            fail("Thrown " + PicoException.class.getName() + " expected");
++        } catch (final PicoException e) {
++            System.out.println(e);
++            
++            assertTrue(e.getMessage().indexOf("but the emptyCollection () was empty or null")>0);
++        }
++     }
++
+     private PicoContainer buildContainer(Reader script) {
+         return buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
+     }
+Index: testmodel/src/java/org/nanocontainer/testmodel/ListSupport.java
+===================================================================
+--- testmodel/src/java/org/nanocontainer/testmodel/ListSupport.java	(revision 0)
++++ testmodel/src/java/org/nanocontainer/testmodel/ListSupport.java	(revision 0)
+@@ -0,0 +1,23 @@
++package org.nanocontainer.testmodel;
++
++import java.util.List;
++
++/**
++ * Test for list support.
++ *
++ * @author Jeff Steward
++ */
++public class ListSupport
++{
++    private List<Entity> aListOfEntityObjects;
++
++    public ListSupport(List<Entity> aListOfEntityObjects)
++    {
++        this.aListOfEntityObjects = aListOfEntityObjects;
++    }
++
++    public List<Entity> getAListOfEntityObjects()
++    {
++        return aListOfEntityObjects;
++    }
++}
+Index: testmodel/src/java/org/nanocontainer/testmodel/MapSupport.java
+===================================================================
+--- testmodel/src/java/org/nanocontainer/testmodel/MapSupport.java	(revision 0)
++++ testmodel/src/java/org/nanocontainer/testmodel/MapSupport.java	(revision 0)
+@@ -0,0 +1,18 @@
++package org.nanocontainer.testmodel;
++
++import java.util.Map;
++
++public class MapSupport
++{
++    private Map<String, Entity> aMapOfEntities;
++
++    public MapSupport(Map<String, Entity> aMapOfEntities)
++    {
++        this.aMapOfEntities = aMapOfEntities;
++    }
++
++    public Map<String, Entity> getAMapOfEntities()
++    {
++        return aMapOfEntities;
++    }
++}

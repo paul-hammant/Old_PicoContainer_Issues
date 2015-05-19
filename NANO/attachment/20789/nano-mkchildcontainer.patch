@@ -1,0 +1,47 @@
+Index: container/src/java/org/nanocontainer/reflection/AbstractNanoPicoContainer.java
+===================================================================
+--- container/src/java/org/nanocontainer/reflection/AbstractNanoPicoContainer.java	(revision 2952)
++++ container/src/java/org/nanocontainer/reflection/AbstractNanoPicoContainer.java	(working copy)
+@@ -101,7 +101,12 @@
+     }
+ 
+     public boolean removeChildContainer(PicoContainer child) {
+-        boolean result = getDelegate().removeChildContainer(child);
++        boolean result;
++        if (child instanceof AbstractNanoPicoContainer) {
++            result = getDelegate().removeChildContainer(((AbstractNanoPicoContainer)child).getDelegate());
++        } else {
++             result = getDelegate().removeChildContainer(child);
++        }
+         Iterator children = namedChildContainers.entrySet().iterator();
+         while (children.hasNext()) {
+             Map.Entry e = (Map.Entry) children.next();
+@@ -161,13 +166,26 @@
+     }
+ 
+     public boolean addChildContainer(PicoContainer child) {
+-        boolean result = getDelegate().addChildContainer(child);
++        boolean result;
++        if (child instanceof AbstractNanoPicoContainer) {
++            result = addChildContainer(((AbstractNanoPicoContainer)child).getDelegate());
++        } else {
++            result = getDelegate().addChildContainer(child);
++        }
++
++
+         namedChildContainers.put("containers" + namedChildContainers.size(), child);
+         return result;
+     }
+ 
+     public void addChildContainer(String name, PicoContainer child) {
+-        getDelegate().addChildContainer(child);
++        if (child instanceof AbstractNanoPicoContainer) {
++            super.addChildContainer(((AbstractNanoPicoContainer)child).getDelegate());
++        } else {
++            super.addChildContainer(child);
++        }
++
++
+         namedChildContainers.put(name, child);
+     }
+ 

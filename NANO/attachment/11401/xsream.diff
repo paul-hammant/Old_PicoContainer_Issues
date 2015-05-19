@@ -1,0 +1,33 @@
+Index: nanocontainer/src/java/org/nanocontainer/script/xml/XStreamContainerBuilder.java
+===================================================================
+RCS file: /cvsroot/picocontainer/java/nanocontainer/src/java/org/nanocontainer/script/xml/XStreamContainerBuilder.java,v
+retrieving revision 1.4
+diff -r1.4 XStreamContainerBuilder.java
+67a68,70
+> 	/**
+> 	 * build and populate container from parsed xml data
+> 	 */
+77,78d79
+<             //} catch (IOException e) {
+<             //    throw new PicoCompositionException(e);
+83c84,97
+< 
+---
+> 	
+> 	/**
+> 	 * populate supplied container from parsed xml 
+> 	 */
+> 	public void populateContainer(MutablePicoContainer container) {
+>         try {
+> 			populateContainer(container, rootElement);
+>         } catch (ClassNotFoundException e) {
+>             throw new PicoCompositionException(e);
+>         } catch (SAXException e) {
+>             throw new PicoCompositionException(e);
+>         }
+> 	}
+> 	
+85c99
+<      * populate contaiber off root element. we process instance &amp; implementation
+---
+>      * populate container off root element. we process instance &amp; implementation

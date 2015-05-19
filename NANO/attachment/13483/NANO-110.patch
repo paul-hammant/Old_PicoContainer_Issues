@@ -1,0 +1,269 @@
+Index: java/nanocontainer/src/java/org/nanocontainer/script/xml/XMLContainerBuilder.java
+===================================================================
+RCS file: /home/projects/picocontainer/scm/java/nanocontainer/src/java/org/nanocontainer/script/xml/XMLContainerBuilder.java,v
+retrieving revision 1.41
+diff -c -r1.41 XMLContainerBuilder.java
+*** java/nanocontainer/src/java/org/nanocontainer/script/xml/XMLContainerBuilder.java	5 Nov 2004 17:26:20 -0000	1.41
+--- java/nanocontainer/src/java/org/nanocontainer/script/xml/XMLContainerBuilder.java	4 Dec 2004 19:52:42 -0000
+***************
+*** 68,73 ****
+--- 68,75 ----
+      private final static String FILE = "file";
+      private final static String KEY = "key";
+      private final static String PARAMETER = "parameter";
++     private final static String REGISTER_SELF = "register-self";
++     private static final String TRUE = "true";
+      private final static String URL = "url";
+  
+      private static final String EMPTY = "";
+***************
+*** 126,131 ****
+--- 128,136 ----
+              }
+              ComponentAdapterFactory componentAdapterFactory = createComponentAdapterFactory(cafName);
+              MutablePicoContainer childContainer = new DefaultPicoContainer(componentAdapterFactory, parentContainer);
++             if(isSet(rootElement.getAttribute(REGISTER_SELF))) {
++                 childContainer.registerComponentInstance(childContainer);
++             }
+              populateContainer(childContainer);
+              return childContainer;
+          } catch (ClassNotFoundException e) {
+***************
+*** 334,339 ****
+--- 339,348 ----
+          } catch (IllegalAccessException e) {
+              throw new NanoContainerMarkupException(e);
+          }
++     }
++ 
++     private boolean isSet(String string) {
++         return string != null && string.equalsIgnoreCase(TRUE);
+      }
+  
+      private boolean notSet(String string) {
+
+Index: java/nanocontainer/src/test/org/nanocontainer/script/xml/XMLContainerBuilderTestCase.java
+===================================================================
+RCS file: /home/projects/picocontainer/scm/java/nanocontainer/src/test/org/nanocontainer/script/xml/XMLContainerBuilderTestCase.java,v
+retrieving revision 1.43
+diff -c -r1.43 XMLContainerBuilderTestCase.java
+*** java/nanocontainer/src/test/org/nanocontainer/script/xml/XMLContainerBuilderTestCase.java	31 Oct 2004 19:31:59 -0000	1.43
+--- java/nanocontainer/src/test/org/nanocontainer/script/xml/XMLContainerBuilderTestCase.java	4 Dec 2004 19:52:43 -0000
+***************
+*** 16,21 ****
+--- 16,22 ----
+  import org.nanocontainer.testmodel.DefaultWebServerConfig;
+  import org.nanocontainer.testmodel.WebServerConfig;
+  import org.nanocontainer.testmodel.WebServerConfigComp;
++ import org.nanocontainer.testmodel.TestDependsOnPicoContainer;
+  import org.picocontainer.MutablePicoContainer;
+  import org.picocontainer.PicoContainer;
+  import org.picocontainer.defaults.ConstructorInjectionComponentAdapterFactory;
+***************
+*** 572,575 ****
+--- 573,586 ----
+          assertNotSame(wsc1, wsc2);
+      }
+  
++     public void testContainerShouldAllowSelfRegistration() {
++         Reader script = new StringReader("" +
++                 "<container register-self='true'>" +
++                 "  <component class='org.nanocontainer.testmodel.TestDependsOnPicoContainer'/>" +
++                 "</container>");
++ 
++         PicoContainer pico = buildContainer(new XMLContainerBuilder(script, getClass().getClassLoader()), null, "SOME_SCOPE");
++         TestDependsOnPicoContainer lookup = (TestDependsOnPicoContainer) pico.getComponentInstanceOfType(TestDependsOnPicoContainer.class);
++         assertNotNull(lookup);
++     }
+  }
+
+Index: java/picocontainer/src/java/org/picocontainer/defaults/DefaultPicoContainer.java
+===================================================================
+RCS file: /home/projects/picocontainer/scm/java/picocontainer/src/java/org/picocontainer/defaults/DefaultPicoContainer.java,v
+retrieving revision 1.122
+diff -c -r1.122 DefaultPicoContainer.java
+*** java/picocontainer/src/java/org/picocontainer/defaults/DefaultPicoContainer.java	24 Nov 2004 03:33:54 -0000	1.122
+--- java/picocontainer/src/java/org/picocontainer/defaults/DefaultPicoContainer.java	4 Dec 2004 19:52:44 -0000
+***************
+*** 9,34 ****
+   *****************************************************************************/
+  package org.picocontainer.defaults;
+  
+! import org.picocontainer.ComponentAdapter;
+! import org.picocontainer.LifecycleManager;
+! import org.picocontainer.MutablePicoContainer;
+! import org.picocontainer.Parameter;
+! import org.picocontainer.PicoContainer;
+! import org.picocontainer.PicoException;
+! import org.picocontainer.PicoRegistrationException;
+! import org.picocontainer.PicoVerificationException;
+! import org.picocontainer.PicoVisitor;
+  import org.picocontainer.alternatives.ImmutablePicoContainer;
+  
+  import java.io.Serializable;
+! import java.util.ArrayList;
+! import java.util.Collection;
+! import java.util.Collections;
+! import java.util.HashMap;
+! import java.util.HashSet;
+! import java.util.Iterator;
+! import java.util.List;
+! import java.util.Map;
+  
+  /**
+   * <p/>
+--- 9,19 ----
+   *****************************************************************************/
+  package org.picocontainer.defaults;
+  
+! import org.picocontainer.*;
+  import org.picocontainer.alternatives.ImmutablePicoContainer;
+  
+  import java.io.Serializable;
+! import java.util.*;
+  
+  /**
+   * <p/>
+***************
+*** 167,179 ****
+  
+          if (found.size() == 1) {
+              return ((ComponentAdapter) found.get(0));
+!         } else if (found.size() == 0) {
+              if (parent != null) {
+                  return parent.getComponentAdapterOfType(componentType);
+!             } else {
+                  return null;
+              }
+!         } else {
+              Class[] foundClasses = new Class[found.size()];
+              for (int i = 0; i < foundClasses.length; i++) {
+                  ComponentAdapter componentAdapter = (ComponentAdapter) found.get(i);
+--- 152,167 ----
+  
+          if (found.size() == 1) {
+              return ((ComponentAdapter) found.get(0));
+!         }
+!         else if (found.size() == 0) {
+              if (parent != null) {
+                  return parent.getComponentAdapterOfType(componentType);
+!             }
+!             else {
+                  return null;
+              }
+!         }
+!         else {
+              Class[] foundClasses = new Class[found.size()];
+              for (int i = 0; i < foundClasses.length; i++) {
+                  ComponentAdapter componentAdapter = (ComponentAdapter) found.get(i);
+***************
+*** 321,327 ****
+          ComponentAdapter componentAdapter = getComponentAdapter(componentKey);
+          if (componentAdapter != null) {
+              return getInstance(componentAdapter);
+!         } else {
+              return null;
+          }
+      }
+--- 309,316 ----
+          ComponentAdapter componentAdapter = getComponentAdapter(componentKey);
+          if (componentAdapter != null) {
+              return getInstance(componentAdapter);
+!         }
+!         else {
+              return null;
+          }
+      }
+***************
+*** 342,348 ****
+              addOrderedComponentAdapter(componentAdapter);
+  
+              return instance;
+!         } else if (parent != null) {
+              return parent.getComponentInstance(componentAdapter.getComponentKey());
+          }
+  
+--- 331,338 ----
+              addOrderedComponentAdapter(componentAdapter);
+  
+              return instance;
+!         }
+!         else if (parent != null) {
+              return parent.getComponentInstance(componentAdapter.getComponentKey());
+          }
+  
+***************
+*** 438,444 ****
+          final List componentAdapters = new ArrayList(getComponentAdapters());
+          for (Iterator iterator = componentAdapters.iterator(); iterator.hasNext();) {
+              ComponentAdapter componentAdapter = (ComponentAdapter) iterator.next();
+!             componentAdapter.accept(visitor);
+          }
+          final List allChildren = new ArrayList(children);
+          for (Iterator iterator = allChildren.iterator(); iterator.hasNext();) {
+--- 428,437 ----
+          final List componentAdapters = new ArrayList(getComponentAdapters());
+          for (Iterator iterator = componentAdapters.iterator(); iterator.hasNext();) {
+              ComponentAdapter componentAdapter = (ComponentAdapter) iterator.next();
+!             boolean adapterContainsSelf = componentAdapter.getComponentInstance(this) == this;
+!             if (!adapterContainsSelf) {
+!                 componentAdapter.accept(visitor);
+!             }
+          }
+          final List allChildren = new ArrayList(children);
+          for (Iterator iterator = allChildren.iterator(); iterator.hasNext();) {
+
+Index: java/picocontainer/src/java/org/picocontainer/defaults/LifecycleVisitor.java
+===================================================================
+RCS file: /home/projects/picocontainer/scm/java/picocontainer/src/java/org/picocontainer/defaults/LifecycleVisitor.java,v
+retrieving revision 1.14
+diff -c -r1.14 LifecycleVisitor.java
+*** java/picocontainer/src/java/org/picocontainer/defaults/LifecycleVisitor.java	8 Nov 2004 01:29:28 -0000	1.14
+--- java/picocontainer/src/java/org/picocontainer/defaults/LifecycleVisitor.java	4 Dec 2004 19:52:45 -0000
+***************
+*** 55,75 ****
+                  Collections.reverse(componentInstances);
+              }
+              for (Iterator iterator = componentInstances.iterator(); iterator.hasNext();) {
+!                 Object o = iterator.next();
+                  try {
+!                     componentMonitor.invoking(method, o);
+                      long startTime = System.currentTimeMillis();
+!                     method.invoke(o, null);
+!                     componentMonitor.invoked(method, o, System.currentTimeMillis() - startTime);
+                  } catch (IllegalArgumentException e) {
+!                     componentMonitor.invocationFailed(method, o, e);
+!                     throw new PicoIntrospectionException("Can't call " + method.getName() + " on " + o, e);
+                  } catch (IllegalAccessException e) {
+!                     componentMonitor.invocationFailed(method, o, e);
+!                     throw new PicoIntrospectionException("Can't call " + method.getName() + " on " + o, e);
+                  } catch (InvocationTargetException e) {
+!                     componentMonitor.invocationFailed(method, o, e);
+!                     throw new PicoIntrospectionException("Failed when calling " + method.getName() + " on " + o, e.getTargetException());
+                  }
+              }
+          } finally {
+--- 55,77 ----
+                  Collections.reverse(componentInstances);
+              }
+              for (Iterator iterator = componentInstances.iterator(); iterator.hasNext();) {
+!                 Object componentInstance = iterator.next();
+                  try {
+!                     componentMonitor.invoking(method, componentInstance);
+                      long startTime = System.currentTimeMillis();
+!                     if (node != componentInstance) {  // prevent infinite loop
+!                         method.invoke(componentInstance, null);
+!                     }
+!                     componentMonitor.invoked(method, componentInstance, System.currentTimeMillis() - startTime);
+                  } catch (IllegalArgumentException e) {
+!                     componentMonitor.invocationFailed(method, componentInstance, e);
+!                     throw new PicoIntrospectionException("Can't call " + method.getName() + " on " + componentInstance, e);
+                  } catch (IllegalAccessException e) {
+!                     componentMonitor.invocationFailed(method, componentInstance, e);
+!                     throw new PicoIntrospectionException("Can't call " + method.getName() + " on " + componentInstance, e);
+                  } catch (InvocationTargetException e) {
+!                     componentMonitor.invocationFailed(method, componentInstance, e);
+!                     throw new PicoIntrospectionException("Failed when calling " + method.getName() + " on " + componentInstance, e.getTargetException());
+                  }
+              }
+          } finally {

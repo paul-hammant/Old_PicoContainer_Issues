@@ -1,0 +1,133 @@
+Index: nanoweb/src/java/org/nanocontainer/nanoweb/NanoWebServlet.java
+===================================================================
+RCS file: /cvsroot/picocontainer/java/nanoweb/src/java/org/nanocontainer/nanoweb/NanoWebServlet.java,v
+retrieving revision 1.7
+diff -u -r1.7 NanoWebServlet.java
+--- nanoweb/src/java/org/nanocontainer/nanoweb/NanoWebServlet.java	29 Mar 2004 20:30:29 -0000	1.7
++++ nanoweb/src/java/org/nanocontainer/nanoweb/NanoWebServlet.java	23 Apr 2004 05:52:45 -0000
+@@ -56,7 +56,7 @@
+         try {
+             containerLauncher.startContainer();
+             String servletPath = getServletPath(httpServletRequest);
+-            String scriptPathWithoutExtension = servletPath.substring(0, servletPath.lastIndexOf('/'));
++            String scriptPathWithoutExtension = servletPath.substring(0, servletPath.lastIndexOf('.'));
+ 
+             Object action = getActionObject(scriptPathWithoutExtension, httpServletRequest);
+             setPropertiesWithOgnl(httpServletRequest, action);
+Index: nanoweb/src/test/org/nanocontainer/nanoweb/NanoWebServletTestCase.java
+===================================================================
+RCS file: /cvsroot/picocontainer/java/nanoweb/src/test/org/nanocontainer/nanoweb/NanoWebServletTestCase.java,v
+retrieving revision 1.6
+diff -u -r1.6 NanoWebServletTestCase.java
+--- nanoweb/src/test/org/nanocontainer/nanoweb/NanoWebServletTestCase.java	30 Mar 2004 11:46:02 -0000	1.6
++++ nanoweb/src/test/org/nanocontainer/nanoweb/NanoWebServletTestCase.java	23 Apr 2004 18:39:22 -0000
+@@ -55,7 +55,7 @@
+         servletConfigMock.expectAndReturn("getServletContext", servletContextMock.proxy());
+         servletConfigMock.expectAndReturn("getServletContext", servletContextMock.proxy());
+         servletContextMock.expect("log", C.args(C.eq("NanoWeb: init")));
+-        servletContextMock.expectAndReturn("getResource", C.args(C.eq("/test_doit_success.vm")), new URL("http://dummy/"));
++        servletContextMock.expectAndReturn("getResource", C.args(C.eq("/test/doit_doit_success.vm")), new URL("http://dummy/"));
+         containerBuilderMock = new Mock(ContainerBuilder.class);
+         servletContextMock.expectAndReturn("getAttribute", C.args(C.eq(KeyConstants.BUILDER)), containerBuilderMock.proxy());
+         requestContainer = new DefaultPicoContainer();
+@@ -77,18 +77,18 @@
+ 
+         // path, action and view
+         requestMock.expectAndReturn("getServletPath", "/test/doit.nano");
+-        requestMock.expectAndReturn("getRequestDispatcher", C.args(C.eq("/test_doit_success.vm")), requestDispatcherMock.proxy());
++        requestMock.expectAndReturn("getRequestDispatcher", C.args(C.eq("/test/doit_doit_success.vm")), requestDispatcherMock.proxy());
+ 
+         nanoServlet.init((ServletConfig) servletConfigMock.proxy());
+     }
+ 
+     public void testParametersShouldBeSetAndExecuteInvokedOnJavaAction() throws IOException, ServletException {
+-        requestContainer.registerComponentImplementation("/test", MyAction.class);
++        requestContainer.registerComponentImplementation("/test/doit", MyAction.class);
+         requestMock.expect("setAttribute", C.args(C.eq("action"), C.isA(MyAction.class)));
+ 
+         nanoServlet.service((HttpServletRequest)requestMock.proxy(), (HttpServletResponse)responseMock.proxy());
+ 
+-        MyAction action = (MyAction) requestContainer.getComponentInstance("/test");
++        MyAction action = (MyAction) requestContainer.getComponentInstance("/test/doit");
+         assertEquals(2004, action.getYear());
+         assertEquals("success", action.doit());
+ 
+@@ -97,12 +97,12 @@
+ 
+     public void testParametersShouldBeSetAndExecuteInvokedOnGroovyAction() throws IOException, ServletException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+         servletConfigMock.expectAndReturn("getServletContext", servletContextMock.proxy());
+-        servletContextMock.expectAndReturn("getResource", C.args(C.eq("/test.groovy")), getClass().getResource("/test.groovy"));
++        servletContextMock.expectAndReturn("getResource", C.args(C.eq("/test/doit.groovy")), getClass().getResource("/test.groovy"));
+         requestMock.expect("setAttribute", C.args(C.eq("action"), C.isA(Object.class)));
+ 
+         nanoServlet.service((HttpServletRequest)requestMock.proxy(), (HttpServletResponse)responseMock.proxy());
+ 
+-        Object action = requestContainer.getComponentInstance("/test.groovy");
++        Object action = requestContainer.getComponentInstance("/test/doit.groovy");
+         Method getYear = action.getClass().getMethod("getYear", null);
+         Object resultYear = getYear.invoke(action, null);
+         assertEquals("2004", resultYear);
+Index: sample-nanoweb/src/test/org/nanocontainer/sample/nanoweb/IntegrationTestCase.java
+===================================================================
+RCS file: /cvsroot/picocontainer/java/sample-nanoweb/src/test/org/nanocontainer/sample/nanoweb/IntegrationTestCase.java,v
+retrieving revision 1.4
+diff -u -r1.4 IntegrationTestCase.java
+--- sample-nanoweb/src/test/org/nanocontainer/sample/nanoweb/IntegrationTestCase.java	29 Mar 2004 20:30:30 -0000	1.4
++++ sample-nanoweb/src/test/org/nanocontainer/sample/nanoweb/IntegrationTestCase.java	23 Apr 2004 18:42:30 -0000
+@@ -36,7 +36,7 @@
+ 
+             server.start();
+ 
+-            URL url = new URL("http://localhost:" + PORT + "/nanocontainer-sample-nanoweb/game/play.nano");
++            URL url = new URL("http://localhost:" + PORT + "/nanocontainer-sample-nanoweb/game.nano");
+             InputStream expected = getClass().getResourceAsStream("expected.xhtml");
+ 
+             InputStream actual = url.openStream();
+Index: sample-nanoweb/src/test/org/nanocontainer/sample/nanoweb/expected.xhtml
+===================================================================
+RCS file: /cvsroot/picocontainer/java/sample-nanoweb/src/test/org/nanocontainer/sample/nanoweb/expected.xhtml,v
+retrieving revision 1.3
+diff -u -r1.3 expected.xhtml
+--- sample-nanoweb/src/test/org/nanocontainer/sample/nanoweb/expected.xhtml	29 Mar 2004 20:30:30 -0000	1.3
++++ sample-nanoweb/src/test/org/nanocontainer/sample/nanoweb/expected.xhtml	23 Apr 2004 18:42:07 -0000
+@@ -5,7 +5,7 @@
+     <p>
+         Guess a number between 1 and 20
+     </p>
+-    <form action="play.groovy">
++    <form action="game.groovy">
+         <input name="guess" type="text" value="-2147483648"/>
+         <input type="submit" value="Guess"/>
+     </form>
+Index: sample-nanoweb/src/webapp/game.groovy
+===================================================================
+RCS file: /cvsroot/picocontainer/java/sample-nanoweb/src/webapp/game.groovy,v
+retrieving revision 1.4
+diff -u -r1.4 game.groovy
+--- sample-nanoweb/src/webapp/game.groovy	30 Mar 2004 11:29:35 -0000	1.4
++++ sample-nanoweb/src/webapp/game.groovy	23 Apr 2004 18:41:29 -0000
+@@ -18,7 +18,7 @@
+         numberToGuess = n
+     }
+ 
+-    play() {
++    game() {
+         if (guess == Integer.MIN_VALUE || guess.equals(numberToGuess.getNumber())) {
+             hint = GUESS_NEW_HINT
+             numberToGuess.newRandom()
+Index: sample-nanoweb/src/webapp/game_input.vm
+===================================================================
+RCS file: /cvsroot/picocontainer/java/sample-nanoweb/src/webapp/game_input.vm,v
+retrieving revision 1.3
+diff -u -r1.3 game_input.vm
+--- sample-nanoweb/src/webapp/game_input.vm	29 Mar 2004 20:56:07 -0000	1.3
++++ sample-nanoweb/src/webapp/game_input.vm	23 Apr 2004 18:41:40 -0000
+@@ -6,7 +6,7 @@
+         <p>
+             ${action.hint}
+         </p>
+-        <form action="play.groovy">
++        <form action="game.groovy">
+             <input name="guess" type="text" value="${action.guess}"/>
+             <input type="submit" value="Guess"/>
+         </form>

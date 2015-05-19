@@ -1,0 +1,88 @@
+Index: src/java/org/nanocontainer/nanoweb/CachingScriptClassLoader.java
+===================================================================
+RCS file: /cvsroot/picocontainer/java/nanoweb/src/java/org/nanocontainer/nanoweb/CachingScriptClassLoader.java,v
+retrieving revision 1.1
+diff -u -r1.1 CachingScriptClassLoader.java
+--- src/java/org/nanocontainer/nanoweb/CachingScriptClassLoader.java	21 Mar 2004 16:11:18 -0000	1.1
++++ src/java/org/nanocontainer/nanoweb/CachingScriptClassLoader.java	27 Mar 2004 20:06:33 -0000
+@@ -7,6 +7,7 @@
+ import java.net.URLConnection;
+ import java.util.Map;
+ import java.util.HashMap;
++import java.util.Collections;
+ 
+ import groovy.lang.GroovyClassLoader;
+ 
+@@ -17,8 +18,8 @@
+  * @version $Revision: 1.1 $
+  */
+ public class CachingScriptClassLoader {
+-    private final Map groovyActionLoadTimestamps = new HashMap();
+-    private final Map scriptClasses = new HashMap();
++    private final Map groovyActionLoadTimestamps = Collections.synchronizedMap(new HashMap());
++    private final Map scriptClasses = Collections.synchronizedMap(new HashMap());
+ 
+     public Class getClass(URL scriptURL) throws SyntaxException, IOException {
+         String urlAsString = scriptURL.toExternalForm();
+@@ -29,7 +30,7 @@
+             cache(scriptURL, urlConnection, scriptClass);
+         } else {
+             Long lastLoaded = (Long) groovyActionLoadTimestamps.get(urlAsString);
+-            if(lastLoaded.longValue() < urlConnection.getDate()) {
++            if(lastLoaded.longValue() < urlConnection.getLastModified()) {
+                 scriptClass = loadGroovyClass(urlConnection, scriptURL);
+                 cache(scriptURL, urlConnection, scriptClass);
+             }
+@@ -46,7 +47,7 @@
+     private void cache(URL scriptURL, URLConnection urlConnection, Class scriptClass) {
+         String urlAsString = scriptURL.toExternalForm();
+         scriptClasses.put(urlAsString, scriptClass);
+-        long lastChanged = urlConnection.getDate();
++        long lastChanged = urlConnection.getLastModified();
+         groovyActionLoadTimestamps.put(urlAsString, new Long(lastChanged));
+     }
+ }
+Index: src/test/org/nanocontainer/nanoweb/CachingScriptClassLoaderTestCase.java
+===================================================================
+RCS file: /cvsroot/picocontainer/java/nanoweb/src/test/org/nanocontainer/nanoweb/CachingScriptClassLoaderTestCase.java,v
+retrieving revision 1.1
+diff -u -r1.1 CachingScriptClassLoaderTestCase.java
+--- src/test/org/nanocontainer/nanoweb/CachingScriptClassLoaderTestCase.java	21 Mar 2004 16:11:18 -0000	1.1
++++ src/test/org/nanocontainer/nanoweb/CachingScriptClassLoaderTestCase.java	27 Mar 2004 20:06:33 -0000
+@@ -34,16 +34,16 @@
+         MockURLStreamHandler urlStreamHandler = new MockURLStreamHandler(urlConnection);
+ 
+         URL classUrl = new URL("test", "test", -1, "test", urlStreamHandler);
+-        urlConnection.setDate(1);
++        urlConnection.setLastModified(1);
+         Class clazz1 = loader.getClass(classUrl);
+-        urlConnection.setDate(2);
++        urlConnection.setLastModified(2);
+         Class clazz2 = loader.getClass(classUrl);
+         assertNotSame(clazz1, clazz2);
+     }
+ 
+     private static class MockURLConnection extends URLConnection {
+         private final String GROOVY_CLASS = "class GroovyClass{}";
+-        private long date;
++        private long lastModified;
+ 
+         public MockURLConnection() {
+             super(null);
+@@ -56,12 +56,12 @@
+             return new StringBufferInputStream(GROOVY_CLASS);
+         }
+ 
+-        public void setDate(long date) {
+-            this.date = date;
++        public void setLastModified(long lastModified) {
++            this.lastModified = lastModified;
+         }
+ 
+-        public long getDate() {
+-            return date;
++        public long getLastModified() {
++            return lastModified;
+         }
+     }
+ 

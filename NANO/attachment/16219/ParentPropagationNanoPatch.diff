@@ -1,0 +1,277 @@
+Index: trunk/container/src/test/org/nanocontainer/script/groovy/NanoContainerBuilderJsrTestCase.java
+===================================================================
+--- trunk/container/src/test/org/nanocontainer/script/groovy/NanoContainerBuilderJsrTestCase.java	(revision 2250)
++++ trunk/container/src/test/org/nanocontainer/script/groovy/NanoContainerBuilderJsrTestCase.java	(working copy)
+@@ -8,11 +8,14 @@
+ import org.picocontainer.PicoContainer;
+ import org.picocontainer.MutablePicoContainer;
+ import org.picocontainer.defaults.ComponentAdapterFactory;
++import org.picocontainer.defaults.SetterInjectionComponentAdapterFactory;
+ import org.picocontainer.defaults.InstanceComponentAdapter;
+ import org.picocontainer.defaults.UnsatisfiableDependenciesException;
+ 
+ import java.io.Reader;
+ import java.io.StringReader;
++import org.picocontainer.ComponentAdapter;
++import org.picocontainer.defaults.SetterInjectionComponentAdapter;
+ 
+ /**
+  * Test with groovy jsr parser
+@@ -263,6 +266,9 @@
+         assertEquals("Should match the expression", "<A<C<BB>C>A>!B!C!A", X.componentRecorder);
+     }
+ 
++
++
++
+     public void testBuildContainerWithParentAttribute() {
+         DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
+         parent.registerComponentInstance("hello", "world");
+@@ -282,6 +288,27 @@
+         assertEquals("world", pico.getComponentInstance("hello"));
+     }
+ 
++    public void testBuildContainerWithParentAttributesPropagatesComponentAdapterFactory() {
++
++        DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer(new SetterInjectionComponentAdapterFactory() );
++
++        Reader script = new StringReader("" +
++                "package org.nanocontainer.script.groovy\n" +
++                "nano = new NanoContainerBuilder().container(parent:parent) {\n" +
++                "}\n");
++
++        MutablePicoContainer pico = (MutablePicoContainer)buildContainer(
++                        new GroovyContainerBuilder(script, getClass().getClassLoader()),
++                        parent,
++                        "SOME_SCOPE");
++
++        // Should be able to get instance that was registered in the parent container
++        ComponentAdapter componentAdapter = pico.registerComponentImplementation(String.class);
++        assertTrue("ComponentAdapter should be originally defined by parent" , componentAdapter instanceof SetterInjectionComponentAdapter);
++    }
++
++
++
+     public void testExceptionThrownWhenParentAttributeDefinedWithinChild() {
+         Reader script = new StringReader("" +
+                 "package org.nanocontainer.script.groovy\n" +
+@@ -328,10 +355,10 @@
+ 
+ 
+ 
+-    	public void testWithDynamicClassPath() {
+-    		DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
++            public void testWithDynamicClassPath() {
++                    DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
+ 
+-    		Reader script = new StringReader("" +
++                    Reader script = new StringReader("" +
+                     "        File testCompJar = new File(System.getProperty(\"testcomp.jar\"))\n" +
+                     "        compJarPath = testCompJar.getCanonicalPath()\n" +
+                     "        child = null\n" +
+@@ -341,19 +368,20 @@
+                     "        }" +
+                     "");
+ 
+-    		MutablePicoContainer pico = (MutablePicoContainer) buildContainer(
++                    MutablePicoContainer pico = (MutablePicoContainer) buildContainer(
+                     new GroovyContainerBuilder(script, getClass().getClassLoader()),
+                     parent,
+                     "SOME_SCOPE");
+ 
+             assertTrue(pico.getComponentInstances().size() == 1);
+             assertEquals("TestComp",pico.getComponentInstances().get(0).getClass().getName());
+-    	}
++            }
+ 
+-    	public void testWithDynamicClassPathWithPermissions() {
+-    		DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
+ 
+-    		Reader script = new StringReader("" +
++            public void testWithDynamicClassPathWithPermissions() {
++                    DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
++
++                    Reader script = new StringReader("" +
+                     "        File testCompJar = new File(System.getProperty(\"testcomp.jar\"))\n" +
+                     "        compJarPath = testCompJar.getCanonicalPath()\n" +
+                     "        child = null\n" +
+@@ -365,7 +393,7 @@
+                     "        }" +
+                     "");
+ 
+-    		MutablePicoContainer pico = (MutablePicoContainer) buildContainer(
++                    MutablePicoContainer pico = (MutablePicoContainer) buildContainer(
+                     new GroovyContainerBuilder(script, getClass().getClassLoader()),
+                     parent,
+                     "SOME_SCOPE");
+@@ -374,7 +402,7 @@
+             assertTrue(pico.getComponentInstances().size() == 1);
+ 
+             // can't actually test the permission under JUNIT control. We're just testing the syntax here.
+-    	}
++            }
+ 
+     public void testGrantPermissionInWrongPlace() {
+         DefaultNanoPicoContainer parent = new DefaultNanoPicoContainer();
+Index: trunk/container/src/java/org/nanocontainer/script/groovy/NanoContainerBuilder.java
+===================================================================
+--- trunk/container/src/java/org/nanocontainer/script/groovy/NanoContainerBuilder.java	(revision 2250)
++++ trunk/container/src/java/org/nanocontainer/script/groovy/NanoContainerBuilder.java	(working copy)
+@@ -44,8 +44,16 @@
+ import java.security.Permission;
+ 
+ /**
+- * Builds trees of PicoContainers and Pico components using GroovyMarkup
+- *
++ * Builds trees of PicoContainers and Pico components using GroovyMarkup.
++ * <p>Simple example usage in your groovy script:
++ * <code><pre>
++ * builder = new org.nanocontainer.script.groovy.NanoContainerBuilder()
++ * pico = builder.container(parent:parent) {
++ * &nbsp;&nbsp;component(class:org.nanocontainer.testmodel.DefaultWebServerConfig)
++ * &nbsp;&nbsp;component(class:org.nanocontainer.testmodel.WebServerImpl)
++ * }
++ * </pre></code>
++ * </p>
+  * @author <a href="mailto:james@coredevelopers.net">James Strachan</a>
+  * @author Paul Hammant
+  * @author Aslak Helles&oslash;y
+@@ -90,6 +98,15 @@
+         return createNode(name, attributes);
+     }
+ 
++    /**
++     * Override of create node.  Called by BuilderSupport.  It examines the
++     * current state of the builder and the given parameters and dispatches the
++     * code to one of the create* private functions in this object.
++     * @param name The name of the groovy node we're building.  Examples are
++     * 'container', and 'grant',
++     * @param attributes Map  attributes of the current invocation.
++     * @return Object the created object.
++     */
+     protected Object createNode(Object name, Map attributes) {
+         Object current = getCurrent();
+         if (current != null && current instanceof GroovyObject) {
+@@ -253,17 +270,34 @@
+         return createNode(name, attributes);
+     }
+ 
++    /**
++     * Creates a new container.  There may or may not be a parent to this container.
++     * Supported attributes are:
++     * <ul>
++     *  <li><tt>componentAdapterFactory</tt>: The Component Adapter Factory to be used as default for the new
++     * container</li>
++     * </ul>
++     * @param attributes Map Attributes defined by the builder in the script.
++     * @param parent NanoContainer  The parent container.  May be null.
++     * @return constructed NanoContainer.
++     */
+     protected NanoContainer createChildContainer(Map attributes, NanoContainer parent) {
+-        ComponentAdapterFactory componentAdapterFactory = (ComponentAdapterFactory) attributes.remove("componentAdapterFactory");
+-        componentAdapterFactory = componentAdapterFactory != null ? componentAdapterFactory : new DefaultComponentAdapterFactory();
++        final ComponentAdapterFactory specifiedComponentAdapterFactory = (ComponentAdapterFactory) attributes.remove("componentAdapterFactory");
++        ComponentAdapterFactory componentAdapterFactory = specifiedComponentAdapterFactory != null ? specifiedComponentAdapterFactory : new DefaultComponentAdapterFactory();
+         ComponentAdapterFactory wrappedComponentAdapterFactory = nanoContainerBuilderDecorationDelegate.decorate(componentAdapterFactory, attributes);
+ 
+         ClassLoader parentClassLoader = null;
+         MutablePicoContainer wrappedPicoContainer = null;
+         if (parent != null) {
+             parentClassLoader = parent.getComponentClassLoader();
+-            wrappedPicoContainer = new DefaultPicoContainer(wrappedComponentAdapterFactory, parent.getPico());
+-            parent.getPico().addChildContainer(wrappedPicoContainer);
++            //If no specified adapter, then just propagate parent's
++            //adapter to child.
++            if (specifiedComponentAdapterFactory == null) {
++                wrappedPicoContainer = parent.getPico().makeChildContainer();
++            } else {
++                wrappedPicoContainer = new DefaultPicoContainer(wrappedComponentAdapterFactory, parent.getPico());
++                parent.getPico().addChildContainer(wrappedPicoContainer);
++            }
+         } else {
+             //parentClassLoader = (ClassLoader) attributes.remove("parentClassLoader");
+             //if (parentClassLoader == null) {
+Index: trunk/container/src/java/org/nanocontainer/reflection/ImplementationHidingNanoPicoContainer.java
+===================================================================
+--- trunk/container/src/java/org/nanocontainer/reflection/ImplementationHidingNanoPicoContainer.java	(revision 2250)
++++ trunk/container/src/java/org/nanocontainer/reflection/ImplementationHidingNanoPicoContainer.java	(working copy)
+@@ -72,10 +72,24 @@
+         this(ImplementationHidingNanoPicoContainer.class.getClassLoader(), null);
+     }
+ 
++    /**
++     * Copy Constructor.  Copy across the lifecyclemanager, child container type, classloader
++     * and component adapter factory from the parent.
++     * <p><tt>Note:</tt> This constructor is protected because are existing scripts
++     * that call <tt>new ImplementationHidingNanoPicoContainer(PicoContainer)</tt>, and they get this
++     * constructor instead (which has different behavior).</p>
++     * @param parent ImplementationHidingNanoPicoContainer
++     */
++    protected ImplementationHidingNanoPicoContainer(final ImplementationHidingNanoPicoContainer parent) {
++        super(parent.getDelegate().makeChildContainer(), parent.getComponentClassLoader());
++        this.lifecycleManager = parent.lifecycleManager;
++    }
++
+     public MutablePicoContainer makeChildContainer(String name) {
+-        ClassLoader currentClassloader = container.getComponentClassLoader();
+-        ImplementationHidingNanoPicoContainer child = new ImplementationHidingNanoPicoContainer(currentClassloader, this, lifecycleManager);
+-        getDelegate().addChildContainer(child);
++//        ClassLoader currentClassloader = container.getComponentClassLoader();
++//        ImplementationHidingNanoPicoContainer child = new ImplementationHidingNanoPicoContainer(currentClassloader, this, lifecycleManager);
++        ImplementationHidingNanoPicoContainer child = new ImplementationHidingNanoPicoContainer(this);
++//        getDelegate().addChildContainer(child);
+         namedChildContainers.put(name, child);
+         return child;
+     }
+Index: trunk/container/src/java/org/nanocontainer/reflection/DefaultNanoPicoContainer.java
+===================================================================
+--- trunk/container/src/java/org/nanocontainer/reflection/DefaultNanoPicoContainer.java	(revision 2250)
++++ trunk/container/src/java/org/nanocontainer/reflection/DefaultNanoPicoContainer.java	(working copy)
+@@ -41,6 +41,7 @@
+         this.lifecycleManager = lifcycleManager;
+     }
+ 
++
+     public DefaultNanoPicoContainer(ClassLoader classLoader, ComponentAdapterFactory caf, PicoContainer parent) {
+         this(classLoader, caf, parent, new DefaultLifecycleManager());
+ 
+@@ -55,6 +56,20 @@
+         this.lifecycleManager = new DefaultLifecycleManager();
+     }
+ 
++    /**
++     * Copy Constructor.  Makes a new DefaultNanoPicoContainer with the given
++     * attributes (classloader, lifecyclemanager, picocontainer class, component adapter factory)
++     * as the parent.
++     * <p><tt>Note:</tt> This constructor is protected because are existing scripts
++     * that call <tt>new DefaultNanoPicoContainer(PicoContainer)</tt>, and they get this
++     * constructor instead (which has different behavior).</p>
++     * @param parent  The object to copy.
++     */
++    protected DefaultNanoPicoContainer(final DefaultNanoPicoContainer parent) {
++        super(parent.getDelegate().makeChildContainer(),  parent.getComponentClassLoader());
++        this.lifecycleManager = parent.lifecycleManager;
++    }
++
+     public DefaultNanoPicoContainer(ClassLoader classLoader, PicoContainer parent, ComponentMonitor componentMonitor) {
+         super(new DefaultPicoContainer(new DefaultComponentAdapterFactory(componentMonitor), parent), classLoader);
+         this.lifecycleManager = new DefaultLifecycleManager(componentMonitor);
+@@ -80,10 +95,15 @@
+         this.lifecycleManager = new DefaultLifecycleManager();
+     }
+ 
++    /**
++     * Makes a child container with the same basic characteristics of <tt>this</tt>
++     * object.  (ComponentAdapterFactory, Wrapped picocontainer, lifecyclemanager, etc)
++     * @param name String
++     * @return MutablePicoContainer
++     */
+     public MutablePicoContainer makeChildContainer(String name) {
+-        ClassLoader currentClassloader = container.getComponentClassLoader();
+-        DefaultNanoPicoContainer child = new DefaultNanoPicoContainer(currentClassloader, this, lifecycleManager);
+-        getDelegate().addChildContainer(child);
++        DefaultNanoPicoContainer child = new DefaultNanoPicoContainer(this);
++//        getDelegate().addChildContainer(child);  ?Done by  this.makeChild
+         namedChildContainers.put(name, child);
+         return child;
+     }

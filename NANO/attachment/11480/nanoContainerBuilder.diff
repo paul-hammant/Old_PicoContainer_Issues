@@ -1,0 +1,64 @@
+Index: src/java/org/nanocontainer/NanoContainer.java
+===================================================================
+RCS file: /cvsroot/picocontainer/java/nanocontainer/src/java/org/nanocontainer/NanoContainer.java,v
+retrieving revision 1.21
+diff -u -r1.21 NanoContainer.java
+--- src/java/org/nanocontainer/NanoContainer.java	18 Feb 2004 18:34:38 -0000	1.21
++++ src/java/org/nanocontainer/NanoContainer.java	19 Feb 2004 15:05:12 -0000
+@@ -46,28 +46,27 @@
+     private ScriptedContainerBuilder containerBuilder;
+ 
+     public NanoContainer(File compositionFile, PicoContainer parent, ClassLoader classLoader) throws IOException, ClassNotFoundException {
+-        this(new FileReader(fileExists(compositionFile)), getLanguage(compositionFile), parent, classLoader);
++        this(new FileReader(fileExists(compositionFile)), getBuilderClass(compositionFile), parent, classLoader);
+     }
+ 
+     public NanoContainer(File compositionFile, PicoContainer parent) throws IOException, ClassNotFoundException {
+-        this(new FileReader(fileExists(compositionFile)), getLanguage(compositionFile), parent, NanoContainer.class.getClassLoader());
++        this(new FileReader(fileExists(compositionFile)), getBuilderClass(compositionFile), parent, NanoContainer.class.getClassLoader());
+     }
+ 
+     public NanoContainer(File compositionFile) throws IOException, ClassNotFoundException {
+-        this(new FileReader(fileExists(compositionFile)), getLanguage(compositionFile), new NullPicoContainer(), NanoContainer.class.getClassLoader());
++        this(new FileReader(fileExists(compositionFile)), getBuilderClass(compositionFile), new NullPicoContainer(), NanoContainer.class.getClassLoader());
+     }
+ 
+-    public NanoContainer(Reader composition, String extension, ClassLoader classLoader) throws ClassNotFoundException {
+-        this(composition, extension, null, classLoader);
++    public NanoContainer(Reader composition, String builderClass, ClassLoader classLoader) throws ClassNotFoundException {
++        this(composition, builderClass, null, classLoader);
+     }
+ 
+-    public NanoContainer(Reader composition, String extension) throws ClassNotFoundException {
+-        this(composition, extension, null, NanoContainer.class.getClassLoader());
++    public NanoContainer(Reader composition, String builderClass) throws ClassNotFoundException {
++        this(composition, builderClass, null, NanoContainer.class.getClassLoader());
+     }
+ 
+-    public NanoContainer(Reader composition, String extension, PicoContainer parent, ClassLoader classLoader) throws ClassNotFoundException {
++    public NanoContainer(Reader composition, String builderClass, PicoContainer parent, ClassLoader classLoader) throws ClassNotFoundException {
+ 
+-        String containerAssemblerClassName = (String) extensionToComposers.get(extension);
+         DefaultReflectionContainerAdapter defaultReflectionContainerAdapter;
+         {
+             // disposable.
+@@ -76,7 +75,7 @@
+             dpc.registerComponentInstance(classLoader);
+             defaultReflectionContainerAdapter = new DefaultReflectionContainerAdapter(dpc);
+         }
+-        ComponentAdapter componentAdapter = defaultReflectionContainerAdapter.registerComponentImplementation(containerAssemblerClassName);
++        ComponentAdapter componentAdapter = defaultReflectionContainerAdapter.registerComponentImplementation(builderClass);
+         containerBuilder = (ScriptedContainerBuilder) componentAdapter.getComponentInstance();
+         final ObjectReference parentRef = new SimpleReference();
+         parentRef.set(parent);
+@@ -90,6 +89,10 @@
+             throw new RuntimeException("File " + compositionFile.getName() + " does not exist.");
+         }
+     }
++
++	private static String getBuilderClass(File compositionFile) throws IOException {
++		return (String) extensionToComposers.get(getLanguage(compositionFile));
++	}
+ 
+     private static String getLanguage(File compositionFile) throws IOException {
+         return compositionFile.getCanonicalPath().substring(compositionFile.getCanonicalPath().lastIndexOf("."));

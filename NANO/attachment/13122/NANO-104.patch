@@ -1,0 +1,278 @@
+Index: deployer/project.xml
+===================================================================
+RCS file: /scm/picocontainer/java/deployer/project.xml,v
+retrieving revision 1.26
+diff -u -u -r1.26 project.xml
+--- deployer/project.xml	2 Aug 2004 22:54:46 -0000	1.26
++++ deployer/project.xml	2 Oct 2004 07:45:01 -0000
+@@ -49,18 +49,18 @@
+ 
+         <dependency>
+             <id>groovy</id>
+-            <version>1.0-beta-6</version>
++            <version>1.0-beta-7</version>
+         </dependency>
+ 
+         <dependency>
+             <id>asm</id>
+-            <version>1.4.1</version>
++            <version>1.4.3</version>
+         </dependency>
+ 
+         <dependency>
+             <groupId>asm</groupId>
+             <artifactId>asm-util</artifactId>
+-            <version>1.4.1</version>
++            <version>1.4.3</version>
+         </dependency>
+ 
+         <dependency>
+Index: microcontainer/project.xml
+===================================================================
+RCS file: /scm/picocontainer/java/microcontainer/project.xml,v
+retrieving revision 1.15
+diff -u -u -r1.15 project.xml
+--- microcontainer/project.xml	19 Aug 2004 02:17:04 -0000	1.15
++++ microcontainer/project.xml	2 Oct 2004 07:45:01 -0000
+@@ -51,18 +51,18 @@
+ 
+         <dependency>
+             <id>asm</id>
+-            <version>1.4.1</version>
++            <version>1.4.3</version>
+         </dependency>
+ 
+         <dependency>
+             <groupId>asm</groupId>
+             <artifactId>asm-util</artifactId>
+-            <version>1.4.1</version>
++            <version>1.4.3</version>
+         </dependency>
+ 
+         <dependency>
+             <id>groovy</id>
+-            <version>1.0-beta-6</version>
++            <version>1.0-beta-7</version>
+         </dependency>
+ 
+         <dependency>
+Index: nanoaop/project.xml
+===================================================================
+RCS file: /scm/picocontainer/java/nanoaop/project.xml,v
+retrieving revision 1.7
+diff -u -u -r1.7 project.xml
+--- nanoaop/project.xml	5 Aug 2004 05:21:37 -0000	1.7
++++ nanoaop/project.xml	2 Oct 2004 07:45:01 -0000
+@@ -23,13 +23,13 @@
+ 
+         <dependency>
+             <id>asm</id>
+-            <version>1.4.1</version>
++            <version>1.4.3</version>
+         </dependency>
+ 
+         <dependency>
+             <groupId>asm</groupId>
+             <artifactId>asm-util</artifactId>
+-            <version>1.4.1</version>
++            <version>1.4.3</version>
+         </dependency>
+ 
+         <dependency>
+@@ -55,7 +55,7 @@
+ 
+         <dependency>
+             <id>groovy</id>
+-            <version>1.0-beta-6</version>
++            <version>1.0-beta-7</version>
+         </dependency>
+ 
+         <dependency>
+Index: nanocontainer/project.xml
+===================================================================
+RCS file: /scm/picocontainer/java/nanocontainer/project.xml,v
+retrieving revision 1.67
+diff -u -u -r1.67 project.xml
+--- nanocontainer/project.xml	5 Sep 2004 20:59:45 -0000	1.67
++++ nanocontainer/project.xml	2 Oct 2004 07:45:02 -0000
+@@ -59,18 +59,18 @@
+ 
+         <dependency>
+             <id>groovy</id>
+-            <version>1.0-beta-6</version>
++            <version>1.0-beta-7</version>
+         </dependency>
+ 
+         <dependency>
+             <id>asm</id>
+-            <version>1.4.1</version>
++            <version>1.4.3</version>
+         </dependency>
+ 
+         <dependency>
+             <groupId>asm</groupId>
+             <artifactId>asm-util</artifactId>
+-            <version>1.4.1</version>
++            <version>1.4.3</version>
+         </dependency>
+ 
+         <dependency>
+Index: nanocontainer/src/java/org/nanocontainer/script/groovy/GroovyContainerBuilder.java
+===================================================================
+RCS file: /scm/picocontainer/java/nanocontainer/src/java/org/nanocontainer/script/groovy/GroovyContainerBuilder.java,v
+retrieving revision 1.24
+diff -u -u -r1.24 GroovyContainerBuilder.java
+--- nanocontainer/src/java/org/nanocontainer/script/groovy/GroovyContainerBuilder.java	6 Sep 2004 08:39:35 -0000	1.24
++++ nanocontainer/src/java/org/nanocontainer/script/groovy/GroovyContainerBuilder.java	2 Oct 2004 07:45:02 -0000
+@@ -11,6 +11,7 @@
+ 
+ import groovy.lang.Binding;
+ import groovy.lang.GroovyClassLoader;
++import groovy.lang.MissingPropertyException;
+ import groovy.lang.Script;
+ import org.codehaus.groovy.control.CompilationFailedException;
+ import org.codehaus.groovy.runtime.InvokerHelper;
+@@ -54,8 +55,10 @@
+ 
+         // both returning something or defining the variable is ok.
+         Object result = groovyScript.run();
+-        Object picoVariable = binding.getVariable("pico");
+-        if (picoVariable == null) {
++        Object picoVariable;
++        try {
++            picoVariable = binding.getVariable("pico");
++        } catch (MissingPropertyException e) {
+             picoVariable = result;
+         }
+         if (picoVariable instanceof PicoContainer) {
+Index: nanowar/project.xml
+===================================================================
+RCS file: /scm/picocontainer/java/nanowar/project.xml,v
+retrieving revision 1.12
+diff -u -u -r1.12 project.xml
+--- nanowar/project.xml	4 Sep 2004 06:20:45 -0000	1.12
++++ nanowar/project.xml	2 Oct 2004 07:45:02 -0000
+@@ -32,18 +32,18 @@
+         
+         <dependency>
+             <id>groovy</id>
+-            <version>1.0-beta-6</version>
++            <version>1.0-beta-7</version>
+         </dependency>
+ 
+         <dependency>
+             <id>asm</id>
+-            <version>1.4.1</version>
++            <version>1.4.3</version>
+         </dependency>
+ 
+         <dependency>
+             <groupId>asm</groupId>
+             <artifactId>asm-util</artifactId>
+-            <version>1.4.1</version>
++            <version>1.4.3</version>
+         </dependency>
+ 
+         <dependency>
+Index: sample-nanowar/project.xml
+===================================================================
+RCS file: /scm/picocontainer/java/sample-nanowar/project.xml,v
+retrieving revision 1.7
+diff -u -u -r1.7 project.xml
+--- sample-nanowar/project.xml	13 Sep 2004 21:46:08 -0000	1.7
++++ sample-nanowar/project.xml	2 Oct 2004 07:45:02 -0000
+@@ -59,7 +59,7 @@
+         -->
+         <dependency>
+             <id>groovy</id>
+-            <version>1.0-beta-6</version>
++            <version>1.0-beta-7</version>
+             <properties>
+                 <war.bundle>true</war.bundle>
+             </properties>
+@@ -67,7 +67,7 @@
+ 
+         <dependency>
+             <id>asm</id>
+-            <version>1.4.1</version>
++            <version>1.4.3</version>
+             <properties>
+                 <war.bundle>true</war.bundle>
+             </properties>
+@@ -76,7 +76,7 @@
+         <dependency>
+             <groupId>asm</groupId>
+             <artifactId>asm-util</artifactId>
+-            <version>1.4.1</version>
++            <version>1.4.3</version>
+             <properties>
+                 <war.bundle>true</war.bundle>
+             </properties>
+Index: sample-nanoweb/project.xml
+===================================================================
+RCS file: /scm/picocontainer/java/sample-nanoweb/project.xml,v
+retrieving revision 1.20
+diff -u -u -r1.20 project.xml
+--- sample-nanoweb/project.xml	2 Aug 2004 22:54:48 -0000	1.20
++++ sample-nanoweb/project.xml	2 Oct 2004 07:45:03 -0000
+@@ -51,7 +51,7 @@
+         -->
+         <dependency>
+             <id>groovy</id>
+-            <version>1.0-beta-6</version>
++            <version>1.0-beta-7</version>
+             <properties>
+                 <war.bundle>true</war.bundle>
+             </properties>
+@@ -59,7 +59,7 @@
+ 
+         <dependency>
+             <id>asm</id>
+-            <version>1.4.1</version>
++            <version>1.4.3</version>
+             <properties>
+                 <war.bundle>true</war.bundle>
+             </properties>
+@@ -68,7 +68,7 @@
+         <dependency>
+             <groupId>asm</groupId>
+             <artifactId>asm-util</artifactId>
+-            <version>1.4.1</version>
++            <version>1.4.3</version>
+             <properties>
+                 <war.bundle>true</war.bundle>
+             </properties>
+Index: sample-webwork/project.xml
+===================================================================
+RCS file: /scm/picocontainer/java/sample-webwork/project.xml,v
+retrieving revision 1.23
+diff -u -u -r1.23 project.xml
+--- sample-webwork/project.xml	2 Aug 2004 22:54:49 -0000	1.23
++++ sample-webwork/project.xml	2 Oct 2004 07:45:03 -0000
+@@ -51,7 +51,7 @@
+         -->
+         <dependency>
+             <id>groovy</id>
+-            <version>1.0-beta-6</version>
++            <version>1.0-beta-7</version>
+             <properties>
+                 <war.bundle>true</war.bundle>
+             </properties>
+@@ -59,7 +59,7 @@
+ 
+         <dependency>
+             <id>asm</id>
+-            <version>1.4.1</version>
++            <version>1.4.3</version>
+             <properties>
+                 <war.bundle>true</war.bundle>
+             </properties>
+@@ -68,7 +68,7 @@
+         <dependency>
+             <groupId>asm</groupId>
+             <artifactId>asm-util</artifactId>
+-            <version>1.4.1</version>
++            <version>1.4.3</version>
+             <properties>
+                 <war.bundle>true</war.bundle>
+             </properties>

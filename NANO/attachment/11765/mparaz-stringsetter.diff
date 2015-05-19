@@ -1,0 +1,815 @@
+Index: src/test/org/nanocontainer/nanoweb/MyAction.java
+===================================================================
+RCS file: /cvsroot/picocontainer/java/nanoweb/src/test/org/nanocontainer/nanoweb/MyAction.java,v
+retrieving revision 1.2
+diff -u -r1.2 MyAction.java
+--- src/test/org/nanocontainer/nanoweb/MyAction.java	29 Mar 2004 20:30:29 -0000	1.2
++++ src/test/org/nanocontainer/nanoweb/MyAction.java	2 Apr 2004 12:27:06 -0000
+@@ -14,6 +14,16 @@
+     public void setYear(int year) {
+         this.year = year;
+     }
++    
++    /**
++     * 
++     * For the String-based setter.
++     * 
++     * @param year String year
++     */
++    public void setYear(String year) {
++        this.year = Integer.parseInt(year);
++    }
+ 
+     public String doit() {
+         if(year > 2003) {
+Index: src/java/org/nanocontainer/nanoweb/NanoWebStringSetterServlet.java
+===================================================================
+RCS file: src/java/org/nanocontainer/nanoweb/NanoWebStringSetterServlet.java
+diff -N src/java/org/nanocontainer/nanoweb/NanoWebStringSetterServlet.java
+--- /dev/null	1 Jan 1970 00:00:00 -0000
++++ src/java/org/nanocontainer/nanoweb/NanoWebStringSetterServlet.java	1 Jan 1970 00:00:00 -0000
+@@ -0,0 +1,182 @@
++package org.nanocontainer.nanoweb;
++
++import java.io.IOException;
++import java.io.InputStream;
++import java.io.PrintWriter;
++import java.lang.reflect.InvocationTargetException;
++import java.lang.reflect.Method;
++import java.net.URL;
++import java.util.Enumeration;
++
++import javax.servlet.ServletContext;
++import javax.servlet.ServletException;
++import javax.servlet.ServletRequest;
++import javax.servlet.http.HttpServlet;
++import javax.servlet.http.HttpServletRequest;
++import javax.servlet.http.HttpServletResponse;
++
++import org.nanocontainer.servlet.KeyConstants;
++import org.nanocontainer.servlet.RequestScopeObjectReference;
++import org.nanocontainer.servlet.ServletRequestContainerLauncher;
++import org.picocontainer.MutablePicoContainer;
++import org.picocontainer.defaults.ObjectReference;
++
++/**
++ * Dispatcher servlet for NanoWeb.
++ * NanoWeb is an ultra simple MVC framework inspired from WebWork It is based on NanoContainer,
++ * PicoContainer, Ognl, Groovy and Velocity.
++ * Design goals:
++ * <ul>
++ * <li>One-file configuration (all in an embedded NanoContainer script in web.xml)</li>
++ * <li>Sensible defaults with the goal to reduce the need for complex configuration</li>
++ * <li>Non intrusiveness. Actions are PicoComponents/POJOs that extend nothing</li>
++ * <li>Actions can be written in a compilable scripting language like Groovy</li>
++ * <li>Actions must implement a String execute() method</li>
++ * <li>The result from execute will be used to determine the view path. Example: /something.nano + "success" -> /something_success.vm</li>
++ * </ul>
++ * Other things:
++ * <ul>
++ * <li>Map action paths to action classes in nanocontainer servlet script (using groovy)</li>
++ * <li>Views can set values in actions with Ognl expressions</li>
++ * </ul>
++ *
++ * @author Aslak Helles&oslash;y
++ * @author Kouhei Mori
++ * @version $Revision: 1.7 $
++ * 
++ * This version uses the String Setter class instead of OGNL for
++ * setting properties.
++ * 
++ */
++public class NanoWebStringSetterServlet extends HttpServlet implements KeyConstants {
++
++    // TODO make this configurable from web.xml
++    private final Dispatcher dispatcher = new ChainingDispatcher();
++    private final CachingScriptClassLoader cachingScriptClassLoader = new CachingScriptClassLoader();
++
++    protected void service(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
++        ServletRequestContainerLauncher containerLauncher = new ServletRequestContainerLauncher(getServletContext(), httpServletRequest);
++        try {
++            containerLauncher.startContainer();
++            String servletPath = getServletPath(httpServletRequest);
++            String scriptPathWithoutExtension = servletPath.substring(0, servletPath.lastIndexOf('/'));
++
++            Object action = getActionObject(scriptPathWithoutExtension, httpServletRequest);
++            setPropertiesWithSetter(httpServletRequest, action);
++
++            int dot = servletPath.lastIndexOf('.');
++            String actionMethod = servletPath.substring(servletPath.lastIndexOf('/') + 1, dot);
++            String result = execute(action, actionMethod);
++
++            httpServletRequest.setAttribute("action", action);
++            ServletContext servletContext = getServletContext();
++            this.dispatcher.dispatch(servletContext, httpServletRequest, httpServletResponse, scriptPathWithoutExtension, actionMethod, result);
++        } catch (ScriptException e) {
++            e.printStackTrace();
++            // Print the stack trace and the script (for debugging)
++            PrintWriter writer = httpServletResponse.getWriter();
++            writer.println("<html>");
++            writer.println("<pre>");
++            e.printStackTrace(writer);
++            writer.println(httpServletRequest.getRequestURI());
++            URL scriptURL = e.getScriptURL();
++            InputStream in = scriptURL.openStream();
++            int c;
++            while ((c = in.read()) != -1) {
++                writer.write(c);
++            }
++            writer.println("</pre>");
++            writer.println("</html>");
++        } finally {
++            try {
++                containerLauncher.killContainer();
++            } catch (Exception e) {
++                throw new ServletException(e);
++            }
++        }
++    }
++
++    private Object getActionObject(String path, HttpServletRequest request) throws ServletException, ScriptException {
++        MutablePicoContainer requestContainer = getRequestContainer(request);
++        // Try to get an action as specified in the configuration
++        Object action = requestContainer.getComponentInstance(path);
++        if (action == null) {
++            // Try to get an action from a script (groovy)
++            try {
++                action = getScriptAction(path + ".groovy", requestContainer);
++            } catch (IOException e) {
++                log("Failed to load action class", e);
++                throw new ServletException(e);
++            }
++        }
++        if (action == null) {
++            String msg = "No action found for '" + path + "'";
++            throw new ServletException(msg);
++        }
++        return action;
++    }
++
++    private Object getScriptAction(String scriptPath, MutablePicoContainer requestContainer) throws IOException, ScriptException {
++        URL scriptURL = getServletContext().getResource(scriptPath);
++        Object result = null;
++        if (scriptURL != null) {
++            Class scriptClass = this.cachingScriptClassLoader.getClass(scriptURL);
++            requestContainer.registerComponentImplementation(scriptPath, scriptClass);
++            result = requestContainer.getComponentInstance(scriptPath);
++        }
++        return result;
++    }
++
++    private void setPropertiesWithSetter(HttpServletRequest servletRequest, Object action) throws ServletException {
++        
++        final StringSetterInvoker invoker = new StringSetterInvoker(action);
++        
++        Enumeration parameterNames = servletRequest.getParameterNames();
++        while (parameterNames.hasMoreElements()) {
++            String parameterName = (String) parameterNames.nextElement();
++            String[] parameterValues = servletRequest.getParameterValues(parameterName);
++            try {
++                invoker.setProperty(parameterName, parameterValues);
++            } catch (NoSuchMethodException e) {
++                log("Failed to set property with Setter", e);
++                throw new ServletException(e);
++            }
++        }
++    }
++
++    private String execute(Object actionObject, String actionMethodName) throws ServletException {
++        Method actionMethod = null;
++        try {
++            actionMethod = actionObject.getClass().getMethod(actionMethodName, null);
++        } catch (NoSuchMethodException e) {
++            String message = "The " + actionObject.getClass().getName() + " doesn't have the method " + actionMethodName + "()";
++            log(message, e);
++            throw new ServletException(message, e);
++        }
++        try {
++            String view = (String) actionMethod.invoke(actionObject, null);
++            return view;
++        } catch (IllegalAccessException e) {
++            String message = actionObject.getClass().getName() + "." + actionMethodName + "() isn't public";
++            log(message, e);
++            throw new ServletException(message, e);
++        } catch (InvocationTargetException e) {
++            String message = "Failed to actionMethod " + actionObject.getClass().getName() + "." + actionMethodName + "()";
++            log(message, e);
++            throw new ServletException(message, e);
++        }
++    }
++
++    static String getServletPath(HttpServletRequest httpServletRequest) {
++        String servletPath = (String) httpServletRequest.getAttribute("javax.servlet.include.servlet_path");
++        if (servletPath == null) {
++            servletPath = httpServletRequest.getServletPath();
++        }
++        return servletPath;
++    }
++
++    private MutablePicoContainer getRequestContainer(ServletRequest request) {
++        ObjectReference ref = new RequestScopeObjectReference(request, REQUEST_CONTAINER);
++        return (MutablePicoContainer) ref.get();
++    }
++}
+Index: src/java/org/nanocontainer/nanoweb/StringSetterInvoker.java
+===================================================================
+RCS file: src/java/org/nanocontainer/nanoweb/StringSetterInvoker.java
+diff -N src/java/org/nanocontainer/nanoweb/StringSetterInvoker.java
+--- /dev/null	1 Jan 1970 00:00:00 -0000
++++ src/java/org/nanocontainer/nanoweb/StringSetterInvoker.java	1 Jan 1970 00:00:00 -0000
+@@ -0,0 +1,243 @@
++/*
++ * Copyright assigned to PicoContainer Organization.
++ */
++package org.nanocontainer.nanoweb;
++
++import java.lang.reflect.InvocationTargetException;
++import java.lang.reflect.Method;
++import java.util.HashMap;
++import java.util.Map;
++
++/**
++ * 
++ * Sets properties by calling setters based on reflection. It does not use
++ * fields.
++ * 
++ * It is specialized for methods that match the signature void
++ * setProperty(String[] parameters), or setProperty(String parameter), in order.
++ * These match ServletRequest.getParameterValues().
++ * 
++ * @author Miguel A Paraz
++ *  
++ */
++public final class StringSetterInvoker {
++
++    /**
++     * String[].getClass()
++     */
++    private static final Class STRING_ARRAY_CLASS = new String[0].getClass();
++
++    /**
++     * Class[] containing String[].getClass
++     */
++    private static final Class[] LOOKUP_STRING_ARRAY = new Class[] { STRING_ARRAY_CLASS};
++
++    /**
++     * Class[] containing String.class
++     */
++    private static final Class[] LOOKUP_STRING = new Class[] { String.class};
++
++    /**
++     * The word "set"
++     */
++    private static final String SET = "set";
++
++    /**
++     * The length of the word "set"
++     */
++    private static final int SET_LENGTH = SET.length();
++
++    /**
++     * Our target object
++     */
++    private final Object target;
++
++    /**
++     * Map from method names to properties.
++     */
++    private final Map methodMap = new HashMap();
++
++    /**
++     * Sets up the setter invoker for a given target. If the object could not be
++     * reflected on, no methods are provided.
++     * 
++     * @param target
++     *            Target object
++     */
++    public StringSetterInvoker(Object target) {
++        this.target = target;
++
++        // Get the list of methods
++        final Method[] methods;
++        try {
++            methods = target.getClass().getMethods();
++        } catch (SecurityException e) {
++            // Leave the map of methods empty
++            return;
++        }
++
++        // Map between method names and the methods themselves
++        for (int i = 0; i < methods.length; i++) {
++            final Method method = methods[i];
++            final String propertyName = getPropertyName(method);
++
++            if (propertyName != null) {
++                this.methodMap.put(propertyName, method);
++            }
++        }
++    }
++
++    /**
++     * Sets a property to a String[]. String[] setter is checked first before
++     * String.
++     * 
++     * @param property
++     *            Name of property to set
++     * @param values
++     *            String[] to set to
++     * @throws NoSuchMethodException
++     *             If no setter method
++     */
++    public void setProperty(String property, String[] values)
++            throws NoSuchMethodException {
++
++        final String setterName = getSetterName(property);
++        final String lookupMethodNameA = "A" + setterName;
++        final String lookupMethodNameS = "S" + setterName;
++
++        if (this.methodMap.containsKey(lookupMethodNameA)) {
++            // Call setter with array
++            final Method method = (Method) this.methodMap
++                    .get(lookupMethodNameA);
++            try {
++                method.invoke(this.target, new Object[] { values});
++            } catch (Exception e) {
++                handleException(e);
++            }
++        } else if (this.methodMap.containsKey(lookupMethodNameS)) {
++            // Call setter with single element
++            final Method method = (Method) this.methodMap
++                    .get(lookupMethodNameS);
++            try {
++                method.invoke(this.target, new Object[] { values[0]});
++            } catch (Exception e) {
++                handleException(e);
++            }
++        } else {
++            throw new NoSuchMethodException("no setter for " + property);
++        }
++    }
++
++    /**
++     * Sets a property to a String. String setter is checked first before
++     * String[].
++     * 
++     * @param property
++     *            Name of property to set
++     * @param value
++     *            String to set to
++     * @throws NoSuchMethodException
++     *             If no setter method
++     */
++    public void setProperty(String property, String value)
++            throws NoSuchMethodException {
++
++        final String setterName = getSetterName(property);
++        final String lookupMethodNameA = "A" + setterName;
++        final String lookupMethodNameS = "S" + setterName;
++
++        if (this.methodMap.containsKey(lookupMethodNameS)) {
++            // Call setter with single element
++            final Method method = (Method) this.methodMap
++                    .get(lookupMethodNameS);
++            try {
++                method.invoke(this.target, new Object[] { value});
++            } catch (Exception e) {
++                handleException(e);
++            }
++        } else if (this.methodMap.containsKey(lookupMethodNameA)) {
++            // Call setter with a constructed array
++            final Method method = (Method) this.methodMap
++                    .get(lookupMethodNameA);
++            try {
++                method.invoke(this.target,
++                        new Object[] { new String[] { value}});
++            } catch (Exception e) {
++                handleException(e);
++            }
++        } else {
++            throw new NoSuchMethodException("no setter for " + property);
++        }
++    }
++
++    /**
++     * Handles exceptions from invoke()
++     * 
++     * @param e
++     *            java.lang.Exception
++     */
++    private static void handleException(Exception e) {
++        // Unwrap an InvocationTargetException
++        // to directly expose the setter exception
++        if (e instanceof InvocationTargetException) {
++            e = (Exception) e.getCause();
++        }
++
++        // TODO What's a good exception to throw?
++        if (e instanceof RuntimeException) {
++            throw (RuntimeException) e;
++        } else {
++            throw new RuntimeException(e);
++        }
++    }
++
++    /**
++     * Gets the setter name of a property. Prepends "set" and capitalizes the
++     * first character.
++     * 
++     * @param propertyName
++     *            Property name
++     * @return setter name
++     */
++    private static String getSetterName(String propertyName) {
++        final StringBuffer buffer = new StringBuffer(SET);
++        buffer.append(Character.toUpperCase(propertyName.charAt(0)));
++        buffer.append(propertyName.substring(1));
++        return buffer.toString();
++    }
++
++    /**
++     * Gets the property name from a setter method name. The property name is
++     * prepended with 'S' for a String and 'A' (array) for a String[].
++     * 
++     * Method name must match setProperty, returns void, and takes in String[]
++     * or String.
++     * 
++     * @param methodName
++     *            method name
++     * @return property name, or null if it's not a setter method
++     */
++    private static String getPropertyName(Method method) {
++        final String methodName = method.getName();
++
++        if (methodName.startsWith(SET)
++                && Character.isUpperCase(methodName.charAt(SET_LENGTH))) {
++            // Check for method signature
++
++            // Must be void
++            if (method.getReturnType() == void.class) {
++                final Class[] classes = method.getParameterTypes();
++                // Must have a single parameter
++                if (classes.length == 1) {
++                    // Must take in String[] or String
++                    if (classes[0] == STRING_ARRAY_CLASS) {
++                        return "A" + methodName;
++                    } else if (classes[0] == String.class) { return "S"
++                            + methodName; }
++                }
++            }
++        }
++        return null;
++    }
++
++}
+Index: src/test/test_setter.groovy
+===================================================================
+RCS file: src/test/test_setter.groovy
+diff -N src/test/test_setter.groovy
+--- /dev/null	1 Jan 1970 00:00:00 -0000
++++ src/test/test_setter.groovy	1 Jan 1970 00:00:00 -0000
+@@ -0,0 +1,19 @@
++package org.nanocontainer.dynaweb;
++
++/**
++ * @author Aslak Helles&oslash;y
++ * @version $Revision: 1.4 $
++ */
++public class MyGroovyAction {
++
++    String year
++
++    public doit() {
++        y = Integer.parseInt(year)
++        if(y > 2003) {
++            return "success";
++        } else {
++            return "error";
++        }
++    }
++}
+Index: src/test/org/nanocontainer/nanoweb/NanoWebStringSetterServletTestCase.java
+===================================================================
+RCS file: src/test/org/nanocontainer/nanoweb/NanoWebStringSetterServletTestCase.java
+diff -N src/test/org/nanocontainer/nanoweb/NanoWebStringSetterServletTestCase.java
+--- /dev/null	1 Jan 1970 00:00:00 -0000
++++ src/test/org/nanocontainer/nanoweb/NanoWebStringSetterServletTestCase.java	1 Jan 1970 00:00:00 -0000
+@@ -0,0 +1,189 @@
++package org.nanocontainer.nanoweb;
++
++import junit.framework.TestCase;
++import org.jmock.Mock;
++import org.jmock.MockObjectTestCase;
++import org.nanocontainer.integrationkit.ContainerBuilder;
++import org.nanocontainer.servlet.KeyConstants;
++import org.picocontainer.MutablePicoContainer;
++import org.picocontainer.defaults.DefaultPicoContainer;
++
++import javax.servlet.RequestDispatcher;
++import javax.servlet.ServletConfig;
++import javax.servlet.ServletContext;
++import javax.servlet.ServletException;
++import javax.servlet.http.HttpServletRequest;
++import javax.servlet.http.HttpServletResponse;
++import java.io.IOException;
++import java.lang.reflect.InvocationTargetException;
++import java.lang.reflect.Method;
++import java.net.URL;
++import java.util.Vector;
++import java.beans.IntrospectionException;
++
++import groovy.lang.MetaClass;
++import groovy.lang.GroovyObjectSupport;
++import groovy.lang.GroovyShell;
++import groovy.lang.Binding;
++import groovy.lang.Reference;
++
++/**
++ * @author Aslak Helles&oslash;y
++ * @author Kouhei Mori
++ * @version $Revision: 1.6 $
++ */
++public class NanoWebStringSetterServletTestCase extends MockObjectTestCase {
++    private NanoWebStringSetterServlet nanoServlet;
++    private MutablePicoContainer requestContainer;
++
++    private Mock requestMock;
++    private Mock responseMock;
++    private Mock servletContextMock;
++    private Mock servletConfigMock;
++    private Mock containerBuilderMock;
++    private Mock requestDispatcherMock;
++
++    protected void setUp() throws Exception {
++        super.setUp();
++        nanoServlet = new NanoWebStringSetterServlet();
++        requestMock = new Mock(HttpServletRequest.class);
++        responseMock = new Mock(HttpServletResponse.class);
++        servletContextMock = new Mock(ServletContext.class);
++        servletConfigMock = new Mock(ServletConfig.class);
++        servletConfigMock.expects(once())
++                         .method("getServletContext")
++                         .withNoArguments()
++                         .will(returnValue(servletContextMock.proxy()));
++        
++        // Joe Walnes' suggestion
++        servletConfigMock.stubs()
++                         .method("getServletName")
++                         .will(returnValue("NanoWeb"));
++        servletConfigMock.expects(once())
++                         .method("getServletContext")
++                         .withNoArguments()
++                         .will(returnValue(servletContextMock.proxy()));
++        servletConfigMock.expects(once())
++                         .method("getServletContext")
++                         .withNoArguments()
++                         .will(returnValue(servletContextMock.proxy()));
++        servletContextMock.stubs()
++                          .method("log")
++                          .withAnyArguments();
++        servletContextMock.expects(once())
++                          .method("getResource")
++                          .with(eq("/test_doit_success.vm"))
++                          .will(returnValue(new URL("http://dummy/")));
++        containerBuilderMock = new Mock(ContainerBuilder.class);
++        servletContextMock.expects(once())
++                          .method("getAttribute")
++                          .with(eq(KeyConstants.BUILDER))
++                          .will(returnValue(containerBuilderMock.proxy()));
++        requestContainer = new DefaultPicoContainer();
++        requestMock.expects(once())
++                   .method("getAttribute")
++                   .with(eq(KeyConstants.REQUEST_CONTAINER))
++                   .will(returnValue(requestContainer));
++        requestMock.expects(once())
++                    .method("getSession")
++                    .with(eq(Boolean.TRUE))
++                    .will(returnValue(null));
++        containerBuilderMock.expects(once())
++                            .method("buildContainer")
++                            .withAnyArguments();
++        containerBuilderMock.expects(once())
++                            .method("killContainer")
++                            .withAnyArguments();
++        requestMock.expects(once())
++                   .method("getAttribute")
++                   .with(eq("javax.servlet.include.servlet_path"))
++                   .will(returnValue(null));
++        requestMock.expects(once())
++                   .method("getAttribute")
++                   .with(eq("javax.servlet.include.servlet_path"))
++                   .will(returnValue(null));
++        requestMock.expects(once())
++                   .method("getAttribute")
++                   .with(eq(KeyConstants.REQUEST_CONTAINER))
++                   .will(returnValue(requestContainer));
++        requestDispatcherMock = new Mock(RequestDispatcher.class);
++        requestDispatcherMock.expects(once())
++                             .method("forward")
++                             .with(eq(requestMock.proxy()), eq(responseMock.proxy()));
++
++        // url params
++        Vector paramtereNames = new Vector();
++        paramtereNames.add("year");
++        requestMock.expects(once())
++                   .method("getParameterNames")
++                   .withNoArguments()
++                   .will(returnValue(paramtereNames.elements()));
++                
++        // NanoWebStringSetterServlet uses this to set values
++        requestMock.expects(once())
++        			.method("getParameterValues")
++        			.with(eq("year"))
++        			.will(returnValue(new String[] {"2004"}));
++        
++        // path, action and view
++        requestMock.expects(once())
++                   .method("getServletPath")
++                   .withNoArguments()
++                   .will(returnValue("/test/doit.nano"));
++        requestMock.expects(once())
++                   .method("getRequestDispatcher")
++                   .with(eq("/test_doit_success.vm"))
++                   .will(returnValue(requestDispatcherMock.proxy()));
++
++        nanoServlet.init((ServletConfig) servletConfigMock.proxy());
++    }
++
++    public void testParametersShouldBeSetAndExecuteInvokedOnJavaAction() throws IOException, ServletException {
++        requestContainer.registerComponentImplementation("/test", MyAction.class);
++        requestMock.expects(once())
++                   .method("setAttribute")
++                   .with(eq("action"), isA(MyAction.class));
++
++        nanoServlet.service((HttpServletRequest)requestMock.proxy(), (HttpServletResponse)responseMock.proxy());
++
++        MyAction action = (MyAction) requestContainer.getComponentInstance("/test");
++        assertEquals(2004, action.getYear());
++        assertEquals("success", action.doit());
++
++        verifyMocks();
++    }
++
++    public void testParametersShouldBeSetAndExecuteInvokedOnGroovyAction() throws IOException, ServletException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
++        servletConfigMock.expects(once())
++                         .method("getServletContext")
++                         .withNoArguments()
++                         .will(returnValue(servletContextMock.proxy()));
++        
++        // Need a Groovy class with a String setter.
++        servletContextMock.expects(once())
++                          .method("getResource")
++                          .with(eq("/test.groovy"))
++                          .will(returnValue(getClass().getResource("/test_setter.groovy")));
++        requestMock.expects(once())
++                   .method("setAttribute")
++                   .with(eq("action"), isA(Object.class));
++
++        nanoServlet.service((HttpServletRequest)requestMock.proxy(), (HttpServletResponse)responseMock.proxy());
++
++        Object action = requestContainer.getComponentInstance("/test.groovy");
++        Method getYear = action.getClass().getMethod("getYear", null);
++        Object resultYear = getYear.invoke(action, null);
++        assertEquals("2004", resultYear);
++
++        verifyMocks();
++    }
++
++    private void verifyMocks() {
++        //requestMock.verify();
++        //responseMock.verify();
++        //servletContextMock.verify();
++        //servletConfigMock.verify();
++        //containerBuilderMock.verify();
++        //requestDispatcherMock.verify();
++    }
++}
+Index: src/test/org/nanocontainer/nanoweb/StringSetterInvokerTestCase.java
+===================================================================
+RCS file: src/test/org/nanocontainer/nanoweb/StringSetterInvokerTestCase.java
+diff -N src/test/org/nanocontainer/nanoweb/StringSetterInvokerTestCase.java
+--- /dev/null	1 Jan 1970 00:00:00 -0000
++++ src/test/org/nanocontainer/nanoweb/StringSetterInvokerTestCase.java	1 Jan 1970 00:00:00 -0000
+@@ -0,0 +1,123 @@
++/*
++ * Copyright assigned to PicoContainer Organization.
++ */
++package org.nanocontainer.nanoweb;
++
++import junit.framework.TestCase;
++
++/**
++ * TestCase for StringArraySetterInvoker
++ * 
++ * @author Miguel A Paraz
++ */
++public class StringSetterInvokerTestCase extends TestCase {
++
++    /**
++     * Only a single instance of the test target is needed.
++     */
++    private static final TestTarget testTarget = new TestTarget();
++
++    /**
++     * String[] values.
++     */
++    private static final String[] arrayValues = new String[] { "one", "two"};
++
++    /**
++     * Single String value.
++     */
++    private static final String singleValue = "single";
++
++    /**
++     * Invoker for tests.
++     */
++    private StringSetterInvoker invoker;
++
++    public void setUp() {
++        this.invoker = new StringSetterInvoker(
++                StringSetterInvokerTestCase.testTarget);
++    }
++
++    /**
++     * Tests array setters properly setting values
++     */
++    public void testArraySetterWithArray() throws NoSuchMethodException {
++        this.invoker.setProperty("x", arrayValues);
++        assertEquals(arrayValues[0], testTarget.getX()[0]);
++        assertEquals(arrayValues[1], testTarget.getX()[1]);
++        this.invoker.setProperty("xAgain", arrayValues);
++        assertEquals(arrayValues[0], testTarget.getX()[0]);
++        assertEquals(arrayValues[1], testTarget.getX()[1]);
++    }
++
++    public void testArraySetterWithString() throws NoSuchMethodException {
++        this.invoker.setProperty("x", singleValue);
++        assertEquals(singleValue, testTarget.getX()[0]);
++    }
++
++    public void testStringSetterWithArray() throws NoSuchMethodException {
++        this.invoker.setProperty("y", arrayValues);
++        assertEquals(arrayValues[0], testTarget.getY());
++    }
++
++    public void testStringSetterWithString() throws NoSuchMethodException {
++        this.invoker.setProperty("y", singleValue);
++        assertEquals(singleValue, testTarget.getY());
++    }
++
++    public void testNonexistentSetter() {
++        try {
++            this.invoker.setProperty("nonexistentProperty", arrayValues);
++            fail("Expected NoSuchMethodException");
++        } catch (NoSuchMethodException e) {
++            // Passed
++        }
++    }
++
++    /**
++     * Tests exception propagation.
++     */
++    public void testSetterWithException() throws NoSuchMethodException {
++        try {
++            this.invoker.setProperty("propertyThrowsException", arrayValues);
++            fail("Expected IllegalArgumentException");
++        } catch (IllegalArgumentException e) {
++            assertEquals("test", e.getMessage());
++        }
++        assertEquals(arrayValues[0], testTarget.getX()[0]);
++    }
++
++    /**
++     * Test Target Class.
++     */
++    private static class TestTarget {
++
++        private String[] x;
++
++        private String y;
++
++        public String[] getX() {
++            return this.x;
++        }
++
++        public void setX(String[] newValue) {
++            this.x = newValue;
++        }
++
++        public void setXAgain(String[] newValue) {
++            this.x = newValue;
++        }
++
++        public void setPropertyThrowsException(String[] newValue) {
++            this.x = newValue;
++            throw new IllegalArgumentException("test");
++        }
++
++        public String getY() {
++            return this.y;
++        }
++
++        public void setY(String y) {
++            this.y = y;
++        }
++    }
++}

@@ -1,0 +1,98 @@
+<!--
+
+     READING THIS DOCUMENT
+     This DTD uses two tags.
+        1) An ELEMENT tag defines a valid XML element, giving it a name and
+           specifying rules for its child elements.
+        2) An ATTLIST tag defines the valid attributes for a particular XML
+           element, giving each attribute a name and specifying its type
+          (or enumerated values) and default value.
+
+     These are the symbols used in DTD syntax:
+        SYMBOL         MEANING
+          *              zero or more
+          +              one or more
+          ?              zero or one
+          ( ... )        a group of choices
+          ,              separates choices whose order is significant
+          |              separates choices whose order is not significant
+
+  -->
+
+<!--
+    The root element.
+    The documepnt can only contain one container element.
+
+    componentadapterfactory -  The class name of the component adapter to use for all components in the file.
+                               This class must implement the ComponentAdapterFactory interface.
+-->
+<!ELEMENT container (classpath*)|(component*)|(pseudocomponent*) >
+<!ATTLIST container
+        componentadapterfactory   CDATA            #IMPLIED
+>
+
+<!--
+    The classpath for the container.  This is used to locate classes. The standard classpath is available.  This option adds this path for this 
+    pico container.  It can be useful when you have class colisions and need to provide a path specific to a given instance of a container.    
+-->
+<!ELEMENT classpath (element+) >
+
+
+<!--
+    The classpath element.  This provides a specific url or file to add to the class path.
+    
+    url -  The URL of the element to add to the classpath.
+    file - The file of the element to add to the classpath.
+
+-->
+<!ELEMENT element>
+<!ATTLIST element
+        url  CDATA            #IMPLIED
+        file CDATA            #IMPLIED
+>
+
+
+<!--
+    A component that is managed by the container. 
+    
+    class -  The implementation class for the component.
+    key - The key to use to get an instance of the class.
+    factory - The factory to use to instantiate the class.
+
+-->
+<!ELEMENT component (parameter*)>
+<!ATTLIST component
+        class   CDATA            #REQUIRED
+        key     CDATA            #IMPLIED
+        factory CDATA            #IMPLIED
+>
+
+<!--
+    A parameter used to instantiate the component.  This is used to find the right component to create.
+    The container will locate the component that most closely matches the paramters passed. 
+        
+    class  - The class of the parameter
+    value - The value for the parameter
+-->
+<!ELEMENT parameter>
+<!ATTLIST parameter
+        class   CDATA            #REQUIRED
+        value   CDATA            #REQUIRED        
+>
+
+
+<!--
+    A pseudocomponent that is managed by the container. 
+    
+    class -  The implementation class for the pseudocomponent.
+    key - The key to use to get an instance of the class.
+    factory - The factory to use to instantiate the class.  
+              Must implement org.nanocontainer.script.xml.XMLPseudoComponentFactory.
+
+-->
+<!ELEMENT pseudocomponent (parameter*)>
+<!ATTLIST pseudocomponent
+        class   CDATA            #REQUIRED
+        key     CDATA            #IMPLIED
+        factory CDATA            #IMPLIED
+>

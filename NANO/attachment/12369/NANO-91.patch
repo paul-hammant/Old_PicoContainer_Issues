@@ -1,0 +1,87 @@
+Index: src/java/org/nanocontainer/script/groovy/NanoGroovyBuilder.java
+===================================================================
+RCS file: /scm/picocontainer/java/nanocontainer/src/java/org/nanocontainer/script/groovy/NanoGroovyBuilder.java,v
+retrieving revision 1.6
+diff -u -r1.6 NanoGroovyBuilder.java
+--- src/java/org/nanocontainer/script/groovy/NanoGroovyBuilder.java	25 Jun 2004 13:40:15 -0000	1.6
++++ src/java/org/nanocontainer/script/groovy/NanoGroovyBuilder.java	26 Jun 2004 22:26:43 -0000
+@@ -17,6 +17,7 @@
+ import org.nanocontainer.reflection.DefaultSoftCompositionPicoContainer;
+ import org.nanocontainer.SoftCompositionPicoContainer;
+ import org.picocontainer.MutablePicoContainer;
++import org.picocontainer.PicoContainer;
+ import org.picocontainer.defaults.ComponentAdapterFactory;
+ import org.picocontainer.defaults.DefaultPicoContainer;
+ 
+@@ -139,7 +140,7 @@
+         }
+         DefaultPicoContainer dpc = new DefaultPicoContainer();
+         if (parent != null) {
+-            dpc.registerComponentInstance(parent);
++            dpc.registerComponentInstance(PicoContainer.class, parent);
+         }
+         if (adapterFactory != null) {
+             dpc.registerComponentInstance(ComponentAdapterFactory.class, adapterFactory);
+@@ -151,7 +152,7 @@
+ 
+         SoftCompositionPicoContainer softPico = (SoftCompositionPicoContainer) dpc2.getComponentInstance(SoftCompositionPicoContainer.class);
+ 
+-        if (parent != null) {
++        if (parent != null && softPico.getParent() == parent) {
+             System.out.println("--> Setting parent");
+             parent.addChildContainer(softPico);
+         } else {
+Index: src/test/org/nanocontainer/script/groovy/NanoGroovyBuilderTestCase.groovy
+===================================================================
+RCS file: /scm/picocontainer/java/nanocontainer/src/test/org/nanocontainer/script/groovy/NanoGroovyBuilderTestCase.groovy,v
+retrieving revision 1.7
+diff -u -r1.7 NanoGroovyBuilderTestCase.groovy
+--- src/test/org/nanocontainer/script/groovy/NanoGroovyBuilderTestCase.groovy	25 Jun 2004 13:40:15 -0000	1.7
++++ src/test/org/nanocontainer/script/groovy/NanoGroovyBuilderTestCase.groovy	26 Jun 2004 22:26:43 -0000
+@@ -45,32 +45,25 @@
+     }
+ 
+ 
+-// This should work! There seems to be some residual artifacts between this test and the one above.
+-// comment out all tests bar these top two. run the tests. then come back, and comment out the top
+-// test and run the suite again. all works then weird, when it was this one that failed in the
+-// first attempt.
+-//    void testInstantiateWithChildContainer() {
++    void testInstantiateWithChildContainer() {
+ 
+-//        Xxx.reset()
++        Xxx.reset()
+ 
+-//        // A and C have no no dependancies. B Depends on A.
++        // A and C have no no dependancies. B Depends on A.
+ 
+-//        builder = new NanoGroovyBuilder()
+-//        pico = builder.container {
+-//            component(Xxx$A)
+-//            container() {
+-//                component(Xxx$B)
+-//            }
+-//            component(Xxx$C)
+-//        }
++        builder = new NanoGroovyBuilder()
++        pico = builder.container {
++            component(Xxx$A)
++            container() {
++                component(Xxx$B)
++            }
++            component(Xxx$C)
++        }
+ 
+-//        startAndStop(pico)
++        startAndStop(pico)
+ 
+-        // TODO this method seems non-deterministic, returning either of the following
+-        //
+-        //assertEquals("Should match the expression", "<A!A<C<A!A!C", Xxx.componentRecorder)
+-        //assertEquals("Should match the expression", "<A!A<A<C!C!A", Xxx.componentRecorder)
+-//    }
++        assertEquals("Should match the expression", "<A<C<B!B!C!A", Xxx.componentRecorder)
++    }
+ 
+     void testInstantiateWithImpossibleComponentDependanciesConsideringTheHierarchy() {
+ 

@@ -1,0 +1,1768 @@
+<!DOCTYPE html>
+<html class="mozilla"><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+    
+
+
+
+
+
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<title>[PICO-91] refactor ComponentAdapter+ComponentFactory relationship - jira.codehaus.org</title>
+<script type="text/javascript"><!--
+/* Script removed by snapshot save */
+--></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+<link rel="shortcut icon" href="index_files/favicon.ico">
+<link rel="search" type="application/opensearchdescription+xml" href="https://jira.codehaus.org/osd.jsp" title="[PICO-91] refactor ComponentAdapter+ComponentFactory relationship - jira.codehaus.org">
+
+    
+
+
+<!--[if IE]><![endif]-->
+<script type="text/javascript"><!--
+/* Script removed by snapshot save */
+--></script>
+<link type="text/css" rel="stylesheet" href="index_files/batch.css" media="all">
+<!--[if lte IE 8]>
+<link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e/en_UK-huda6k-1988229788/6162/7/6/_/download/superbatch/css/batch.css?conditionalComment=lte+IE+8" media="all">
+<![endif]-->
+<!--[if lte IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e/en_UK-huda6k-1988229788/6162/7/6/_/download/superbatch/css/batch.css?conditionalComment=lte+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="index_files/batch-1.css" media="all">
+<script type="text/javascript" src="index_files/batch.js"></script><style type="text/css"></style>
+<!--[if lte IE 8]>
+<script type="text/javascript" src="/s/d41d8cd98f00b204e9800998ecf8427e/en_UK-huda6k-1988229788/6162/7/6/_/download/superbatch/js/batch.js?conditionalComment=lte+IE+8" ></script>
+<![endif]-->
+<script type="text/javascript" src="index_files/batch-1.js"></script>
+<script type="text/javascript" src="index_files/jira.webresources_calendar-en.js"></script>
+<script type="text/javascript" src="index_files/com.atlassian.administraticksearch-webresources.js"></script>
+
+<script type="text/javascript" src="index_files/shortcuts.js"></script>
+
+
+    
+    
+    
+    <meta name="decorator" content="atl.general">
+    <meta id="isNavigator" name="isNavigator" content="true">
+    <meta name="ajs-user.search.mode" content="basic">
+    <meta name="ajs-issue-search-help-title" content="Searching for Issues">
+    <meta name="ajs-issue-search-help-url" content="https://docs.atlassian.com/jira/docs-061/Searching+for+Issues">
+    <meta name="ajs-advanced-search-help-title" content="Performing Advanced Searches">
+    <meta name="ajs-advanced-search-help-url" content="https://docs.atlassian.com/jira/docs-061/Advanced+Searching">
+    
+</head>
+<body data-aui-version="5.1.8" id="jira" class="aui-layout aui-theme-default ka ajax-issue-search-and-view page-type-navigator navigator-issue-only" data-version="6.1.6">
+<div id="page">
+    <header id="header" style="display:none" role="banner">
+        
+
+
+
+    
+        
+            
+        
+    
+
+
+
+
+
+
+
+        
+
+
+
+
+        
+
+
+
+
+
+<fieldset class="parameters hidden dont-default-focus">
+    <input title="tzdetect.pref.tzid" value="America/Chicago" type="hidden">
+    <input title="tzdetect.pref.tzname" value="(GMT-06:00) Chicago" type="hidden">
+    <input title="tzdetect.pref.tzoffset" value="(GMT-06:00)" type="hidden">
+    <input title="tzdetect.pref.tzdst" value="true" type="hidden">
+    <input title="tzdetect.pref.nothanks" value="" type="hidden">
+</fieldset>
+<nav data-aui-responsive="true" class="aui-header aui-dropdown2-trigger-group" role="navigation"><div class="aui-header-inner"><div class="aui-header-before"><a class="aui-dropdown2-trigger app-switcher-trigger" aria-owns="app-switcher" aria-haspopup="true" tabindex="0"><span class="aui-icon aui-icon-small aui-iconfont-appswitcher">Linked Applications</span></a><div id="app-switcher" class="aui-dropdown2 aui-style-default"><div class="aui-dropdown2-section"><ul class="nav-links"><li class="nav-link nav-link-local"><a href="https://jira.codehaus.org/" class="aui-dropdown2-radio interactive checked" title="https://jira.codehaus.org/"><span class="nav-link-label">jira.codehaus.org</span></a></li><li class="nav-link"><a href="http://jira.sonarsource.com/" class="aui-dropdown2-radio interactive" title="http://jira.sonarsource.com/"><span class="nav-link-label">SonarSource</span></a></li><li class="nav-link"><a href="http://docs.codehaus.org/" class="aui-dropdown2-radio interactive" title="http://docs.codehaus.org/"><span class="nav-link-label">Codehaus</span></a></li><li class="nav-link"><a href="http://xircles.codehaus.org/" class="aui-dropdown2-radio interactive" title="http://xircles.codehaus.org"><span class="nav-link-label">Xircles</span></a></li></ul></div></div><script><!--
+/* Script removed by snapshot save */
+--></script></div><div class="aui-header-primary"><h1 id="logo" class="aui-header-logo aui-header-logo-custom"><a href="https://jira.codehaus.org/secure/MyJiraHome.jspa"><img data-aui-responsive-header-index="0" src="urn:download-error:http://www.codehaus.org/codehaus-small.gif" alt="jira.codehaus.org"></a></h1><ul style="width: auto;" class="aui-nav">
+
+
+
+
+<li><a class="aui-nav-link aui-dropdown2-ajax jira-ajax-menu aui-dropdown2-trigger " href="https://jira.codehaus.org/secure/Dashboard.jspa" id="home_link" accesskey="d" title="View and manage your dashboards" aria-haspopup="true" aria-owns="home_link-content">Dashboards</a><div id="home_link-content" class="aui-dropdown2 aui-style-default" data-aui-dropdown2-ajax-key="home_link"></div></li><li><a class="aui-nav-link aui-dropdown2-ajax jira-ajax-menu aui-dropdown2-trigger " href="/Old_JIRA_Issues/index.html" id="browse_link" accesskey="p" title="View recent projects and browse a list of projects" aria-haspopup="true" aria-owns="browse_link-content">Projects</a><div id="browse_link-content" class="aui-dropdown2 aui-style-default" data-aui-dropdown2-ajax-key="browse_link"></div></li><li><a class="aui-nav-link aui-dropdown2-ajax jira-ajax-menu aui-dropdown2-trigger " href="https://jira.codehaus.org/secure/IssueNavigator.jspa" id="find_link" accesskey="i" title="Search for issues and view recent issues" aria-haspopup="true" aria-owns="find_link-content">Issues</a><div id="find_link-content" class="aui-dropdown2 aui-style-default" data-aui-dropdown2-ajax-key="find_link"></div></li>
+<li style="display: none;"><a id="aui-responsive-header-dropdown-trigger-0" class="aui-dropdown2-trigger" aria-owns="aui-responsive-header-dropdown-content-0" aria-haspopup="true" href="#">More<span class="icon aui-icon-dropdown"></span></a><div id="aui-responsive-header-dropdown-content-0" class="aui-dropdown2 aui-style-default"><div class="aui-dropdown2-section"><ul id="aui-responsive-header-dropdown-list-0"></ul></div></div></li></ul></div><div class="aui-header-secondary"><ul class="aui-nav"><li>
+    <form action="https://jira.codehaus.org/secure/QuickSearch.jspa" method="post" id="quicksearch" class="aui-quicksearch dont-default-focus ajs-dirty-warning-exempt">
+        <input id="quickSearchInput" class="search" title="Quick Search ( Type '/' )" placeholder="Quick Search" name="searchString" accesskey="q" type="text">
+        <input class="hidden" value="Search" type="submit">
+    </form>
+</li>
+
+
+
+    <li id="system-help-menu">
+        <a class="aui-nav-link aui-dropdown2-trigger" aria-haspopup="true" aria-owns="system-help-menu-content" href="https://docs.atlassian.com/jira/docs-061/JIRA+Documentation" target="_blank" title="Help"><span class="aui-icon aui-icon-small aui-iconfont-help">Help</span></a>
+        <div id="system-help-menu-content" class="aui-dropdown2 aui-style-default">
+                            <div class="aui-dropdown2-section">
+                                                                <ul id="jira-help" class="aui-list-truncate">
+                                                            <li>
+                                    <a id="view_help" class="interactive" title="Goto the online documentation for JIRA" href="https://docs.atlassian.com/jira/docs-061/JIRA+Documentation" target="_blank">Online Help</a>
+                                </li>
+                                                            <li>
+                                    <a id="keyshortscuthelp" class="interactive" title="Get more information about JIRA's Keyboard Shortcuts ( Type '?' )" href="https://jira.codehaus.org/secure/ViewKeyboardShortcuts%21default.jspa" target="_blank">Keyboard Shortcuts</a>
+                                </li>
+                                                            <li>
+                                    <a id="view_about" class="interactive" title="Get more information about JIRA" href="https://jira.codehaus.org/secure/AboutPage.jspa">About JIRA</a>
+                                </li>
+                                                            <li>
+                                    <a id="view_credits" class="interactive" title="See who did what" href="https://jira.codehaus.org/secure/JiraCreditsPage%21default.jspa" target="_blank">JIRA Credits</a>
+                                </li>
+                                                            <li>
+                                    <a id="whats-new-menu-link" class="interactive" href="https://docs.atlassian.com/jira/docs-061/whatsnew/iframe">What?s New</a>
+                                </li>
+                                                    </ul>
+                                    </div>
+                    </div>
+    </li>
+
+
+
+
+
+
+
+
+
+<li id="user-options">
+            <a class="aui-nav-link login-link" href="https://jira.codehaus.org/login.jsp?os_destination=%2Fbrowse%2FPICO-91">Log In</a>
+                <div id="user-options-content" class="aui-dropdown2 aui-style-default">
+                            <div class="aui-dropdown2-section">
+                                                        </div>
+                    </div>
+    </li>
+</ul></div></div><!-- .aui-header-inner--></nav><!-- .aui-header -->
+    </header>
+    
+
+
+<div id="announcement-banner" class="alertHeader">
+    <div style="position: absolute; right: 20em; top: -2em">
+  <a href="https://xircles.codehaus.org/signup">Signup</a>
+</div>
+</div>
+
+
+    <section id="content" role="main">
+        
+    
+
+    <div class="issue-container ">
+                                    <div id="issue-content" class="issue-edit-form">
+                    <header id="stalker" class="issue-header js-stalker">
+                        <div class="issue-header-content"><header class="aui-page-header"><div class="aui-page-header-inner"><div class="aui-page-header-image"><span id="10120" class="aui-avatar aui-avatar-large aui-avatar-project jira-system-avatar"><span class="aui-avatar-inner"><img id="project-avatar" alt="PicoContainer" src="index_files/projectavatar.png"></span></span></div><!-- .aui-page-header-image --><div class="aui-page-header-main"><ol class="aui-nav aui-nav-breadcrumbs"><li><a id="project-name-val" href="/Old_JIRA_Issues/index.html">PicoContainer</a></li><li><a class="issue-link" data-issue-key="PICO-91" href="#" id="key-val" rel="13193">PICO-91</a></li></ol><h1 id="summary-val">refactor ComponentAdapter+ComponentFactory relationship</h1></div><!-- .aui-page-header-main --><div class="aui-page-header-actions"><div id="issue-header-pager"></div></div><!-- .aui-page-header-actions --></div><!-- .aui-page-header-inner --></header><!-- .aui-page-header --><div class="command-bar"><div class="ops-cont"><div class="ops-menus aui-toolbar"><div class="toolbar-split toolbar-split-left"><ul id="opsbar-ops-login-lnk_container" class="toolbar-group pluggable-ops"><li class="toolbar-item"><a id="ops-login-lnk" style="display:none" title="Log In" class="toolbar-trigger" href="https://jira.codehaus.org/login.jsp?os_destination=%2Fbrowse%2FPICO-91"><span class="trigger-label">Log In</span></a></li></ul><ul id="opsbar-opsbar-operations" class="toolbar-group pluggable-ops"></ul><ul id="opsbar-opsbar-transitions" class="toolbar-group pluggable-ops"></ul><ul id="opsbar-opsbar-admin" class="toolbar-group pluggable-ops"></ul></div><div class="toolbar-split toolbar-split-right"><ul id="opsbar-jira.issue.tools" style="display:none" class="toolbar-group pluggable-ops"><li class="toolbar-item toolbar-dropdown"><div><a href="#" id="viewissue-export" title="Export this issue in another format" data-hide-on-scroll=".split-view .issue-container" data-contain-to-window="true" class="toolbar-trigger  js-default-dropdown"><span class="icon icon-export viewissue-export"></span> <span class="dropdown-text">Export</span><span class="icon drop-menu"></span></a><div class="aui-list hidden"><ul class="aui-list-section aui-first aui-last"><li class="aui-list-item"><a href="https://jira.codehaus.org/si/jira.issueviews:issue-xml/PICO-91/PICO-91.xml" class="aui-list-item-link" id="jira.issueviews:issue-xml"><span class="trigger-label">XML</span></a></li><li class="aui-list-item"><a href="https://jira.codehaus.org/si/jira.issueviews:issue-word/PICO-91/PICO-91.doc" class="aui-list-item-link" id="jira.issueviews:issue-word"><span class="trigger-label">Word</span></a></li><li class="aui-list-item"><a href="https://jira.codehaus.org/si/jira.issueviews:issue-html/PICO-91/PICO-91.html" class="aui-list-item-link" id="jira.issueviews:issue-html"><span class="trigger-label">Printable</span></a></li></ul></div></div></li></ul></div></div></div></div></div>
+                    </header>
+                    <div class="issue-body-content">
+                        <div class="aui-group issue-body"><div class="aui-item issue-main-column"><div id="details-module" class="module toggle-wrap"><div id="details-module_heading" class="mod-header"><ul class="ops"></ul><h2 class="toggle-title">Details</h2></div><div class="mod-content">
+
+
+
+
+<ul id="issuedetails" class="property-list two-cols">
+    <li class="item">
+        <div class="wrap">
+            <strong class="name">Type:</strong>
+            <span id="type-val" class="value">
+                                <img alt="Improvement" src="index_files/improvement.png" title="Improvement - An improvement or enhancement to an existing feature or task." height="16" width="16"> Improvement
+            </span>
+        </div>
+    </li>
+    <li class="item item-right">
+        <div class="wrap">
+            <strong class="name">Status:</strong>
+            <span id="status-val" class="value">
+                                
+
+<img src="index_files/open.png" alt="Open" title="Open - The issue is open and ready for the assignee to start work on it." height="16" width="16"> Open
+            </span>
+                    </div>
+    </li>
+            <li class="item">
+            <div class="wrap">
+                <strong class="name">Priority:</strong>
+                <span id="priority-val" class="value">
+                                        <img alt="Major" src="index_files/major.png" title="Major - Major loss of function." height="16" width="16"> Major
+                </span>
+            </div>
+        </li>
+                                <li class="item item-right">
+            <div class="wrap">
+                <strong class="name">Resolution:</strong>
+                <span id="resolution-val" class="value unresolved">
+                                    Unresolved
+                                </span>
+            </div>
+        </li>
+                <li class="item">
+            <div class="wrap">
+                <strong class="name">Affects Version/s:</strong>
+                <span id="versions-val" class="value">
+                                            <span style="height: auto;" class="shorten" id="versions-field">
+                                                            <span title="1.0-beta-5 ">1.0-beta-5</span>                                                    </span>
+                                    </span>
+            </div>
+        </li>
+                <li class="item item-right">
+            <div class="wrap">
+                <strong class="name">Fix Version/s:</strong>
+                <span id="fixfor-val" class="value">
+                                            <span style="height: auto;" class="shorten" id="fixVersions-field">
+                                                            <a href="/Old_JIRA_Issues/index.html/fixforversion/14410" title="3.0 PicoContainer 3.x">3.0</a>                                                    </span>
+                                    </span>
+            </div>
+        </li>
+                <li class="item">
+            <div class="wrap">
+                <strong class="name">Component/s:</strong>
+                <span id="components-val" class="value">
+                                            <span style="height: auto;" class="shorten" id="components-field">
+                                                            <a href="/Old_JIRA_Issues/index.html/component/10191" title="PicoContainer (Java) ">PicoContainer (Java)</a>                                                    </span>
+                                    </span>
+            </div>
+        </li>
+                    <li class="item full-width">
+            <div class="wrap" id="wrap-labels">
+                <strong class="name">Labels:</strong>
+                    <div class="labels-wrap value">
+            <span class="labels" id="labels-13193-value">None</span>
+                </div>
+            </div>
+        </li>
+                <li class="item full-width">
+            <div class="wrap">
+                <strong class="name">Environment:</strong>
+                <div id="environment-val" class="value">
+                                  all
+      
+                </div>
+            </div>
+        </li>
+    </ul>
+
+<div id="customfieldmodule">
+    <div class="aui-tabs horizontal-tabs" id="customfield-tabs">
+                    <div id="customfield-panel-1" class="tabs-pane active-pane">
+                        <ul class="property-list">
+                                                <li id="rowForcustomfield_10210" class="item">
+                        <div class="wrap">
+                            <strong title="Number of attachments " class="name">Number of attachments :</strong>
+                            <div id="customfield_10210-val" class="value type-attachments" data-fieldtype="attachments" data-fieldtypecompletekey="com.atlassian.jira.toolkit:attachments">
+                                    0
+
+                            </div>
+                        </div>
+                    </li>
+                                        </ul>
+        </div>
+        </div></div>
+</div></div><div id="descriptionmodule" class="module toggle-wrap"><div id="descriptionmodule_heading" class="mod-header"><ul class="ops"></ul><h2 class="toggle-title">Description</h2></div><div class="mod-content"><div id="description-val" class="field-ignore-highlight">
+    <div class="user-content-block">
+                    <p>By design, there are implementation dependencies between a factory and its adapter. Every time you create a new adapter, you need to create a new factory, which has zero reuse potential. Parrallel class hierarchy.</p>
+
+<p>First mentioned:</p>
+
+<p><a href="http://lists.codehaus.org/pipermail/picocontainer-dev/2003-November/001606.html" class="external-link" rel="nofollow">http://lists.codehaus.org/pipermail/picocontainer-dev/2003-November/001606.html</a></p>
+
+<p>(see followup as well).</p>
+
+<p>It would be a good idea to fix this in one go together with</p>
+
+<p><a href="/Old_JIRA_Issues/90" title="refactor ComponentAdapter &lt;-&gt; PicoContainer relationship" class="issue-link" data-issue-key="PICO-90"><del>PICO-90</del></a> (<a href="http://jira.codehaus.org/secure/ViewIssue.jspa?key=PICO-90" class="external-link" rel="nofollow">http://jira.codehaus.org/secure/ViewIssue.jspa?key=PICO-90</a>)</p>
+
+<p>as these two issues are somewhat related.</p>
+            </div>
+</div>
+</div></div><div id="activitymodule" class="module toggle-wrap"><div id="activitymodule_heading" class="mod-header"><ul class="ops"></ul><h2 class="toggle-title">Activity</h2></div><div class="mod-content">
+
+
+
+
+
+
+
+
+
+
+    <div class="tabwrap tabs2" style="display:none">
+                    <div class="sortwrap">
+                                    <a class="icon icon-sort-down ajax-activity-content" rel="nofollow" href="/Old_JIRA_Issues/91?actionOrder=desc" title="Ascending order - Click to sort in descending order"><span>Ascending order - Click to sort in descending order</span></a>
+                            </div>
+                <ul id="issue-tabs" class="tabs horizontal">
+                                
+            <li class="active" id="all-tabpanel" data-id="all-tabpanel" data-key="com.atlassian.jira.plugin.system.issuetabpanels:all-tabpanel" data-label="All" data-href="/browse/PICO-91">
+                            <strong>All</strong>
+                        </li>
+                                
+            <li data-id="comment-tabpanel" data-key="com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel" data-label="Comments" data-href="/browse/PICO-91">
+                            <a class="ajax-activity-content" id="comment-tabpanel" href="/Old_JIRA_Issues/91"><strong>Comments</strong></a>
+                        </li>
+                                
+            <li data-id="worklog-tabpanel" data-key="com.atlassian.jira.plugin.system.issuetabpanels:worklog-tabpanel" data-label="Work Log" data-href="/browse/PICO-91">
+                            <a class="ajax-activity-content" id="worklog-tabpanel" href="/Old_JIRA_Issues/91"><strong>Work Log</strong></a>
+                        </li>
+                                
+            <li data-id="changehistory-tabpanel" data-key="com.atlassian.jira.plugin.system.issuetabpanels:changehistory-tabpanel" data-label="History" data-href="/browse/PICO-91">
+                            <a class="ajax-activity-content" id="changehistory-tabpanel" href="/Old_JIRA_Issues/91"><strong>History</strong></a>
+                        </li>
+                                
+            <li data-id="activity-stream-issue-tab" data-key="com.atlassian.streams.streams-jira-plugin:activity-stream-issue-tab" data-label="Activity" data-href="/browse/PICO-91">
+                            <a class="ajax-activity-content" id="activity-stream-issue-tab" href="/Old_JIRA_Issues/91"><strong>Activity</strong></a>
+                        </li>
+                </ul>
+    </div>
+    <div class="issuePanelWrapper">
+        <div class="issuePanelProgress"></div>
+        <div class="issuePanelContainer" id="issue_actions_container">
+                                    
+
+
+<div id="comment-15648" class="issue-data-block activity-comment twixi-block  expanded">
+    <div class="twixi-wrap verbose actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-opened"><span>Hide</span></span></a>
+            <div class="action-links">
+                <a href="/Old_JIRA_Issues/91?focusedCommentId=15648&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-15648" title="A permanent link to this comment." class="icon icon-perma activitymodule-link"><span>Permalink</span></a>
+                                            </div>
+            <div class="action-details">        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="lsimons" id="commentauthor_15648_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=lsimons"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Leo Simons</a>
+ added a comment  - <span class="commentdate_15648_verbose subText"><span class="date user-tz" title="02/Jan/04 4:22 PM"><time class="livestamp" datetime="2004-01-02T16:22-0600">02/Jan/04 4:22 PM</time></span></span>  </div>
+        </div>
+        <div class="action-body flooded"><p>every time you have a new kind of component you need a new adapter <b>and</b> a new factory. Furthermore, you *<b>can't freely swap</b>* (all factories have an explicit implementation dependency on an adapter). The responsibility split between adapter and factory is in some way broken. One option is to change the relationship: for example from</p>
+
+<p>  factory <b>creates</b> adapter</p>
+
+<p>to</p>
+
+<p>  factory <b>uses</b> adapter</p>
+
+<p>The combo I like best atm is</p>
+
+<p>  adapter <b>uses</b> factory</p>
+
+<p>where a factory is just that, a factory, and the adapter handles everything but the 'new' (and with non-type-3 IoC, the init and dispose). Furthermore, the container need not care or know about factories...</p>
+
+<p>  container <b>uses</b> adapter</p>
+
+<p>...is enough.</p>
+
+<p>In my pet container I went further and introduced many-to-many selection policy, where an adapter is associated with a selector inside the container:</p>
+
+<p>Container-&lt;&lt;uses&gt;&gt;----<del>0..m</del>---&gt;Selector<br>
+Selector-<del>&lt;&lt;locates&gt;&gt;</del><del>1</del>------&gt;Adapter<br>
+Adapter-<del>&lt;&lt;uses&gt;&gt;</del>----<del>1..n</del>---&gt;Factory</p>
+
+<p>This is essentially a more generic form of a hashmap. In JDK-1.5 terms, the less generic hashmap variant is:</p>
+
+<p>container&lt;key,adapter&gt;<br>
+Adapter <b>has-a</b> Factory</p>
+
+<p>In Ruby terms, the selector list functions as a rich switch/case statement, and the selector is the implementation of the '===' operator.</p>
+
+<p>In pseudocode (fragments):</p>
+
+<p>Container.get(arg):<br>
+  for each selector<br>
+    if selector.select(arg)<br>
+      return adapters.get(selector).get()<br>
+  return null</p>
+
+<p>SingleUseAdapter.get():<br>
+  return factory.newInstance()</p>
+
+<p>SingletonAdapter.get():<br>
+  lazyInit()<br>
+  return instance</p>
+
+<p>Factory.newInstance():<br>
+  return new Something</p>
+
+<p>Much cleaner. IoC.</p> </div>
+    </div>
+    <div class="twixi-wrap concise actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-closed"><span>Show</span></span></a>
+            <div class="action-details flooded">
+                        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="lsimons" id="commentauthor_15648_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=lsimons"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Leo Simons</a>
+ added a comment  - <span class="commentdate_15648_concise subText"><span class="date user-tz" title="02/Jan/04 4:22 PM"><time class="livestamp" datetime="2004-01-02T16:22-0600">02/Jan/04 4:22 PM</time></span></span>                    every time you have a new kind of component you need a new adapter  and  a new factory. Furthermore, you * can't freely swap * (all factories have an explicit implementation dependency on an adapter). The responsibility split between adapter and factory is in some way broken. One option is to change the relationship: for example from 
+
+   factory  creates  adapter 
+
+ to 
+
+   factory  uses  adapter 
+
+ The combo I like best atm is 
+
+   adapter  uses  factory 
+
+ where a factory is just that, a factory, and the adapter handles everything but the 'new' (and with non-type-3 IoC, the init and dispose). Furthermore, the container need not care or know about factories... 
+
+   container  uses  adapter 
+
+ ...is enough. 
+
+ In my pet container I went further and introduced many-to-many selection policy, where an adapter is associated with a selector inside the container: 
+
+ Container-&lt;&lt;uses&gt;&gt;---- 0..m ---&gt;Selector 
+Selector- &lt;&lt;locates&gt;&gt;  1 ------&gt;Adapter 
+Adapter- &lt;&lt;uses&gt;&gt; ---- 1..n ---&gt;Factory 
+
+ This is essentially a more generic form of a hashmap. In JDK-1.5 terms, the less generic hashmap variant is: 
+
+ container&lt;key,adapter&gt; 
+Adapter  has-a  Factory 
+
+ In Ruby terms, the selector list functions as a rich switch/case statement, and the selector is the implementation of the '===' operator. 
+
+ In pseudocode (fragments): 
+
+ Container.get(arg): 
+  for each selector 
+    if selector.select(arg) 
+      return adapters.get(selector).get() 
+  return null 
+
+ SingleUseAdapter.get(): 
+  return factory.newInstance() 
+
+ SingletonAdapter.get(): 
+  lazyInit() 
+  return instance 
+
+ Factory.newInstance(): 
+  return new Something 
+
+ Much cleaner. IoC.              </div>
+        </div>
+    </div>
+</div>
+                             
+
+
+<div id="comment-15665" class="issue-data-block activity-comment twixi-block  expanded">
+    <div class="twixi-wrap verbose actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-opened"><span>Hide</span></span></a>
+            <div class="action-links">
+                <a href="/Old_JIRA_Issues/91?focusedCommentId=15665&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-15665" title="A permanent link to this comment." class="icon icon-perma activitymodule-link"><span>Permalink</span></a>
+                                            </div>
+            <div class="action-details">        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="tirsen" id="commentauthor_15665_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=tirsen"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jon Tirsen</a>
+ added a comment  - <span class="commentdate_15665_verbose subText"><span class="date user-tz" title="03/Jan/04 8:02 AM"><time class="livestamp" datetime="2004-01-03T08:02-0600">03/Jan/04 8:02 AM</time></span></span>  </div>
+        </div>
+        <div class="action-body flooded"><p>I don't get it. How would you do it?</p>
+
+<p>Any chance you could describe it in more concrete terms? Like how would the DefaultComponentAdapter <b>use</b> a factory? For what?</p>
+
+<p>We had sort of the notion of a pluggable object that instantiated the objects (don't remember the name), but it didn't work. There's more logic associated to doing that than just creating an instance of a class. That's why we ended up with the adapter instead. Feature-envy, various parts of the container moved towards the factory, and the factory stopped being just a factory.</p>
+
+<p>The ComponentAdapterFactory is there for one reason only, to allow a PicoContainer to select a component-adapter to use when the user does not specify one. It's a completely different set of logic to doing that, for example the NanningComponentAdapterFactory introspects the component to see whether it's an aspect, a component that can get aspects applied to it, or a POJO (without intf/impl-separation). That's all different component adapters. There's no way I can put that logic somewhere else.</p>
+
+<p>I don't get the notion of a ComponentFactory. Isn't that a developer? How can someone other than a developer create a component?</p> </div>
+    </div>
+    <div class="twixi-wrap concise actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-closed"><span>Show</span></span></a>
+            <div class="action-details flooded">
+                        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="tirsen" id="commentauthor_15665_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=tirsen"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jon Tirsen</a>
+ added a comment  - <span class="commentdate_15665_concise subText"><span class="date user-tz" title="03/Jan/04 8:02 AM"><time class="livestamp" datetime="2004-01-03T08:02-0600">03/Jan/04 8:02 AM</time></span></span>                    I don't get it. How would you do it? 
+
+ Any chance you could describe it in more concrete terms? Like how would the DefaultComponentAdapter  use  a factory? For what? 
+
+ We had sort of the notion of a pluggable object that instantiated the objects (don't remember the name), but it didn't work. There's more logic associated to doing that than just creating an instance of a class. That's why we ended up with the adapter instead. Feature-envy, various parts of the container moved towards the factory, and the factory stopped being just a factory. 
+
+ The ComponentAdapterFactory is there for one reason only, to allow a PicoContainer to select a component-adapter to use when the user does not specify one. It's a completely different set of logic to doing that, for example the NanningComponentAdapterFactory introspects the component to see whether it's an aspect, a component that can get aspects applied to it, or a POJO (without intf/impl-separation). That's all different component adapters. There's no way I can put that logic somewhere else. 
+
+ I don't get the notion of a ComponentFactory. Isn't that a developer? How can someone other than a developer create a component?              </div>
+        </div>
+    </div>
+</div>
+                             
+
+
+<div id="comment-15667" class="issue-data-block activity-comment twixi-block  expanded">
+    <div class="twixi-wrap verbose actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-opened"><span>Hide</span></span></a>
+            <div class="action-links">
+                <a href="/Old_JIRA_Issues/91?focusedCommentId=15667&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-15667" title="A permanent link to this comment." class="icon icon-perma activitymodule-link"><span>Permalink</span></a>
+                                            </div>
+            <div class="action-details">        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="lsimons" id="commentauthor_15667_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=lsimons"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Leo Simons</a>
+ added a comment  - <span class="commentdate_15667_verbose subText"><span class="date user-tz" title="03/Jan/04 9:09 AM"><time class="livestamp" datetime="2004-01-03T09:09-0600">03/Jan/04 9:09 AM</time></span></span>  </div>
+        </div>
+        <div class="action-body flooded"><p>Jon wrote: "I don't get it. How would you do it? Any chance you could describe it in more concrete terms?"</p>
+
+<p>Sure. How about some code? Take a look here:</p>
+
+<p><a href="http://cvs.sourceforge.net/viewcvs.py/jicarilla/jicarilla-sandbox/platform/container/" class="external-link" rel="nofollow">http://cvs.sourceforge.net/viewcvs.py/jicarilla/jicarilla-sandbox/platform/container/</a></p>
+
+<p>here are some sample adapters:</p>
+
+<p><a href="http://cvs.sourceforge.net/viewcvs.py/jicarilla/jicarilla-sandbox/platform/container/" class="external-link" rel="nofollow">http://cvs.sourceforge.net/viewcvs.py/jicarilla/jicarilla-sandbox/platform/container/</a></p>
+
+<p>here is a "type-3" component factory:</p>
+
+<p><a href="http://cvs.sourceforge.net/viewcvs.py/*checkout*/jicarilla/jicarilla-sandbox/platform/container/impl/src/java/com/leosimons/jicarilla/container/factories/Type3ComponentFactory.java?content-type=text%2Fplain&amp;rev=1.6" class="external-link" rel="nofollow">http://cvs.sourceforge.net/viewcvs.py/*checkout*/jicarilla/jicarilla-sandbox/platform/container/impl/src/java/com/leosimons/jicarilla/container/factories/Type3ComponentFactory.java?content-type=text%2Fplain&amp;rev=1.6</a></p>
+
+<p>here's a testcase that shows it works:</p>
+
+<p><a href="http://cvs.sourceforge.net/viewcvs.py/jicarilla/jicarilla-sandbox/platform/container/impl/src/test/com/leosimons/jicarilla/container/test/integration/pico/" class="external-link" rel="nofollow">http://cvs.sourceforge.net/viewcvs.py/jicarilla/jicarilla-sandbox/platform/container/impl/src/test/com/leosimons/jicarilla/container/test/integration/pico/</a></p>
+
+<p>Jon also wrote: "The ComponentAdapterFactory is there for one reason only, to allow a PicoContainer to select a component-adapter to use when the user does not specify one. It's a completely different set of logic to doing that, for example the NanningComponentAdapterFactory introspects the component to see whether it's an aspect, a component that can get aspects applied to it, or a POJO (without intf/impl-separation). That's all different component adapters. There's no way I can put that logic somewhere else. "</p>
+
+<p>Why not? A ComponentAdapter selection policy should be a "policy-style" object, not a "factory-style" object. The key point is to decouple your policies from the "new" keyword (to me, "factory" is about calling the "new" keyword and doing any initialization).</p>
+
+<p>With the nanning example, in my chosen decomposition, I would actually much rather apply the policy you desribe at container population time (since the policy that should be applied is already known at that stage). Something like</p>
+
+<p>AspectSupportingContainerBuilder.add(componentKey, componentClass):<br>
+  if(component instanceof aspect)<br>
+    container.add(<br>
+      new EquivalenceSelector( componentKey ),<br>
+      new SingletonAdapter(<br>
+        new AspectFactory( componentClass )<br>
+      )<br>
+    )<br>
+  else if( canHaveAspectsApplied( component ) )<br>
+    container.add(<br>
+      new EquivalenceSelector( componentKey ),<br>
+      new SingletonAdapter(<br>
+        new AspectSupportingFactory( componentClass )<br>
+      )<br>
+    )<br>
+  else<br>
+    container.add(<br>
+      new EquivalenceSelector( componentKey ),<br>
+      new SingletonAdapter(<br>
+        new BasicType3Factory( componentClass )<br>
+      )<br>
+    )</p>
+
+<p>where you obviously will have a set of builders that reuses more code <img class="emoticon" src="index_files/biggrin.gif" alt="" height="16" align="absmiddle" border="0" width="16"></p>
+
+<p>Jon also wrote: "I don't get the notion of a ComponentFactory. Isn't that a developer? How can someone other than a developer create a component?"</p>
+
+<p>I don't get your question! Re: the factory pattern. A factory creates instances of things. A component factory creates instances of components.</p>
+
+<p>I am sure there are also other possible decompositions that remove the parallel hierarchies which are probably less radical; I just haven't thought of any just yet.</p> </div>
+    </div>
+    <div class="twixi-wrap concise actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-closed"><span>Show</span></span></a>
+            <div class="action-details flooded">
+                        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="lsimons" id="commentauthor_15667_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=lsimons"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Leo Simons</a>
+ added a comment  - <span class="commentdate_15667_concise subText"><span class="date user-tz" title="03/Jan/04 9:09 AM"><time class="livestamp" datetime="2004-01-03T09:09-0600">03/Jan/04 9:09 AM</time></span></span>                    Jon wrote: "I don't get it. How would you do it? Any chance you could describe it in more concrete terms?" 
+
+ Sure. How about some code? Take a look here: 
+
+  http://cvs.sourceforge.net/viewcvs.py/jicarilla/jicarilla-sandbox/platform/container/  
+
+ here are some sample adapters: 
+
+  http://cvs.sourceforge.net/viewcvs.py/jicarilla/jicarilla-sandbox/platform/container/  
+
+ here is a "type-3" component factory: 
+
+  http://cvs.sourceforge.net/viewcvs.py/*checkout*/jicarilla/jicarilla-sandbox/platform/container/impl/src/java/com/leosimons/jicarilla/container/factories/Type3ComponentFactory.java?content-type=text%2Fplain&amp;rev=1.6  
+
+ here's a testcase that shows it works: 
+
+  http://cvs.sourceforge.net/viewcvs.py/jicarilla/jicarilla-sandbox/platform/container/impl/src/test/com/leosimons/jicarilla/container/test/integration/pico/  
+
+ Jon also wrote: "The ComponentAdapterFactory is there for one reason only, to allow a PicoContainer to select a component-adapter to use when the user does not specify one. It's a completely different set of logic to doing that, for example the NanningComponentAdapterFactory introspects the component to see whether it's an aspect, a component that can get aspects applied to it, or a POJO (without intf/impl-separation). That's all different component adapters. There's no way I can put that logic somewhere else. " 
+
+ Why not? A ComponentAdapter selection policy should be a "policy-style" object, not a "factory-style" object. The key point is to decouple your policies from the "new" keyword (to me, "factory" is about calling the "new" keyword and doing any initialization). 
+
+ With the nanning example, in my chosen decomposition, I would actually much rather apply the policy you desribe at container population time (since the policy that should be applied is already known at that stage). Something like 
+
+ AspectSupportingContainerBuilder.add(componentKey, componentClass): 
+  if(component instanceof aspect) 
+    container.add( 
+      new EquivalenceSelector( componentKey ), 
+      new SingletonAdapter( 
+        new AspectFactory( componentClass ) 
+      ) 
+    ) 
+  else if( canHaveAspectsApplied( component ) ) 
+    container.add( 
+      new EquivalenceSelector( componentKey ), 
+      new SingletonAdapter( 
+        new AspectSupportingFactory( componentClass ) 
+      ) 
+    ) 
+  else 
+    container.add( 
+      new EquivalenceSelector( componentKey ), 
+      new SingletonAdapter( 
+        new BasicType3Factory( componentClass ) 
+      ) 
+    ) 
+
+ where you obviously will have a set of builders that reuses more code   
+
+ Jon also wrote: "I don't get the notion of a ComponentFactory. Isn't that a developer? How can someone other than a developer create a component?" 
+
+ I don't get your question! Re: the factory pattern. A factory creates instances of things. A component factory creates instances of components. 
+
+ I am sure there are also other possible decompositions that remove the parallel hierarchies which are probably less radical; I just haven't thought of any just yet.              </div>
+        </div>
+    </div>
+</div>
+                             
+
+
+<div id="comment-15669" class="issue-data-block activity-comment twixi-block  expanded">
+    <div class="twixi-wrap verbose actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-opened"><span>Hide</span></span></a>
+            <div class="action-links">
+                <a href="/Old_JIRA_Issues/91?focusedCommentId=15669&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-15669" title="A permanent link to this comment." class="icon icon-perma activitymodule-link"><span>Permalink</span></a>
+                                            </div>
+            <div class="action-details">        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="lsimons" id="commentauthor_15669_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=lsimons"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Leo Simons</a>
+ added a comment  - <span class="commentdate_15669_verbose subText"><span class="date user-tz" title="03/Jan/04 9:15 AM"><time class="livestamp" datetime="2004-01-03T09:15-0600">03/Jan/04 9:15 AM</time></span></span>  </div>
+        </div>
+        <div class="action-body flooded"><p>I wrote: "With the nanning example, in my chosen decomposition, I would actually much rather apply the policy you desribe at container population time"</p>
+
+<p>Put another way, remove a lot of policy decisions from the container and encapsulate it in a helper object. You will then probably have a proliferation of different "builders" that apply different policies. So unless you add another layer of abstraction (something like policy objects), you will indeed still have sort-of parallel class hierarchies (one for each policy). But some things <b>have</b> been decoupled, so they will be smaller.</p>
+
+<p>Put yet another way, we've replaced inheritance with composition.</p> </div>
+    </div>
+    <div class="twixi-wrap concise actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-closed"><span>Show</span></span></a>
+            <div class="action-details flooded">
+                        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="lsimons" id="commentauthor_15669_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=lsimons"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Leo Simons</a>
+ added a comment  - <span class="commentdate_15669_concise subText"><span class="date user-tz" title="03/Jan/04 9:15 AM"><time class="livestamp" datetime="2004-01-03T09:15-0600">03/Jan/04 9:15 AM</time></span></span>                    I wrote: "With the nanning example, in my chosen decomposition, I would actually much rather apply the policy you desribe at container population time" 
+
+ Put another way, remove a lot of policy decisions from the container and encapsulate it in a helper object. You will then probably have a proliferation of different "builders" that apply different policies. So unless you add another layer of abstraction (something like policy objects), you will indeed still have sort-of parallel class hierarchies (one for each policy). But some things  have  been decoupled, so they will be smaller. 
+
+ Put yet another way, we've replaced inheritance with composition.              </div>
+        </div>
+    </div>
+</div>
+                             
+
+
+<div id="comment-15670" class="issue-data-block activity-comment twixi-block  expanded">
+    <div class="twixi-wrap verbose actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-opened"><span>Hide</span></span></a>
+            <div class="action-links">
+                <a href="/Old_JIRA_Issues/91?focusedCommentId=15670&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-15670" title="A permanent link to this comment." class="icon icon-perma activitymodule-link"><span>Permalink</span></a>
+                                            </div>
+            <div class="action-details">        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="tirsen" id="commentauthor_15670_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=tirsen"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jon Tirsen</a>
+ added a comment  - <span class="commentdate_15670_verbose subText"><span class="date user-tz" title="03/Jan/04 12:16 PM"><time class="livestamp" datetime="2004-01-03T12:16-0600">03/Jan/04 12:16 PM</time></span></span>  </div>
+        </div>
+        <div class="action-body flooded"><p>Got it! We simply use different naming:</p>
+
+<p>Pico                         Leo Simons<br>
+ComponentAdapterFactory &lt;=&gt;  ComponentFactorySelectionPolicy<br>
+ComponentAdapter        &lt;=&gt;  ComponentFactory</p>
+
+<p>But in fact we have a very similar solution!</p>
+
+<p>Still don't really like the term ComponentFactory though, it sounds like something that creates components (not instances of components). It's like calling something a ClassFactory, it's something that creates classes, right?<br>
+ComponentAdapter is to be interpreted as adapting different component-styles to PicoContainer, which is a much broader term. In fact the adapter doesn't necessarily have to <b>create</b> instances at all! It could for example look them up using JNDI or JAXR or whatever. Saying that something is a factory in that case constrains the implementation.</p>
+
+<p>So, simply put, there are no factories that creates instances of components in Pico, there are only adapters. For that reason, I don't think we should fix this issue.</p> </div>
+    </div>
+    <div class="twixi-wrap concise actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-closed"><span>Show</span></span></a>
+            <div class="action-details flooded">
+                        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="tirsen" id="commentauthor_15670_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=tirsen"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jon Tirsen</a>
+ added a comment  - <span class="commentdate_15670_concise subText"><span class="date user-tz" title="03/Jan/04 12:16 PM"><time class="livestamp" datetime="2004-01-03T12:16-0600">03/Jan/04 12:16 PM</time></span></span>                    Got it! We simply use different naming: 
+
+ Pico                         Leo Simons 
+ComponentAdapterFactory &lt;=&gt;  ComponentFactorySelectionPolicy 
+ComponentAdapter        &lt;=&gt;  ComponentFactory 
+
+ But in fact we have a very similar solution! 
+
+ Still don't really like the term ComponentFactory though, it sounds like something that creates components (not instances of components). It's like calling something a ClassFactory, it's something that creates classes, right? 
+ComponentAdapter is to be interpreted as adapting different component-styles to PicoContainer, which is a much broader term. In fact the adapter doesn't necessarily have to  create  instances at all! It could for example look them up using JNDI or JAXR or whatever. Saying that something is a factory in that case constrains the implementation. 
+
+ So, simply put, there are no factories that creates instances of components in Pico, there are only adapters. For that reason, I don't think we should fix this issue.              </div>
+        </div>
+    </div>
+</div>
+                             
+
+
+<div id="comment-15671" class="issue-data-block activity-comment twixi-block  expanded">
+    <div class="twixi-wrap verbose actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-opened"><span>Hide</span></span></a>
+            <div class="action-links">
+                <a href="/Old_JIRA_Issues/91?focusedCommentId=15671&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-15671" title="A permanent link to this comment." class="icon icon-perma activitymodule-link"><span>Permalink</span></a>
+                                            </div>
+            <div class="action-details">        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="tirsen" id="commentauthor_15671_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=tirsen"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jon Tirsen</a>
+ added a comment  - <span class="commentdate_15671_verbose subText"><span class="date user-tz" title="03/Jan/04 12:20 PM"><time class="livestamp" datetime="2004-01-03T12:20-0600">03/Jan/04 12:20 PM</time></span></span>  </div>
+        </div>
+        <div class="action-body flooded"><p>Maybe we could rename ComponentAdapterFactory to ComponentAdapterSelectionPolicy though, it's a bit awkward though.</p> </div>
+    </div>
+    <div class="twixi-wrap concise actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-closed"><span>Show</span></span></a>
+            <div class="action-details flooded">
+                        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="tirsen" id="commentauthor_15671_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=tirsen"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jon Tirsen</a>
+ added a comment  - <span class="commentdate_15671_concise subText"><span class="date user-tz" title="03/Jan/04 12:20 PM"><time class="livestamp" datetime="2004-01-03T12:20-0600">03/Jan/04 12:20 PM</time></span></span>                    Maybe we could rename ComponentAdapterFactory to ComponentAdapterSelectionPolicy though, it's a bit awkward though.              </div>
+        </div>
+    </div>
+</div>
+                             
+
+
+<div id="comment-15673" class="issue-data-block activity-comment twixi-block  expanded">
+    <div class="twixi-wrap verbose actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-opened"><span>Hide</span></span></a>
+            <div class="action-links">
+                <a href="/Old_JIRA_Issues/91?focusedCommentId=15673&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-15673" title="A permanent link to this comment." class="icon icon-perma activitymodule-link"><span>Permalink</span></a>
+                                            </div>
+            <div class="action-details">        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="lsimons" id="commentauthor_15673_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=lsimons"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Leo Simons</a>
+ added a comment  - <span class="commentdate_15673_verbose subText"><span class="date user-tz" title="03/Jan/04 2:11 PM"><time class="livestamp" datetime="2004-01-03T14:11-0600">03/Jan/04 2:11 PM</time></span></span>  </div>
+        </div>
+        <div class="action-body flooded"><p>Jon wrote: "We simply use different naming &lt;snip&gt; But in fact we have a very similar solution!".</p>
+
+<p>I (still) don't think so. Implementations of ComponentAdapterFactory are tied to (<b>specific</b>, <b>hard-coded</b>) implementations of ComponentAdapter. Also, current implementations of Container are tied to <b>specific</b> implementations of a <b>single</b> ComponentAdapterFactory. Renaming them to "ComponentFactorySelectionPolicy" or anything else does not change that fact. Here's the terminology mapping as it applies to the code links I sent:</p>
+
+<p>Pico                      Me<br>
+------------------------------------------<br>
+Component                 Service<br>
+Component instance        Component<br>
+Container                 Container<br>
+ComponentAdapter          ComponentAdapter<br>
+ComponentAdapterFactory   &lt;&lt;unspecified&gt;&gt;<br>
+&lt;&lt;unspecified&gt;&gt;           Selector<br>
+&lt;&lt;unspecified&gt;&gt;           ComponentFactory</p>
+
+<p>There is overlap between "ComponentAdapterFactory" and "Selector", but the latter has a much smaller responsibility. I'll "speak pico" from now on <img class="emoticon" src="index_files/biggrin.gif" alt="" height="16" align="absmiddle" border="0" width="16"></p>
+
+<p>Take a look at this code:</p>
+
+<p>    public ComponentAdapter createComponentAdapter(Object componentKey, Class componentImplementation, Parameter[] parameters)<br>
+            throws PicoIntrospectionException, AssignabilityRegistrationException, NotConcreteRegistrationException </p>
+{
+        return new CachingComponentAdapter(super.createComponentAdapter(componentKey, componentImplementation, parameters));
+    }
+
+<p>I'm saying that should always be written as</p>
+
+<p>  container.registerAdapter(<br>
+    new CachingComponentAdapter(<br>
+      new SomeOtherComponentAdapter(<br>
+        componentKey,<br>
+        componentImplementation,<br>
+        parameters<br>
+      )<br>
+    )<br>
+  ); // this code works with current MutablePicoContainer</p>
+
+<p>or better yet</p>
+
+<p>  container.registerAdapter(<br>
+    componentKey, // the adapter doesn't need to care about<br>
+                  // being subject to any kind of mapping<br>
+    new CachingComponentAdapter(<br>
+      new SomeOtherComponentAdapter(<br>
+        componentImplementation,<br>
+        parameters<br>
+      )<br>
+    )<br>
+  );</p>
+
+<p>The difference is relatively small from a user perspective but rather big from an implementation perspective (or from a power user perspective). This is because as a power user I cannot get away with simply writing a custom ComponentAdapter; I need to write a ComponentAdapterFactory as well. Furthermore, it is difficult to mix and match multiple ComponentAdapterFactories (it requires adding scoped/hierarchical containers).</p>
+
+<p>Truly <b>decoupling</b> ComponentAdapterFactory from ComponentAdapter and <b>removing</b> some of its current responsibilities (removing them from PicoContainer and references alltogether, in fact) is the only way I've thought of so far that changes this.</p>
+
+<p>"simply put, there are no factories that creates instances of components in Pico, there are only adapters."</p>
+
+<p>that is a Good Thing. But there's factories that create instances of adapters, and pico assumes that there are. I'm not saying adapters must neccessarily use factories; I'm saying PicoContainer (implementations) shouldn't use them either.</p>
+
+<p>I hope I'm making at least some kind of sense to you. Maybe Thomas explains it better @</p>
+
+<p><a href="http://lists.codehaus.org/pipermail/picocontainer-dev/2003-November/001626.html" class="external-link" rel="nofollow">http://lists.codehaus.org/pipermail/picocontainer-dev/2003-November/001626.html</a></p> </div>
+    </div>
+    <div class="twixi-wrap concise actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-closed"><span>Show</span></span></a>
+            <div class="action-details flooded">
+                        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="lsimons" id="commentauthor_15673_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=lsimons"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Leo Simons</a>
+ added a comment  - <span class="commentdate_15673_concise subText"><span class="date user-tz" title="03/Jan/04 2:11 PM"><time class="livestamp" datetime="2004-01-03T14:11-0600">03/Jan/04 2:11 PM</time></span></span>                    Jon wrote: "We simply use different naming &lt;snip&gt; But in fact we have a very similar solution!". 
+
+ I (still) don't think so. Implementations of ComponentAdapterFactory are tied to ( specific ,  hard-coded ) implementations of ComponentAdapter. Also, current implementations of Container are tied to  specific  implementations of a  single  ComponentAdapterFactory. Renaming them to "ComponentFactorySelectionPolicy" or anything else does not change that fact. Here's the terminology mapping as it applies to the code links I sent: 
+
+ Pico                      Me 
+------------------------------------------ 
+Component                 Service 
+Component instance        Component 
+Container                 Container 
+ComponentAdapter          ComponentAdapter 
+ComponentAdapterFactory   &lt;&lt;unspecified&gt;&gt; 
+&lt;&lt;unspecified&gt;&gt;           Selector 
+&lt;&lt;unspecified&gt;&gt;           ComponentFactory 
+
+ There is overlap between "ComponentAdapterFactory" and "Selector", but the latter has a much smaller responsibility. I'll "speak pico" from now on   
+
+ Take a look at this code: 
+
+     public ComponentAdapter createComponentAdapter(Object componentKey, Class componentImplementation, Parameter[] parameters) 
+            throws PicoIntrospectionException, AssignabilityRegistrationException, NotConcreteRegistrationException  
+{
+        return new CachingComponentAdapter(super.createComponentAdapter(componentKey, componentImplementation, parameters));
+    }
+
+ I'm saying that should always be written as 
+
+   container.registerAdapter( 
+    new CachingComponentAdapter( 
+      new SomeOtherComponentAdapter( 
+        componentKey, 
+        componentImplementation, 
+        parameters 
+      ) 
+    ) 
+  ); // this code works with current MutablePicoContainer 
+
+ or better yet 
+
+   container.registerAdapter( 
+    componentKey, // the adapter doesn't need to care about 
+                  // being subject to any kind of mapping 
+    new CachingComponentAdapter( 
+      new SomeOtherComponentAdapter( 
+        componentImplementation, 
+        parameters 
+      ) 
+    ) 
+  ); 
+
+ The difference is relatively small from a user perspective but rather big from an implementation perspective (or from a power user perspective). This is because as a power user I cannot get away with simply writing a custom ComponentAdapter; I need to write a ComponentAdapterFactory as well. Furthermore, it is difficult to mix and match multiple ComponentAdapterFactories (it requires adding scoped/hierarchical containers). 
+
+ Truly  decoupling  ComponentAdapterFactory from ComponentAdapter and  removing  some of its current responsibilities (removing them from PicoContainer and references alltogether, in fact) is the only way I've thought of so far that changes this. 
+
+ "simply put, there are no factories that creates instances of components in Pico, there are only adapters." 
+
+ that is a Good Thing. But there's factories that create instances of adapters, and pico assumes that there are. I'm not saying adapters must neccessarily use factories; I'm saying PicoContainer (implementations) shouldn't use them either. 
+
+ I hope I'm making at least some kind of sense to you. Maybe Thomas explains it better @ 
+
+  http://lists.codehaus.org/pipermail/picocontainer-dev/2003-November/001626.html               </div>
+        </div>
+    </div>
+</div>
+                             
+
+
+<div id="comment-15674" class="issue-data-block activity-comment twixi-block  expanded">
+    <div class="twixi-wrap verbose actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-opened"><span>Hide</span></span></a>
+            <div class="action-links">
+                <a href="/Old_JIRA_Issues/91?focusedCommentId=15674&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-15674" title="A permanent link to this comment." class="icon icon-perma activitymodule-link"><span>Permalink</span></a>
+                                            </div>
+            <div class="action-details">        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="tirsen" id="commentauthor_15674_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=tirsen"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jon Tirsen</a>
+ added a comment  - <span class="commentdate_15674_verbose subText"><span class="date user-tz" title="03/Jan/04 2:31 PM"><time class="livestamp" datetime="2004-01-03T14:31-0600">03/Jan/04 2:31 PM</time></span></span>  </div>
+        </div>
+        <div class="action-body flooded"><p>I understand.</p>
+
+<p>The reason why we keep around ComponentAdapterFactories for a number of component-adapters is because the casual user should not have to worry about ComponentAdapters. In fact we initially only considered ComponentAdapter to be an implementation detail.</p>
+
+<p>What you suggest is to remove all registerComponentImplementation<img class="emoticon" src="index_files/star_yellow.gif" alt="" height="16" align="absmiddle" border="0" width="16"> and replace them by one single registerComponentAdapter(ComponentAdapter).</p>
+
+<p>We already have a registerComponentAdapter(ComponentAdapter). It would be possible to remove all other methods, but I think for the non-casual user they make the API easier to use. Maybe we should just keep a small number of ComponentAdapterFactories around and let all power-users use registerComponentAdapter.</p>
+
+<p>That ComponentAdapter knows what key it has is probably one of the main differences with ComponentFactory and ComponentAdapter, the ComponentAdapter actually keeps it's state around. That the container maps it just a performance detail, an index.</p> </div>
+    </div>
+    <div class="twixi-wrap concise actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-closed"><span>Show</span></span></a>
+            <div class="action-details flooded">
+                        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="tirsen" id="commentauthor_15674_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=tirsen"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jon Tirsen</a>
+ added a comment  - <span class="commentdate_15674_concise subText"><span class="date user-tz" title="03/Jan/04 2:31 PM"><time class="livestamp" datetime="2004-01-03T14:31-0600">03/Jan/04 2:31 PM</time></span></span>                    I understand. 
+
+ The reason why we keep around ComponentAdapterFactories for a number of component-adapters is because the casual user should not have to worry about ComponentAdapters. In fact we initially only considered ComponentAdapter to be an implementation detail. 
+
+ What you suggest is to remove all registerComponentImplementation  and replace them by one single registerComponentAdapter(ComponentAdapter). 
+
+ We already have a registerComponentAdapter(ComponentAdapter). It would be possible to remove all other methods, but I think for the non-casual user they make the API easier to use. Maybe we should just keep a small number of ComponentAdapterFactories around and let all power-users use registerComponentAdapter. 
+
+ That ComponentAdapter knows what key it has is probably one of the main differences with ComponentFactory and ComponentAdapter, the ComponentAdapter actually keeps it's state around. That the container maps it just a performance detail, an index.              </div>
+        </div>
+    </div>
+</div>
+                             
+
+
+<div id="comment-15680" class="issue-data-block activity-comment twixi-block  expanded">
+    <div class="twixi-wrap verbose actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-opened"><span>Hide</span></span></a>
+            <div class="action-links">
+                <a href="/Old_JIRA_Issues/91?focusedCommentId=15680&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-15680" title="A permanent link to this comment." class="icon icon-perma activitymodule-link"><span>Permalink</span></a>
+                                            </div>
+            <div class="action-details">        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="lsimons" id="commentauthor_15680_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=lsimons"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Leo Simons</a>
+ added a comment  - <span class="commentdate_15680_verbose subText"><span class="date user-tz" title="03/Jan/04 5:12 PM"><time class="livestamp" datetime="2004-01-03T17:12-0600">03/Jan/04 5:12 PM</time></span></span>  </div>
+        </div>
+        <div class="action-body flooded"><p>Jon wrote: "I understand".</p>
+
+<p>good! And your decision is to keep things as-is to support the more common use cases better by default, right? Okay. Makes sense. Annoying for me, but makes sense <img class="emoticon" src="index_files/biggrin.gif" alt="" height="16" align="absmiddle" border="0" width="16"></p> </div>
+    </div>
+    <div class="twixi-wrap concise actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-closed"><span>Show</span></span></a>
+            <div class="action-details flooded">
+                        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="lsimons" id="commentauthor_15680_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=lsimons"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Leo Simons</a>
+ added a comment  - <span class="commentdate_15680_concise subText"><span class="date user-tz" title="03/Jan/04 5:12 PM"><time class="livestamp" datetime="2004-01-03T17:12-0600">03/Jan/04 5:12 PM</time></span></span>                    Jon wrote: "I understand". 
+
+ good! And your decision is to keep things as-is to support the more common use cases better by default, right? Okay. Makes sense. Annoying for me, but makes sense                </div>
+        </div>
+    </div>
+</div>
+                             
+
+
+<div id="comment-15681" class="issue-data-block activity-comment twixi-block  expanded">
+    <div class="twixi-wrap verbose actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-opened"><span>Hide</span></span></a>
+            <div class="action-links">
+                <a href="/Old_JIRA_Issues/91?focusedCommentId=15681&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-15681" title="A permanent link to this comment." class="icon icon-perma activitymodule-link"><span>Permalink</span></a>
+                                            </div>
+            <div class="action-details">        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="tirsen" id="commentauthor_15681_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=tirsen"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jon Tirsen</a>
+ added a comment  - <span class="commentdate_15681_verbose subText"><span class="date user-tz" title="03/Jan/04 7:32 PM"><time class="livestamp" datetime="2004-01-03T19:32-0600">03/Jan/04 7:32 PM</time></span></span>  </div>
+        </div>
+        <div class="action-body flooded"><p>Yeah, but it's not my decision only.</p>
+
+<p>I get your point, although it's much to close to a release to do such a massive overhaul. I will try to take a serious look at the other issue though, the Adapter -&gt; Registry thing: <a href="/Old_JIRA_Issues/90" title="refactor ComponentAdapter &lt;-&gt; PicoContainer relationship" class="issue-link" data-issue-key="PICO-90"><del>PICO-90</del></a>.</p> </div>
+    </div>
+    <div class="twixi-wrap concise actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-closed"><span>Show</span></span></a>
+            <div class="action-details flooded">
+                        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="tirsen" id="commentauthor_15681_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=tirsen"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jon Tirsen</a>
+ added a comment  - <span class="commentdate_15681_concise subText"><span class="date user-tz" title="03/Jan/04 7:32 PM"><time class="livestamp" datetime="2004-01-03T19:32-0600">03/Jan/04 7:32 PM</time></span></span>                    Yeah, but it's not my decision only. 
+
+ I get your point, although it's much to close to a release to do such a massive overhaul. I will try to take a serious look at the other issue though, the Adapter -&gt; Registry thing:   PICO-90  .              </div>
+        </div>
+    </div>
+</div>
+                             
+
+<div class="issue-data-block" id="changehistory-16169">
+    <div class="actionContainer">
+        <div class="action-details" id="changehistorydetails_16169">
+                                
+
+    <a class="user-hover user-avatar" rel="rinkrank" id="changehistoryauthor_16169" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=rinkrank"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Aslak Hellesøy</a>
+ made changes  - <span class="date" title="08/Jan/04 1:43 PM"><time class="livestamp" datetime="2004-01-08T13:43-0600">08/Jan/04 1:43 PM</time></span>
+        </div>
+        <div class="changehistory action-body">
+            <table id="changehistory_16169" border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <thead>
+                    <tr>
+                        <th width="20%">Field</th>
+                        <th width="40%">Original Value</th>
+                        <th width="40%">New Value</th>
+                    </tr>
+                </thead>
+                            <tbody>
+                            <tr>
+                <td class="activity-name" width="20%">
+                                    Assignee
+                                </td>
+                <td class="activity-old-val" width="40%">
+                                                </td>
+                <td class="activity-new-val" width="40%">
+                                                               Jon Tirsen
+                                                                                               <span class="hist-value">[    tirsen
+]</span>
+                                                    </td>
+                </tr>
+                            <tr>
+                <td class="activity-name" width="20%">
+                                    Fix Version/s
+                                </td>
+                <td class="activity-old-val" width="40%">
+                                                </td>
+                <td class="activity-new-val" width="40%">
+                                                               2.0
+                                                                                               <span class="hist-value">[    10411
+]</span>
+                                                    </td>
+                </tr>
+                            </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+                             
+
+
+<div id="comment-44989" class="issue-data-block activity-comment twixi-block  expanded">
+    <div class="twixi-wrap verbose actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-opened"><span>Hide</span></span></a>
+            <div class="action-links">
+                <a href="/Old_JIRA_Issues/91?focusedCommentId=44989&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-44989" title="A permanent link to this comment." class="icon icon-perma activitymodule-link"><span>Permalink</span></a>
+                                            </div>
+            <div class="action-details">        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="proyal" id="commentauthor_44989_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=proyal"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> peter royal</a>
+ added a comment  - <span class="commentdate_44989_verbose subText"><span class="date user-tz" title="22/Aug/05 7:32 PM"><time class="livestamp" datetime="2005-08-22T19:32-0500">22/Aug/05 7:32 PM</time></span></span>  </div>
+        </div>
+        <div class="action-body flooded"><p>Is this closeable?</p>
+
+<p>I think Leo's use-case can be achieved with MutablePicoContainer.registerComponent( ComponentAdapter ). As for addditional design ideas, at this point in time in Pico's life I'm not sure if its a pragmatic decision.</p> </div>
+    </div>
+    <div class="twixi-wrap concise actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-closed"><span>Show</span></span></a>
+            <div class="action-details flooded">
+                        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="proyal" id="commentauthor_44989_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=proyal"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> peter royal</a>
+ added a comment  - <span class="commentdate_44989_concise subText"><span class="date user-tz" title="22/Aug/05 7:32 PM"><time class="livestamp" datetime="2005-08-22T19:32-0500">22/Aug/05 7:32 PM</time></span></span>                    Is this closeable? 
+
+ I think Leo's use-case can be achieved with MutablePicoContainer.registerComponent( ComponentAdapter ). As for addditional design ideas, at this point in time in Pico's life I'm not sure if its a pragmatic decision.              </div>
+        </div>
+    </div>
+</div>
+                             
+
+
+<div id="comment-45009" class="issue-data-block activity-comment twixi-block  expanded">
+    <div class="twixi-wrap verbose actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-opened"><span>Hide</span></span></a>
+            <div class="action-links">
+                <a href="/Old_JIRA_Issues/91?focusedCommentId=45009&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-45009" title="A permanent link to this comment." class="icon icon-perma activitymodule-link"><span>Permalink</span></a>
+                                            </div>
+            <div class="action-details">        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="joehni" id="commentauthor_45009_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jörg Schaible</a>
+ added a comment  - <span class="commentdate_45009_verbose subText"><span class="date user-tz" title="23/Aug/05 1:49 AM"><time class="livestamp" datetime="2005-08-23T01:49-0500">23/Aug/05 1:49 AM</time></span></span>  </div>
+        </div>
+        <div class="action-body flooded"><p>That's the reason for the 2.0 schedule. Here we collect any ideas, that we should consider for the next incarnation.</p> </div>
+    </div>
+    <div class="twixi-wrap concise actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-closed"><span>Show</span></span></a>
+            <div class="action-details flooded">
+                        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="joehni" id="commentauthor_45009_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jörg Schaible</a>
+ added a comment  - <span class="commentdate_45009_concise subText"><span class="date user-tz" title="23/Aug/05 1:49 AM"><time class="livestamp" datetime="2005-08-23T01:49-0500">23/Aug/05 1:49 AM</time></span></span>                    That's the reason for the 2.0 schedule. Here we collect any ideas, that we should consider for the next incarnation.              </div>
+        </div>
+    </div>
+</div>
+                             
+
+<div class="issue-data-block" id="changehistory-47579">
+    <div class="actionContainer">
+        <div class="action-details" id="changehistorydetails_47579">
+                                
+
+    <a class="user-hover user-avatar" rel="joehni" id="changehistoryauthor_47579" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jörg Schaible</a>
+ made changes  - <span class="date" title="23/Aug/05 1:49 AM"><time class="livestamp" datetime="2005-08-23T01:49-0500">23/Aug/05 1:49 AM</time></span>
+        </div>
+        <div class="changehistory action-body">
+            <table id="changehistory_47579" border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tbody>
+                            <tr>
+                <td class="activity-name" width="20%">
+                                    Assignee
+                                </td>
+                <td class="activity-old-val" width="40%">
+                                                                Jon Tirsen
+                                                                                                <span class="hist-value">[    tirsen
+]</span>
+                                                    </td>
+                <td class="activity-new-val" width="40%">
+                                                </td>
+                </tr>
+                            </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+                             
+
+
+<div id="comment-45010" class="issue-data-block activity-comment twixi-block  expanded">
+    <div class="twixi-wrap verbose actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-opened"><span>Hide</span></span></a>
+            <div class="action-links">
+                <a href="/Old_JIRA_Issues/91?focusedCommentId=45010&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-45010" title="A permanent link to this comment." class="icon icon-perma activitymodule-link"><span>Permalink</span></a>
+                                            </div>
+            <div class="action-details">        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="joehni" id="commentauthor_45010_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jörg Schaible</a>
+ added a comment  - <span class="commentdate_45010_verbose subText"><span class="date user-tz" title="23/Aug/05 1:49 AM"><time class="livestamp" datetime="2005-08-23T01:49-0500">23/Aug/05 1:49 AM</time></span></span>  </div>
+        </div>
+        <div class="action-body flooded"><p>I don't think Jon will do anything with it <img class="emoticon" src="index_files/smile.gif" alt="" height="16" align="absmiddle" border="0" width="16"></p> </div>
+    </div>
+    <div class="twixi-wrap concise actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-closed"><span>Show</span></span></a>
+            <div class="action-details flooded">
+                        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="joehni" id="commentauthor_45010_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jörg Schaible</a>
+ added a comment  - <span class="commentdate_45010_concise subText"><span class="date user-tz" title="23/Aug/05 1:49 AM"><time class="livestamp" datetime="2005-08-23T01:49-0500">23/Aug/05 1:49 AM</time></span></span>                    I don't think Jon will do anything with it                </div>
+        </div>
+    </div>
+</div>
+                             
+
+<div class="issue-data-block" id="changehistory-165393">
+    <div class="actionContainer">
+        <div class="action-details" id="changehistorydetails_165393">
+                                
+
+    <a class="user-hover user-avatar" rel="rimovm" id="changehistoryauthor_165393" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=rimovm"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Michael Rimov</a>
+ made changes  - <span class="date" title="06/May/08 2:37 PM"><time class="livestamp" datetime="2008-05-06T14:37-0500">06/May/08 2:37 PM</time></span>
+        </div>
+        <div class="changehistory action-body">
+            <table id="changehistory_165393" border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tbody>
+                            <tr>
+                <td class="activity-name" width="20%">
+                                    Fix Version/s
+                                </td>
+                <td class="activity-old-val" width="40%">
+                                                                2.0
+                                                                                                <span class="hist-value">[    10411
+]</span>
+                                                    </td>
+                <td class="activity-new-val" width="40%">
+                                                </td>
+                </tr>
+                            <tr>
+                <td class="activity-name" width="20%">
+                                    Fix Version/s
+                                </td>
+                <td class="activity-old-val" width="40%">
+                                                </td>
+                <td class="activity-new-val" width="40%">
+                                                               2.2
+                                                                                               <span class="hist-value">[    14251
+]</span>
+                                                    </td>
+                </tr>
+                            </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+                             
+
+<div class="issue-data-block" id="changehistory-166260">
+    <div class="actionContainer">
+        <div class="action-details" id="changehistorydetails_166260">
+                                
+
+    <a class="user-hover user-avatar" rel="rimovm" id="changehistoryauthor_166260" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=rimovm"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Michael Rimov</a>
+ made changes  - <span class="date" title="10/May/08 3:54 PM"><time class="livestamp" datetime="2008-05-10T15:54-0500">10/May/08 3:54 PM</time></span>
+        </div>
+        <div class="changehistory action-body">
+            <table id="changehistory_166260" border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tbody>
+                            <tr>
+                <td class="activity-name" width="20%">
+                                    Fix Version/s
+                                </td>
+                <td class="activity-old-val" width="40%">
+                                                </td>
+                <td class="activity-new-val" width="40%">
+                                                               2.3
+                                                                                               <span class="hist-value">[    14303
+]</span>
+                                                    </td>
+                </tr>
+                            <tr>
+                <td class="activity-name" width="20%">
+                                    Fix Version/s
+                                </td>
+                <td class="activity-old-val" width="40%">
+                                                                2.2
+                                                                                                <span class="hist-value">[    14251
+]</span>
+                                                    </td>
+                <td class="activity-new-val" width="40%">
+                                                </td>
+                </tr>
+                            </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+                             
+
+<div class="issue-data-block" id="changehistory-171227">
+    <div class="actionContainer">
+        <div class="action-details" id="changehistorydetails_171227">
+                                
+
+    <a class="user-hover user-avatar" rel="rimovm" id="changehistoryauthor_171227" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=rimovm"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Michael Rimov</a>
+ made changes  - <span class="date" title="05/Jun/08 8:28 PM"><time class="livestamp" datetime="2008-06-05T20:28-0500">05/Jun/08 8:28 PM</time></span>
+        </div>
+        <div class="changehistory action-body">
+            <table id="changehistory_171227" border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tbody>
+                            <tr>
+                <td class="activity-name" width="20%">
+                                    Fix Version/s
+                                </td>
+                <td class="activity-old-val" width="40%">
+                                                </td>
+                <td class="activity-new-val" width="40%">
+                                                               2.4
+                                                                                               <span class="hist-value">[    14362
+]</span>
+                                                    </td>
+                </tr>
+                            <tr>
+                <td class="activity-name" width="20%">
+                                    Fix Version/s
+                                </td>
+                <td class="activity-old-val" width="40%">
+                                                                2.3
+                                                                                                <span class="hist-value">[    14303
+]</span>
+                                                    </td>
+                <td class="activity-new-val" width="40%">
+                                                </td>
+                </tr>
+                            </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+                             
+
+<div class="issue-data-block" id="changehistory-174229">
+    <div class="actionContainer">
+        <div class="action-details" id="changehistorydetails_174229">
+                                
+
+    <a class="user-hover user-avatar" rel="rimovm" id="changehistoryauthor_174229" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=rimovm"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Michael Rimov</a>
+ made changes  - <span class="date" title="03/Jul/08 2:04 AM"><time class="livestamp" datetime="2008-07-03T02:04-0500">03/Jul/08 2:04 AM</time></span>
+        </div>
+        <div class="changehistory action-body">
+            <table id="changehistory_174229" border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tbody>
+                            <tr>
+                <td class="activity-name" width="20%">
+                                    Fix Version/s
+                                </td>
+                <td class="activity-old-val" width="40%">
+                                                                2.4
+                                                                                                <span class="hist-value">[    14362
+]</span>
+                                                    </td>
+                <td class="activity-new-val" width="40%">
+                                                </td>
+                </tr>
+                            <tr>
+                <td class="activity-name" width="20%">
+                                    Fix Version/s
+                                </td>
+                <td class="activity-old-val" width="40%">
+                                                </td>
+                <td class="activity-new-val" width="40%">
+                                                               2.5
+                                                                                               <span class="hist-value">[    14424
+]</span>
+                                                    </td>
+                </tr>
+                            </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+                             
+
+<div class="issue-data-block" id="changehistory-174281">
+    <div class="actionContainer">
+        <div class="action-details" id="changehistorydetails_174281">
+                                
+
+    <a class="user-hover user-avatar" rel="paul" id="changehistoryauthor_174281" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=paul"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Paul Hammant</a>
+ made changes  - <span class="date" title="03/Jul/08 8:39 AM"><time class="livestamp" datetime="2008-07-03T08:39-0500">03/Jul/08 8:39 AM</time></span>
+        </div>
+        <div class="changehistory action-body">
+            <table id="changehistory_174281" border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tbody>
+                            <tr>
+                <td class="activity-name" width="20%">
+                                    Fix Version/s
+                                </td>
+                <td class="activity-old-val" width="40%">
+                                                                2.5
+                                                                                                <span class="hist-value">[    14424
+]</span>
+                                                    </td>
+                <td class="activity-new-val" width="40%">
+                                                </td>
+                </tr>
+                            <tr>
+                <td class="activity-name" width="20%">
+                                    Fix Version/s
+                                </td>
+                <td class="activity-old-val" width="40%">
+                                                </td>
+                <td class="activity-new-val" width="40%">
+                                                               3.0
+                                                                                               <span class="hist-value">[    14410
+]</span>
+                                                    </td>
+                </tr>
+                            </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+                             </div>
+    </div>
+</div></div></div><div id="viewissuesidebar" class="aui-item issue-side-column"><div id="peoplemodule" class="module toggle-wrap"><div id="peoplemodule_heading" class="mod-header"><ul class="ops"></ul><h2 class="toggle-title">People</h2></div><div class="mod-content"><ul class="item-details" id="peopledetails">
+    <li class="people-details">
+                <dl>
+            <dt>Assignee:</dt>
+            <dd>
+                <span id="assignee-val" class="view-issue-field">
+
+    <span class="aui-avatar aui-avatar-small"><span class="aui-avatar-inner"><img src="index_files/useravatar-1.png"></span></span>
+    Unassigned
+</span>
+                            </dd>
+        </dl>
+                        <dl>
+            <dt>Reporter:</dt>
+            <dd>
+                <span id="reporter-val" class="view-issue-field">
+
+            <span class="user-hover" id="issue_summary_reporter_lsimons" rel="lsimons">
+            <span class="aui-avatar aui-avatar-small"><span class="aui-avatar-inner"><img src="index_files/useravatar-2.png"></span></span>
+            Leo Simons
+        </span>
+    </span>
+            </dd>
+        </dl>
+                    </li>
+</ul>
+    <ul class="item-details">
+        <li>
+                            <dl>
+                    <dt>Votes:</dt>
+                    <dd>
+                                                                            <span id="vote-data" class="aui-badge vote-state-off">0</span>
+                        
+                                                                                                        <span id="vote-label" title="You have to be logged in to vote for an issue.">Vote for this issue</span>
+                                            </dd>
+                </dl>
+                                        <dl>
+                    <dt>Watchers:</dt>
+                    <dd>
+                                                                        
+                                                                            <span id="watcher-data" class="aui-badge watch-state-off">0</span>
+                        
+                                                                                <span id="watch-label" title="You have to be logged in to watch an issue.">Start watching this issue</span>
+                                            </dd>
+                </dl>
+                    </li>
+    </ul>
+</div></div><div id="datesmodule" class="module toggle-wrap"><div id="datesmodule_heading" class="mod-header"><ul class="ops"></ul><h2 class="toggle-title">Dates</h2></div><div class="mod-content"><ul class="item-details">
+    <li>
+            <dl class="dates">
+            <dt>Created:</dt>
+            <dd class="date user-tz" title="02/Jan/04 4:10 PM">
+
+                <span data-name="Created" id="create-date" data-fieldtype="datetime">
+                                                                        <time class="livestamp" datetime="2004-01-02T16:10-0600">02/Jan/04 4:10 PM</time>                                                             </span>
+            </dd>
+        </dl>
+            <dl class="dates">
+            <dt>Updated:</dt>
+            <dd class="date user-tz" title="03/Jul/08 8:39 AM">
+
+                <span data-name="Updated" id="updated-date" data-fieldtype="datetime">
+                                                                        <time class="livestamp" datetime="2008-07-03T08:39-0500">03/Jul/08 8:39 AM</time>                                                             </span>
+            </dd>
+        </dl>
+        </li>
+</ul>
+</div></div><div id="timetrackingmodule" class="module toggle-wrap"><div id="timetrackingmodule_heading" class="mod-header"><ul class="ops"></ul><h2 class="toggle-title">Time Tracking</h2></div><div class="mod-content">    
+    
+    
+                    <div id="tt_single_table_info" class="tt_inner">
+                                <dl>
+        <dt id="tt_single_text_orig" class="tt_text" title="Original Estimate - 2 days">
+            Estimated:
+        </dt>
+        <dd class="tt_graph">
+            <table id="tt_single_graph_orig" class="tt_graph" cellpadding="0" cellspacing="0">
+                <tbody><tr class="tt_graph">
+                                                                        <td style="width:100%; background-color:#89afd7">
+                    <img src="index_files/spacer.gif" style="height:10px; width:100%; border-width:0" class="hideOnPrint" title="Original Estimate - 2 days" alt="Original Estimate - 2 days">
+                </td>
+                                                        </tr>
+            </tbody></table>
+        </dd>
+        <dd id="tt_single_values_orig" class="tt_values" title="Original Estimate - 2 days">
+                            2d
+                    </dd>
+    </dl>
+                        <dl>
+        <dt id="tt_single_text_remain" class="tt_text" title="Remaining Estimate - 2 days">
+            Remaining:
+        </dt>
+        <dd class="tt_graph">
+            <table id="tt_single_graph_remain" class="tt_graph" cellpadding="0" cellspacing="0">
+                <tbody><tr class="tt_graph">
+                                                                                                    <td style="width:100%; background-color:#ec8e00">
+                    <img src="index_files/spacer.gif" style="height:10px; width:100%; border-width:0" class="hideOnPrint" title="Remaining Estimate - 2 days" alt="Remaining Estimate - 2 days">
+                </td>
+                                                        </tr>
+            </tbody></table>
+        </dd>
+        <dd id="tt_single_values_remain" class="tt_values" title="Remaining Estimate - 2 days">
+                            2d
+                    </dd>
+    </dl>
+                        <dl>
+        <dt id="tt_single_text_spent" class="tt_text" title="Time Spent - Not Specified">
+            Logged:
+        </dt>
+        <dd class="tt_graph">
+            <table id="tt_single_graph_spent" class="tt_graph" cellpadding="0" cellspacing="0">
+                <tbody><tr class="tt_graph">
+                                                                                                    <td style="width:100%; background-color:#cccccc">
+                    <img src="index_files/spacer.gif" style="height:10px; width:100%; border-width:0" class="hideOnPrint" title="Time Spent - Not Specified" alt="Time Spent - Not Specified">
+                </td>
+                                                        </tr>
+            </tbody></table>
+        </dd>
+        <dd id="tt_single_values_spent" class="tt_values" title="Time Spent - Not Specified">
+                            Not Specified
+                    </dd>
+    </dl>
+                        </div>
+        
+</div></div></div></div>
+                    </div>
+                </div>
+                        </div>
+
+    <fieldset class="hidden parameters">
+        <input title="autocompleteEnabled" value="true" type="hidden">
+    </fieldset>
+    
+    </section>
+    <footer id="footer" role="contentinfo">
+        
+        
+
+
+
+<div class="footer-body">
+    <ul>
+        <li>
+                        <a href="http://www.atlassian.com/software/jira">Atlassian JIRA</a>
+
+                                                    
+                        
+            <span id="footer-build-information">(v6.1.6#6162-<span title="7af547ce7c84dbb7c1e345a65437ed7b85efffa2" data-commit-id="7af547ce7c84dbb7c1e345a65437ed7b85efffa2}">sha1:7af547c</span>)</span>
+        </li>
+        <li>
+            <a id="about-link" href="https://jira.codehaus.org/secure/AboutPage.jspa">About JIRA</a>
+        </li>
+        <li>
+                                    <a id="footer-report-problem-link" href="https://jira.codehaus.org/secure/CreateIssue%21default.jspa">Report a problem</a>
+        </li>
+    </ul>
+            <ul>
+            <li class="licensemessage">
+                                    Powered by a free Atlassian <a href="http://www.atlassian.com/software/jira">JIRA</a> open source license for Codehaus. Try JIRA - <a href="http://www.atlassian.com/software/jira">bug tracking software</a> for <i>your</i> team.
+
+                            </li>
+        </ul>
+    </div>
+
+<form id="jira_request_timing_info" class="dont-default-focus">
+	<fieldset class="parameters hidden">
+
+
+
+
+		<input title="jira.session.expiry.in.mins" value="299" type="hidden">
+
+	</fieldset>
+</form>
+<!--
+	                 
+	          
+	               
+	                 
+	        CONCURRENT REQUESTS : 4
+
+
+
+-->
+
+
+
+
+
+
+
+
+
+
+<fieldset class="hidden parameters">
+    <input title="loggedInUser" value="" type="hidden">
+    <input title="ajaxTimeout" value="The call to the JIRA server did not complete within the timeout period.  We are unsure of the result of this operation." type="hidden">
+    <input title="JiraVersion" value="6.1.6" type="hidden">
+    <input title="ajaxUnauthorised" value="You are not authorised to perform this operation.  Please log in." type="hidden">
+    <input title="baseURL" value="https://jira.codehaus.org:443" type="hidden">
+    <input title="ajaxCommsError" value="The JIRA server could not be contacted.  This may be a temporary glitch or the server may be down." type="hidden">
+    <input title="ajaxServerError" value="The JIRA server was contacted but has returned an error response. We are unsure of the result of this operation." type="hidden">
+    <input title="ajaxErrorCloseDialog" value="Close this dialog and press refresh in your browser" type="hidden">
+    <input title="ajaxErrorDialogHeading" value="Communications Breakdown" type="hidden">
+
+    <input title="dirtyMessage" value="You have entered new data on this page. If you navigate away from this page without first saving your data, the changes will be lost." type="hidden">
+    <input title="dirtyDialogMessage" value="You have entered new data in this dialog. If you navigate away from this dialog without first saving your data, the changes will be lost. Click cancel to return to the dialog." type="hidden">
+    <input title="keyType" value="Type" type="hidden">
+    <input title="keyThen" value="then" type="hidden">
+    <input title="dblClickToExpand" value="Double click to expand" type="hidden">
+    <input title="actions" value="Actions" type="hidden">
+    <input title="removeItem" value="Remove" type="hidden">
+    <input title="workflow" value="Workflow" type="hidden">
+    <input title="labelNew" value="New Label" type="hidden">
+    <input title="issueActionsHint" value="Begin typing for available operations or press down to see all" type="hidden">
+    <input title="closelink" value="Close" type="hidden">
+    <input title="dotOperations" value="Operations" type="hidden">
+    <input title="dotLoading" value="Loading..." type="hidden">
+    <input title="frotherSuggestions" value="Suggestions" type="hidden">
+    <input title="frotherNomatches" value="No Matches" type="hidden">
+    <input title="multiselectVersionsError" value="{0} is not a valid version." type="hidden">
+    <input title="multiselectComponentsError" value="{0} is not a valid component." type="hidden">
+    <input title="multiselectGenericError" value="The value {0} is invalid." type="hidden">
+</fieldset>
+
+    </footer>
+</div>
+
+
+<div id="fancybox-tmp"></div><div id="fancybox-loading"><div></div></div><div id="fancybox-overlay"></div><div id="fancybox-wrap"><div id="fancybox-outer"><div class="fancybox-bg" id="fancybox-bg-n"></div><div class="fancybox-bg" id="fancybox-bg-ne"></div><div class="fancybox-bg" id="fancybox-bg-e"></div><div class="fancybox-bg" id="fancybox-bg-se"></div><div class="fancybox-bg" id="fancybox-bg-s"></div><div class="fancybox-bg" id="fancybox-bg-sw"></div><div class="fancybox-bg" id="fancybox-bg-w"></div><div class="fancybox-bg" id="fancybox-bg-nw"></div><div id="fancybox-content"></div><a id="fancybox-close"></a><div id="fancybox-title"></div><a href="javascript:void(0);" id="fancybox-left"><span class="fancy-ico" id="fancybox-left-ico"></span></a><a href="javascript:void(0);" id="fancybox-right"><span class="fancy-ico" id="fancybox-right-ico"></span></a></div></div><div class="navigator-sidebar collapsed ui-popout ui-popout-detached ui-popout-collapsed" id="navigator-sidebar"><a class="toggle-filter-panel" href="#" title="Dock the filters panel ([)"></a></div><div style="display: none;" class="jira-dialog box-shadow" id="edit-issue-dialog"><div class="jira-dialog-content"></div></div><div style="display: none;" class="jira-dialog box-shadow" id="create-subtask-dialog"><div class="jira-dialog-content"></div></div></body></html>

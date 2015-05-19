@@ -1,0 +1,212 @@
+? .classpath
+? .project
+? PoolingComponentAdapter.java.diff
+? PoolingComponentAdapterTestCase.java.diff
+? WeakPool.diff
+Index: src/java/org/nanocontainer/pool2/PoolingComponentAdapter.java
+===================================================================
+RCS file: /home/projects/picocontainer/scm/java/pool2/src/java/org/nanocontainer/pool2/PoolingComponentAdapter.java,v
+retrieving revision 1.6
+diff -u -r1.6 PoolingComponentAdapter.java
+--- src/java/org/nanocontainer/pool2/PoolingComponentAdapter.java	4 May 2004 22:08:28 -0000	1.6
++++ src/java/org/nanocontainer/pool2/PoolingComponentAdapter.java	6 May 2004 01:59:53 -0000
+@@ -10,10 +10,18 @@
+ package org.nanocontainer.pool2;
+ 
+ import org.picocontainer.*;
++import org.picocontainer.defaults.ClassHierarchyIntrospector;
+ import org.picocontainer.defaults.DecoratingComponentAdapter;
+ 
++import java.lang.ref.WeakReference;
++import java.lang.reflect.InvocationHandler;
++import java.lang.reflect.Method;
++import java.lang.reflect.Proxy;
++import java.util.HashMap;
++import java.util.Iterator;
+ import java.util.LinkedList;
+ import java.util.List;
++import java.util.Map;
+ 
+ /**
+  * This Component Adapter maintains a pool of component instances.
+@@ -21,11 +29,21 @@
+  * @version $Revision: 1.6 $
+  */
+ public class PoolingComponentAdapter extends DecoratingComponentAdapter {
++    private static Method getInstanceToAutorelease;
++    static {
++        try {
++            getInstanceToAutorelease = Autoreleasable.class.getMethod("getInstanceToAutorelease", null);
++        } catch (NoSuchMethodException e) {
++            throw new InternalError();
++        }
++    }
++    
+     private static final int DEFAULT_SIZE = 5;
+     private int maxPoolSize;
+-    private final int waitMilliSeconds;
++    private int waitMilliSeconds;
+     private List available = new LinkedList();
+-    private List busy = new LinkedList();
++    private Map busy = new HashMap();
++    private boolean autoRelease;
+ 
+     /**
+      * @param delegate The delegate adapter that provides the pooled instances.
+@@ -33,21 +51,35 @@
+      * @param waitMilliSeconds number of milliseconds to wait when {@link #getComponentInstance(MutablePicoContainer) }
+      * is called. Three different values are possible here:
+      * <ul>
+-     * <li>-1 : Wait when exhausted until a component is available.</li>
++     * <li>-1 : Wait when exhausted until a component is available (not supported in auto-release mode).</li>
+      * <li>0 : Fail immediately when exhausted.</li>
+      * <li>n : Wait for max n milliseconds until a component is available. This will fail on timeout.</li>
+      * </ul>
++     * @param autoRelease instances will return automatically back into the cache if freed by the garbage collector
+      */
+-    public PoolingComponentAdapter(ComponentAdapter delegate, int maxPoolSize, int waitMilliSeconds) {
++    public PoolingComponentAdapter(ComponentAdapter delegate, int maxPoolSize, int waitMilliSeconds, boolean autoRelease) {
+         super(delegate);
+         this.maxPoolSize = maxPoolSize;
+         this.waitMilliSeconds = waitMilliSeconds;
++        this.autoRelease = autoRelease;
++    }
++
++    public PoolingComponentAdapter(ComponentAdapter delegate, int maxPoolSize, int waitMilliSeconds) {
++        this(delegate, maxPoolSize, waitMilliSeconds, false);
++    }
++
++    public PoolingComponentAdapter(ComponentAdapter delegate, int maxPoolSize, boolean autoRelelase) {
++        this(delegate, maxPoolSize, 0, autoRelelase);
+     }
+ 
+     public PoolingComponentAdapter(ComponentAdapter delegate, int maxPoolSize) {
+         this(delegate, maxPoolSize, 0);
+     }
+ 
++    public PoolingComponentAdapter(ComponentAdapter delegate, boolean autoRelelase) {
++        this(delegate, DEFAULT_SIZE, autoRelelase);
++    }
++
+     public PoolingComponentAdapter(ComponentAdapter delegate) {
+         this(delegate, DEFAULT_SIZE);
+     }
+@@ -55,7 +87,7 @@
+     public synchronized Object getComponentInstance() throws PicoException {
+         Object componentInstance = null;
+         final int availableSize = available.size();
+-        if (availableSize > 0) {
++        if (availableSize > 0 || (autoRelease && collectInstances() > 0)) {
+             componentInstance = available.remove(0);
+         } else {
+             // none available. grow or wait.
+@@ -66,8 +98,11 @@
+                 try {
+                     if(waitMilliSeconds > 0) {
+                         wait(waitMilliSeconds);
++                        if (autoRelease) {
++                            collectInstances();
++                        }
+                     }
+-                    if(waitMilliSeconds < 0) {
++                    if(waitMilliSeconds < 0 && !autoRelease) {
+                         wait();
+                     }
+                     componentInstance = available.remove(0);
+@@ -78,15 +113,43 @@
+                 }
+             }
+         }
+-        busy.add(componentInstance);
+-        return componentInstance;
++        Object proxy = componentInstance;
++        Object reference = componentInstance;
++        if(autoRelease) {
++            List interfaces = new LinkedList();
++            interfaces.add(Autoreleasable.class);
++            if(getDelegate().getComponentKey() instanceof Class && ((Class)getDelegate().getComponentKey()).isInterface()) {
++                interfaces.add(getDelegate().getComponentKey());
++            } else {
++                interfaces.addAll(ClassHierarchyIntrospector.getAllInterfaces(getDelegate().getComponentImplementation()));
++            }
++            if (interfaces.size() == 0) {
++                throw new PicoIntrospectionException("Can't realize auto releasing pool for " + getDelegate().getComponentImplementation().getName() + ". It doesn't implement any interfaces.");
++            }
++            final DelegatingInvocationHandler delegatingInvocationHandler = new DelegatingInvocationHandler(this);
++            proxy = Proxy.newProxyInstance(
++                    getClass().getClassLoader(),
++                    (Class[]) interfaces.toArray(new Class[interfaces.size()]),
++                    delegatingInvocationHandler);
++            reference = new WeakReference(proxy);
++        }
++        busy.put(componentInstance, reference);
++        return proxy;
+     }
+ 
+     public synchronized void returnComponentInstance(Object componentInstance) {
++        Object proxy = componentInstance; // Keep reference till end of function
++        if (autoRelease) { 
++            if (proxy instanceof Autoreleasable) {
++                componentInstance = ((Autoreleasable)proxy).getInstanceToAutorelease();
++            } else {
++                throw new BadTypeException(Autoreleasable.class, proxy.getClass());
++            }
++        }
+         if (!getComponentImplementation().equals(componentInstance.getClass())) {
+             throw new BadTypeException(getComponentImplementation(), componentInstance.getClass());
+         }
+-        if (!busy.contains(componentInstance)) {
++        if (!busy.keySet().contains(componentInstance)) {
+             throw new UnmanagedInstanceException(componentInstance);
+         }
+         busy.remove(componentInstance);
+@@ -105,4 +168,49 @@
+     public int getAvailable() {
+         return available.size();
+     }
++    
++    private int collectInstances() {
++        List freedInstances = new LinkedList();
++        for(Iterator iter = busy.keySet().iterator(); iter.hasNext(); ) {
++            Object key = iter.next();
++            WeakReference ref = (WeakReference)busy.get(key);
++            if (ref.get() == null) {
++                freedInstances.add(key);
++            }
++        }
++        for (Iterator iter = freedInstances.iterator(); iter.hasNext();) {
++            busy.remove(iter.next());
++        }
++        available.addAll(freedInstances);
++        return freedInstances.size();
++    }
++    
++    private static interface Autoreleasable {
++        public Object getInstanceToAutorelease();
++    }
++
++    private static class DelegatingInvocationHandler implements InvocationHandler {
++        private final Object delegatedInstance;
++
++        public DelegatingInvocationHandler(Object instance) {
++            this.delegatedInstance = instance;
++        }
++
++        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
++            Class declaringClass = method.getDeclaringClass();
++            if (declaringClass.equals(Object.class)) {
++                if (method.equals(ClassHierarchyIntrospector.hashCode)) {
++                    // Return the hashCode of ourself, as Proxy.newProxyInstance() may
++                    // return cached proxies. We want a unique hashCode for each created proxy!
++                    return new Integer(System.identityHashCode(this));
++                }
++                // If it's any other method defined by Object, call on ourself.
++                return method.invoke(this, args);
++            } else if (getInstanceToAutorelease.equals(method)) {
++                return delegatedInstance;
++            } else {
++                return method.invoke(delegatedInstance, args);
++            }
++        }
++    }
+ }

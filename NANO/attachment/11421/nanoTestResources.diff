@@ -1,0 +1,22 @@
+Index: project.xml
+===================================================================
+RCS file: /cvsroot/picocontainer/java/nanocontainer/project.xml,v
+retrieving revision 1.35
+diff -u -r1.35 project.xml
+--- project.xml	12 Feb 2004 01:23:53 -0000	1.35
++++ project.xml	13 Feb 2004 11:31:54 -0000
+@@ -152,6 +152,14 @@
+             <excludes>
+                 <exclude>**/Abstract*</exclude>
+             </excludes>
++            <resources>
++                <resource>
++                    <directory>src/test</directory>
++                    <includes>
++                        <include>**/*.bsh</include>
++                    </includes>
++                </resource>
++            </resources>
+         </unitTest>
+     </build>
+ 

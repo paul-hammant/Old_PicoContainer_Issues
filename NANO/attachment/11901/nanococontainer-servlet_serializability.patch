@@ -1,0 +1,101 @@
+Index: servlet/src/java/org/nanocontainer/servlet/ServletContainerListener.java
+===================================================================
+RCS file: /cvsroot/picocontainer/java/servlet/src/java/org/nanocontainer/servlet/ServletContainerListener.java,v
+retrieving revision 1.28
+diff -u -r1.28 ServletContainerListener.java
+--- servlet/src/java/org/nanocontainer/servlet/ServletContainerListener.java	13 Apr 2004 14:44:28 -0000	1.28
++++ servlet/src/java/org/nanocontainer/servlet/ServletContainerListener.java	16 Apr 2004 02:46:18 -0000
+@@ -27,6 +27,7 @@
+ import java.io.StringReader;
+ import java.io.Reader;
+ import java.io.InputStreamReader;
++import java.io.Serializable;
+ import java.util.Enumeration;
+ 
+ /**
+@@ -41,8 +42,8 @@
+  * @author Aslak Helles&oslash;y
+  * @author Philipp Meier
+  */
+-public class ServletContainerListener implements ServletContextListener, HttpSessionListener, KeyConstants {
+-    private final ContainerBuilder containerKiller = new DefaultLifecycleContainerBuilder(null);
++public class ServletContainerListener implements ServletContextListener, HttpSessionListener, KeyConstants, Serializable {
++    private transient ContainerBuilder containerKiller = new DefaultLifecycleContainerBuilder(null);
+ 
+     public static final String KILLER_HELPER = "KILLER_HELPER";
+ 
+@@ -105,7 +106,7 @@
+         ObjectReference webappContainerRef = new ApplicationScopeObjectReference(context, APPLICATION_CONTAINER);
+         containerBuilder.buildContainer(sessionContainerRef, webappContainerRef, session);
+ 
+-        session.setAttribute(KILLER_HELPER, new HttpSessionBindingListener() {
++        session.setAttribute(KILLER_HELPER, new ContainerKillerHelper() {
+             public void valueBound(HttpSessionBindingEvent bindingEvent) {
+             }
+ 
+@@ -115,16 +116,16 @@
+                 try {
+                     killContainer(containerRef);
+                 } catch (IllegalStateException e) {
+-                    /*
+-                    Some servlet containers (Jetty) call contextDestroyed(ServletContextEvent event)
+-                    and then afterwards call valueUnbound(HttpSessionBindingEvent event).
+-
+-                    contextDestroyed will kill the top level (app level) pico container which will
+-                    cascade stop() down to the session children.
+-
+-                    This means that when valueUnbound is called later, the session level container will
+-                    already be stopped.
+-                    */
++                    //
++                    //Some servlet containers (Jetty) call contextDestroyed(ServletContextEvent event)
++                    //and then afterwards call valueUnbound(HttpSessionBindingEvent event).
++
++                    //contextDestroyed will kill the top level (app level) pico container which will
++                    //cascade stop() down to the session children.
++
++                    //This means that when valueUnbound is called later, the session level container will
++                    //already be stopped.
++                    //
+                 }
+             }
+         });
+@@ -144,4 +145,6 @@
+             containerKiller.killContainer(containerRef);
+         }
+     }
++
++    private abstract class ContainerKillerHelper implements HttpSessionBindingListener, Serializable {}
+ }
+Index: servlet/src/java/org/nanocontainer/servlet/SessionScopeObjectReference.java
+===================================================================
+RCS file: /cvsroot/picocontainer/java/servlet/src/java/org/nanocontainer/servlet/SessionScopeObjectReference.java,v
+retrieving revision 1.3
+diff -u -r1.3 SessionScopeObjectReference.java
+--- servlet/src/java/org/nanocontainer/servlet/SessionScopeObjectReference.java	8 Feb 2004 22:34:57 -0000	1.3
++++ servlet/src/java/org/nanocontainer/servlet/SessionScopeObjectReference.java	16 Apr 2004 02:56:46 -0000
+@@ -10,6 +10,7 @@
+ 
+ import org.picocontainer.defaults.ObjectReference;
+ 
++import java.io.Serializable;
+ import javax.servlet.http.HttpSession;
+ 
+ /**
+@@ -18,9 +19,14 @@
+  *
+  * @author <a href="mailto:joe@thoughtworks.net">Joe Walnes</a>
+  */
+-public class SessionScopeObjectReference implements ObjectReference {
++public class SessionScopeObjectReference implements ObjectReference, Serializable {
+ 
+-    private HttpSession session;
++    //The only reason this class is Serializable and the 'session' field is transient
++    //is so that if this class is used as a key in a PicoContainer (as it is in the
++    //nanocontainer servlet framework), it won't break serializability of the
++    //container. The deserialized class won't be reused for its actual purpose, but
++    //discarded. As such, there is no need to resurrect the transient session field
++    private transient HttpSession session;
+     private String key;
+ 
+     public SessionScopeObjectReference(HttpSession session, String key) {

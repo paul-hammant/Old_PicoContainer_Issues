@@ -1,0 +1,19 @@
+Index: nanocontainer/src/java/org/nanocontainer/integrationkit/LifecycleContainerBuilder.java
+===================================================================
+RCS file: /cvsroot/picocontainer/java/nanocontainer/src/java/org/nanocontainer/integrationkit/LifecycleContainerBuilder.java,v
+retrieving revision 1.6
+diff -u -r1.6 LifecycleContainerBuilder.java
+--- nanocontainer/src/java/org/nanocontainer/integrationkit/LifecycleContainerBuilder.java	8 Feb 2004 19:42:24 -0000	1.6
++++ nanocontainer/src/java/org/nanocontainer/integrationkit/LifecycleContainerBuilder.java	9 Feb 2004 04:20:03 -0000
+@@ -21,7 +21,10 @@
+ public abstract class LifecycleContainerBuilder implements ContainerBuilder {
+ 
+     public void buildContainer(ObjectReference containerRef, ObjectReference parentContainerRef, Object assemblyScope) {
+-        PicoContainer parentContainer = (PicoContainer) parentContainerRef.get();
++        PicoContainer parentContainer = null;
++        if (parentContainerRef != null) {
++            parentContainer = (PicoContainer) parentContainerRef.get();
++        }
+         MutablePicoContainer container = createContainer(parentContainer);
+ 
+         composeContainer(container, assemblyScope);

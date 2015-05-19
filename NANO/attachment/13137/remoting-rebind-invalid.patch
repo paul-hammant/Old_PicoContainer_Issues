@@ -1,0 +1,19 @@
+Index: remoting/src/java/org/nanocontainer/remoting/NanoNamingImpl.java
+===================================================================
+RCS file: /home/projects/picocontainer/scm/java/remoting/src/java/org/nanocontainer/remoting/NanoNamingImpl.java,v
+retrieving revision 1.5
+diff -u -r1.5 NanoNamingImpl.java
+--- remoting/src/java/org/nanocontainer/remoting/NanoNamingImpl.java	7 Aug 2004 20:04:30 -0000	1.5
++++ remoting/src/java/org/nanocontainer/remoting/NanoNamingImpl.java	4 Oct 2004 15:33:57 -0000
+@@ -29,7 +29,10 @@
+         RemoteInterceptorImpl remoteInterceptor = new RemoteInterceptorImpl(registry, pico, key, proxyFactory);
+         ClientInvoker clientInvocationHandler = new ClientInvoker(key, remoteInterceptor);
+         ComponentAdapter componentAdapter = pico.getComponentAdapter(key);
+-        remoteInterceptor.bind(componentAdapter);
++        if(componentAdapter == null) {
++            throw new IllegalArgumentException("Component key not found: " + key);
++        }
++        //remoteInterceptor.bind(componentAdapter);
+         return proxyFactory.createProxy(new Class[]{
+             componentAdapter.getComponentImplementation(),
+             Serializable.class,

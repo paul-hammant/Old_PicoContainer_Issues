@@ -1,0 +1,62 @@
+Index: sample-nanoweb/project.xml
+===================================================================
+RCS file: /scm/picocontainer/java/sample-nanoweb/project.xml,v
+retrieving revision 1.20
+diff -u -r1.20 project.xml
+--- sample-nanoweb/project.xml	2 Aug 2004 22:54:48 -0000	1.20
++++ sample-nanoweb/project.xml	8 Aug 2004 19:40:07 -0000
+@@ -143,7 +143,7 @@
+         <dependency>
+             <groupId>tomcat</groupId>
+             <artifactId>jasper-compiler</artifactId>
+-            <version>5.0.18</version>
++            <version>4.1.30</version>
+             <properties>
+                 <war.bundle>false</war.bundle>
+             </properties>
+@@ -152,7 +152,7 @@
+         <dependency>
+             <groupId>tomcat</groupId>
+             <artifactId>jasper-runtime</artifactId>
+-            <version>5.0.18</version>
++            <version>4.1.30</version>
+             <properties>
+                 <war.bundle>false</war.bundle>
+             </properties>
+Index: sample-nanoweb/src/test/org/nanocontainer/sample/nanoweb/IntegrationTestCase.java
+===================================================================
+RCS file: /scm/picocontainer/java/sample-nanoweb/src/test/org/nanocontainer/sample/nanoweb/IntegrationTestCase.java,v
+retrieving revision 1.7
+diff -u -r1.7 IntegrationTestCase.java
+--- sample-nanoweb/src/test/org/nanocontainer/sample/nanoweb/IntegrationTestCase.java	7 Aug 2004 20:04:35 -0000	1.7
++++ sample-nanoweb/src/test/org/nanocontainer/sample/nanoweb/IntegrationTestCase.java	8 Aug 2004 19:40:07 -0000
+@@ -24,11 +24,7 @@
+         XMLUnit.getTestDocumentBuilderFactory().setIgnoringComments(true);
+     }
+ 
+-    public void testDummy() {
+-
+-    }
+-
+-    public void FIXMEtestWithJetty() throws Exception {
++    public void testWithJetty() throws Exception {
+         Server server = new Server();
+         try {
+             SocketListener listener = new SocketListener();
+Index: sample-nanoweb/src/webapp/WEB-INF/web.xml
+===================================================================
+RCS file: /scm/picocontainer/java/sample-nanoweb/src/webapp/WEB-INF/web.xml,v
+retrieving revision 1.7
+diff -u -r1.7 web.xml
+--- sample-nanoweb/src/webapp/WEB-INF/web.xml	15 Jul 2004 08:22:24 -0000	1.7
++++ sample-nanoweb/src/webapp/WEB-INF/web.xml	8 Aug 2004 19:40:07 -0000
+@@ -7,8 +7,7 @@
+         <param-name>nanocontainer.groovy</param-name>
+         <param-value><![CDATA[
+             if(assemblyScope instanceof javax.servlet.ServletContext) {
+-                // we'll have to think of something better than this...
+-                com.thoughtworks.proxy.toys.nullobject.Null.object(org.picocontainer.PicoContainer)
++                return new org.picocontainer.defaults.DefaultPicoContainer(parent)
+             } else if(assemblyScope instanceof javax.servlet.http.HttpSession) {
+                 // Session level components
+                 pico = new org.picocontainer.defaults.DefaultPicoContainer(parent)

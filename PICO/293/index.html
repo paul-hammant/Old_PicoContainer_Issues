@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html class="mozilla"><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+    
+
+
+
+
+
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<title>[PICO-293] Annotation extension for picocontainer - jira.codehaus.org</title>
+<script type="text/javascript"><!--
+/* Script removed by snapshot save */
+--></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+<link rel="shortcut icon" href="index_files/favicon.ico">
+<link rel="search" type="application/opensearchdescription+xml" href="https://jira.codehaus.org/osd.jsp" title="[PICO-293] Annotation extension for picocontainer - jira.codehaus.org">
+
+    
+
+
+<!--[if IE]><![endif]-->
+<script type="text/javascript"><!--
+/* Script removed by snapshot save */
+--></script>
+<link type="text/css" rel="stylesheet" href="index_files/batch.css" media="all">
+<!--[if lte IE 8]>
+<link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e/en_UK-huda6k-1988229788/6162/7/6/_/download/superbatch/css/batch.css?conditionalComment=lte+IE+8" media="all">
+<![endif]-->
+<!--[if lte IE 9]>
+<link type="text/css" rel="stylesheet" href="/s/d41d8cd98f00b204e9800998ecf8427e/en_UK-huda6k-1988229788/6162/7/6/_/download/superbatch/css/batch.css?conditionalComment=lte+IE+9" media="all">
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="index_files/batch-1.css" media="all">
+<script type="text/javascript" src="index_files/batch.js"></script><style type="text/css"></style>
+<!--[if lte IE 8]>
+<script type="text/javascript" src="/s/d41d8cd98f00b204e9800998ecf8427e/en_UK-huda6k-1988229788/6162/7/6/_/download/superbatch/js/batch.js?conditionalComment=lte+IE+8" ></script>
+<![endif]-->
+<script type="text/javascript" src="index_files/batch-1.js"></script>
+<script type="text/javascript" src="index_files/jira.webresources_calendar-en.js"></script>
+<script type="text/javascript" src="index_files/com.atlassian.administraticksearch-webresources.js"></script>
+
+<script type="text/javascript" src="index_files/shortcuts.js"></script>
+
+
+    
+    
+    
+    <meta name="decorator" content="atl.general">
+    <meta id="isNavigator" name="isNavigator" content="true">
+    <meta name="ajs-user.search.mode" content="basic">
+    <meta name="ajs-issue-search-help-title" content="Searching for Issues">
+    <meta name="ajs-issue-search-help-url" content="https://docs.atlassian.com/jira/docs-061/Searching+for+Issues">
+    <meta name="ajs-advanced-search-help-title" content="Performing Advanced Searches">
+    <meta name="ajs-advanced-search-help-url" content="https://docs.atlassian.com/jira/docs-061/Advanced+Searching">
+    
+</head>
+<body data-aui-version="5.1.8" id="jira" class="aui-layout aui-theme-default ka ajax-issue-search-and-view page-type-navigator navigator-issue-only" data-version="6.1.6">
+<div id="page">
+    <header id="header" style="display:none" role="banner">
+        
+
+
+
+    
+        
+            
+        
+    
+
+
+
+
+
+
+
+        
+
+
+
+
+        
+
+
+
+
+
+<fieldset class="parameters hidden dont-default-focus">
+    <input title="tzdetect.pref.tzid" value="America/Chicago" type="hidden">
+    <input title="tzdetect.pref.tzname" value="(GMT-06:00) Chicago" type="hidden">
+    <input title="tzdetect.pref.tzoffset" value="(GMT-06:00)" type="hidden">
+    <input title="tzdetect.pref.tzdst" value="true" type="hidden">
+    <input title="tzdetect.pref.nothanks" value="" type="hidden">
+</fieldset>
+<nav data-aui-responsive="true" class="aui-header aui-dropdown2-trigger-group" role="navigation"><div class="aui-header-inner"><div class="aui-header-before"><a class="aui-dropdown2-trigger app-switcher-trigger" aria-owns="app-switcher" aria-haspopup="true" tabindex="0"><span class="aui-icon aui-icon-small aui-iconfont-appswitcher">Linked Applications</span></a><div id="app-switcher" class="aui-dropdown2 aui-style-default"><div class="aui-dropdown2-section"><ul class="nav-links"><li class="nav-link nav-link-local"><a href="https://jira.codehaus.org/" class="aui-dropdown2-radio interactive checked" title="https://jira.codehaus.org/"><span class="nav-link-label">jira.codehaus.org</span></a></li><li class="nav-link"><a href="http://jira.sonarsource.com/" class="aui-dropdown2-radio interactive" title="http://jira.sonarsource.com/"><span class="nav-link-label">SonarSource</span></a></li><li class="nav-link"><a href="http://docs.codehaus.org/" class="aui-dropdown2-radio interactive" title="http://docs.codehaus.org/"><span class="nav-link-label">Codehaus</span></a></li><li class="nav-link"><a href="http://xircles.codehaus.org/" class="aui-dropdown2-radio interactive" title="http://xircles.codehaus.org"><span class="nav-link-label">Xircles</span></a></li></ul></div></div><script><!--
+/* Script removed by snapshot save */
+--></script></div><div class="aui-header-primary"><h1 id="logo" class="aui-header-logo aui-header-logo-custom"><a href="https://jira.codehaus.org/secure/MyJiraHome.jspa"><img data-aui-responsive-header-index="0" src="urn:download-error:http://www.codehaus.org/codehaus-small.gif" alt="jira.codehaus.org"></a></h1><ul style="width: auto;" class="aui-nav">
+
+
+
+
+<li><a class="aui-nav-link aui-dropdown2-ajax jira-ajax-menu aui-dropdown2-trigger " href="https://jira.codehaus.org/secure/Dashboard.jspa" id="home_link" accesskey="d" title="View and manage your dashboards" aria-haspopup="true" aria-owns="home_link-content">Dashboards</a><div id="home_link-content" class="aui-dropdown2 aui-style-default" data-aui-dropdown2-ajax-key="home_link"></div></li><li><a class="aui-nav-link aui-dropdown2-ajax jira-ajax-menu aui-dropdown2-trigger " href="/Old_JIRA_Issues/index.html" id="browse_link" accesskey="p" title="View recent projects and browse a list of projects" aria-haspopup="true" aria-owns="browse_link-content">Projects</a><div id="browse_link-content" class="aui-dropdown2 aui-style-default" data-aui-dropdown2-ajax-key="browse_link"></div></li><li><a class="aui-nav-link aui-dropdown2-ajax jira-ajax-menu aui-dropdown2-trigger " href="https://jira.codehaus.org/secure/IssueNavigator.jspa" id="find_link" accesskey="i" title="Search for issues and view recent issues" aria-haspopup="true" aria-owns="find_link-content">Issues</a><div id="find_link-content" class="aui-dropdown2 aui-style-default" data-aui-dropdown2-ajax-key="find_link"></div></li>
+<li style="display: none;"><a id="aui-responsive-header-dropdown-trigger-0" class="aui-dropdown2-trigger" aria-owns="aui-responsive-header-dropdown-content-0" aria-haspopup="true" href="#">More<span class="icon aui-icon-dropdown"></span></a><div id="aui-responsive-header-dropdown-content-0" class="aui-dropdown2 aui-style-default"><div class="aui-dropdown2-section"><ul id="aui-responsive-header-dropdown-list-0"></ul></div></div></li></ul></div><div class="aui-header-secondary"><ul class="aui-nav"><li>
+    <form action="https://jira.codehaus.org/secure/QuickSearch.jspa" method="post" id="quicksearch" class="aui-quicksearch dont-default-focus ajs-dirty-warning-exempt">
+        <input id="quickSearchInput" class="search" title="Quick Search ( Type '/' )" placeholder="Quick Search" name="searchString" accesskey="q" type="text">
+        <input class="hidden" value="Search" type="submit">
+    </form>
+</li>
+
+
+
+    <li id="system-help-menu">
+        <a class="aui-nav-link aui-dropdown2-trigger" aria-haspopup="true" aria-owns="system-help-menu-content" href="https://docs.atlassian.com/jira/docs-061/JIRA+Documentation" target="_blank" title="Help"><span class="aui-icon aui-icon-small aui-iconfont-help">Help</span></a>
+        <div id="system-help-menu-content" class="aui-dropdown2 aui-style-default">
+                            <div class="aui-dropdown2-section">
+                                                                <ul id="jira-help" class="aui-list-truncate">
+                                                            <li>
+                                    <a id="view_help" class="interactive" title="Goto the online documentation for JIRA" href="https://docs.atlassian.com/jira/docs-061/JIRA+Documentation" target="_blank">Online Help</a>
+                                </li>
+                                                            <li>
+                                    <a id="keyshortscuthelp" class="interactive" title="Get more information about JIRA's Keyboard Shortcuts ( Type '?' )" href="https://jira.codehaus.org/secure/ViewKeyboardShortcuts%21default.jspa" target="_blank">Keyboard Shortcuts</a>
+                                </li>
+                                                            <li>
+                                    <a id="view_about" class="interactive" title="Get more information about JIRA" href="https://jira.codehaus.org/secure/AboutPage.jspa">About JIRA</a>
+                                </li>
+                                                            <li>
+                                    <a id="view_credits" class="interactive" title="See who did what" href="https://jira.codehaus.org/secure/JiraCreditsPage%21default.jspa" target="_blank">JIRA Credits</a>
+                                </li>
+                                                            <li>
+                                    <a id="whats-new-menu-link" class="interactive" href="https://docs.atlassian.com/jira/docs-061/whatsnew/iframe">What?s New</a>
+                                </li>
+                                                    </ul>
+                                    </div>
+                    </div>
+    </li>
+
+
+
+
+
+
+
+
+
+<li id="user-options">
+            <a class="aui-nav-link login-link" href="https://jira.codehaus.org/login.jsp?os_destination=%2Fbrowse%2FPICO-293">Log In</a>
+                <div id="user-options-content" class="aui-dropdown2 aui-style-default">
+                            <div class="aui-dropdown2-section">
+                                                        </div>
+                    </div>
+    </li>
+</ul></div></div><!-- .aui-header-inner--></nav><!-- .aui-header -->
+    </header>
+    
+
+
+<div id="announcement-banner" class="alertHeader">
+    <div style="position: absolute; right: 20em; top: -2em">
+  <a href="https://xircles.codehaus.org/signup">Signup</a>
+</div>
+</div>
+
+
+    <section id="content" role="main">
+        
+    
+
+    <div class="issue-container ">
+                                    <div id="issue-content" class="issue-edit-form">
+                    <header id="stalker" class="issue-header js-stalker">
+                        <div class="issue-header-content"><header class="aui-page-header"><div class="aui-page-header-inner"><div class="aui-page-header-image"><span id="10120" class="aui-avatar aui-avatar-large aui-avatar-project jira-system-avatar"><span class="aui-avatar-inner"><img id="project-avatar" alt="PicoContainer" src="index_files/projectavatar.png"></span></span></div><!-- .aui-page-header-image --><div class="aui-page-header-main"><ol class="aui-nav aui-nav-breadcrumbs"><li><a id="project-name-val" href="/Old_JIRA_Issues/index.html">PicoContainer</a></li><li><a class="issue-link" data-issue-key="PICO-293" href="#" id="key-val" rel="49750">PICO-293</a></li></ol><h1 id="summary-val">Annotation extension for picocontainer</h1></div><!-- .aui-page-header-main --><div class="aui-page-header-actions"><div id="issue-header-pager"></div></div><!-- .aui-page-header-actions --></div><!-- .aui-page-header-inner --></header><!-- .aui-page-header --><div class="command-bar"><div class="ops-cont"><div class="ops-menus aui-toolbar"><div class="toolbar-split toolbar-split-left"><ul id="opsbar-ops-login-lnk_container" class="toolbar-group pluggable-ops"><li class="toolbar-item"><a id="ops-login-lnk" style="display:none" title="Log In" class="toolbar-trigger" href="https://jira.codehaus.org/login.jsp?os_destination=%2Fbrowse%2FPICO-293"><span class="trigger-label">Log In</span></a></li></ul><ul id="opsbar-opsbar-operations" class="toolbar-group pluggable-ops"></ul><ul id="opsbar-opsbar-transitions" class="toolbar-group pluggable-ops"></ul><ul id="opsbar-opsbar-admin" class="toolbar-group pluggable-ops"></ul></div><div class="toolbar-split toolbar-split-right"><ul id="opsbar-jira.issue.tools" style="display:none" class="toolbar-group pluggable-ops"><li class="toolbar-item toolbar-dropdown"><div><a href="#" id="viewissue-export" title="Export this issue in another format" data-hide-on-scroll=".split-view .issue-container" data-contain-to-window="true" class="toolbar-trigger  js-default-dropdown"><span class="icon icon-export viewissue-export"></span> <span class="dropdown-text">Export</span><span class="icon drop-menu"></span></a><div class="aui-list hidden"><ul class="aui-list-section aui-first aui-last"><li class="aui-list-item"><a href="https://jira.codehaus.org/si/jira.issueviews:issue-xml/PICO-293/PICO-293.xml" class="aui-list-item-link" id="jira.issueviews:issue-xml"><span class="trigger-label">XML</span></a></li><li class="aui-list-item"><a href="https://jira.codehaus.org/si/jira.issueviews:issue-word/PICO-293/PICO-293.doc" class="aui-list-item-link" id="jira.issueviews:issue-word"><span class="trigger-label">Word</span></a></li><li class="aui-list-item"><a href="https://jira.codehaus.org/si/jira.issueviews:issue-html/PICO-293/PICO-293.html" class="aui-list-item-link" id="jira.issueviews:issue-html"><span class="trigger-label">Printable</span></a></li></ul></div></div></li></ul></div></div></div></div></div>
+                    </header>
+                    <div class="issue-body-content">
+                        <div class="aui-group issue-body"><div class="aui-item issue-main-column"><div id="details-module" class="module toggle-wrap"><div id="details-module_heading" class="mod-header"><ul class="ops"></ul><h2 class="toggle-title">Details</h2></div><div class="mod-content">
+
+
+
+
+<ul id="issuedetails" class="property-list two-cols">
+    <li class="item">
+        <div class="wrap">
+            <strong class="name">Type:</strong>
+            <span id="type-val" class="value">
+                                <img alt="New Feature" src="index_files/newfeature.png" title="New Feature - A new feature of the product, which has yet to be developed." height="16" width="16"> New Feature
+            </span>
+        </div>
+    </li>
+    <li class="item item-right">
+        <div class="wrap">
+            <strong class="name">Status:</strong>
+            <span id="status-val" class="value">
+                                
+
+<img src="index_files/closed.png" alt="Closed" title="Closed - The issue is considered finished, the resolution is correct. Issues which are closed can be reopened." height="16" width="16"> Closed
+            </span>
+                    </div>
+    </li>
+            <li class="item">
+            <div class="wrap">
+                <strong class="name">Priority:</strong>
+                <span id="priority-val" class="value">
+                                        <img alt="Major" src="index_files/major.png" title="Major - Major loss of function." height="16" width="16"> Major
+                </span>
+            </div>
+        </li>
+                                <li class="item item-right">
+            <div class="wrap">
+                <strong class="name">Resolution:</strong>
+                <span id="resolution-val" class="value resolved">
+                                     Fixed
+                                </span>
+            </div>
+        </li>
+                <li class="item">
+            <div class="wrap">
+                <strong class="name">Affects Version/s:</strong>
+                <span id="versions-val" class="value">
+                                            None
+                                    </span>
+            </div>
+        </li>
+                <li class="item item-right">
+            <div class="wrap">
+                <strong class="name">Fix Version/s:</strong>
+                <span id="fixfor-val" class="value">
+                                            <span style="height: auto;" class="shorten" id="fixVersions-field">
+                                                            <a href="/Old_JIRA_Issues/index.html/fixforversion/14410" title="3.0 PicoContainer 3.x">3.0</a>                                                    </span>
+                                    </span>
+            </div>
+        </li>
+                <li class="item">
+            <div class="wrap">
+                <strong class="name">Component/s:</strong>
+                <span id="components-val" class="value">
+                                            None
+                                    </span>
+            </div>
+        </li>
+                    <li class="item full-width">
+            <div class="wrap" id="wrap-labels">
+                <strong class="name">Labels:</strong>
+                    <div class="labels-wrap value">
+            <span class="labels" id="labels-49750-value">None</span>
+                </div>
+            </div>
+        </li>
+        </ul>
+
+<div id="customfieldmodule">
+    <div class="aui-tabs horizontal-tabs" id="customfield-tabs">
+                    <div id="customfield-panel-1" class="tabs-pane active-pane">
+                        <ul class="property-list">
+                                                <li id="rowForcustomfield_10110" class="item">
+                        <div class="wrap">
+                            <strong title="Testcase included" class="name">Testcase included:</strong>
+                            <div id="customfield_10110-val" class="value type-radiobuttons" data-fieldtype="radiobuttons" data-fieldtypecompletekey="com.atlassian.jira.plugin.system.customfieldtypes:radiobuttons">
+                                    yes
+
+                            </div>
+                        </div>
+                    </li>
+                                                                <li id="rowForcustomfield_10210" class="item">
+                        <div class="wrap">
+                            <strong title="Number of attachments " class="name">Number of attachments :</strong>
+                            <div id="customfield_10210-val" class="value type-attachments" data-fieldtype="attachments" data-fieldtypecompletekey="com.atlassian.jira.toolkit:attachments">
+                                    3
+
+                            </div>
+                        </div>
+                    </li>
+                                        </ul>
+        </div>
+        </div></div>
+</div></div><div id="descriptionmodule" class="module toggle-wrap"><div id="descriptionmodule_heading" class="mod-header"><ul class="ops"></ul><h2 class="toggle-title">Description</h2></div><div class="mod-content"><div id="description-val" class="field-ignore-highlight">
+    <div class="user-content-block">
+                    <p>Since all the Guice stuff really saves me typing and allows me to write cleaner code (whethever this is a more or less a pure "IoC" approach), I decided to try adding annotations processing into pico as well as implicit binding. So far I implemented @Inject, @Singleton, @ImplementedBy.</p>
+
+<p>public class Cat implements CatSoul {</p>
+
+<p>	@Inject<br>
+	private Mouse mouse;</p>
+
+<p>	@Inject<br>
+	private ExtendedPicoContainer container;</p>
+
+<p>	public Mouse getMouse() </p>
+{
+		return mouse;
+	}
+
+<p>	public ExtendedPicoContainer getContainer() </p>
+{
+		return container;
+	}
+
+<p>}</p>
+
+<p>@ImplementedBy(Cat.class)<br>
+public interface CatSoul {<br>
+	public abstract Mouse getMouse();<br>
+}</p>
+
+<p>and then you can write<br>
+ExtendedPicoContainer pico = new DefaultExtendedContainer();<br>
+CatSoul cat = pico.get(CatSoul.class);<br>
+assertNotNull(cat);<br>
+assertNotNull(cat.getMouse());</p>
+            </div>
+</div>
+</div></div><div id="attachmentmodule" class="module toggle-wrap"><div id="attachmentmodule_heading" class="mod-header"><ul class="ops"><li class="drop"><div class="aui-dd-parent"><a href="#" class="icon drop-menu js-default-dropdown" title="Options"><span>Options</span></a><div class="aui-dropdown-content aui-list"><ul id="attachment-sorting-options" class="aui-list-section aui-first"><li class="aui-list-item"><a id="attachment-sort-key-name" href="/Old_JIRA_Issues/293?attachmentSortBy=fileName#attachmentmodule" class="aui-list-checked aui-checked aui-list-item-link" title="viewissue.subtasks.tab.show.all.name"><span>Sort By Name</span></a></li><li class="aui-list-item"><a id="attachment-sort-key-date" href="/Old_JIRA_Issues/293?attachmentSortBy=dateTime#attachmentmodule" class="aui-list-checked aui-list-item-link" title="Sort By Date"><span>Sort By Date</span></a></li></ul><ul id="attachment-sorting-order-options" class="aui-list-section"><li class="aui-list-item"><a id="attachment-sort-direction-asc" href="/Old_JIRA_Issues/293?attachmentOrder=asc#attachmentmodule" class="aui-list-checked aui-checked aui-list-item-link" title="Ascending"><span>Ascending</span></a></li><li class="aui-list-item"><a id="attachment-sort-direction-desc" href="/Old_JIRA_Issues/293?attachmentOrder=desc#attachmentmodule" class="aui-list-checked aui-list-item-link" title="Descending"><span>Descending</span></a></li></ul><ul id="attachment-manage-options" class="aui-list-section aui-last"><li class="aui-list-item"><a id="aszip" href="https://jira.codehaus.org/secure/attachmentzip/49750.zip" class="aui-list-checked aui-list-item-link" title="Download all attachments as a ZIP file"><span>Download All</span></a></li></ul></div></div></li></ul><h2 class="toggle-title">Attachments</h2></div><div class="mod-content">
+            <ol id="file_attachments" class="item-attachments">
+                            <li class="attachment-content">
+                                            <div class="twixi-block collapsed">
+                            <div class="twixi-wrap verbose">
+                                <a href="#" class="twixi"><span class="icon twixi-opened"><span>Hide</span></span></a>
+                                <div class="attachment-thumb">
+                                    <a href="https://jira.codehaus.org/secure/attachment/26755/$%7BfileAttachment.fileNameUrlEncoded%7D" draggable="true" data-downloadurl="application/zip:annotations-project.zip:https://jira.codehaus.org/secure/attachment/26755/annotations-project.zip">
+                                            <img src="index_files/zip.gif" alt="Zip Archive" height="16" border="0" width="16">
+                                    </a>
+                                </div>
+                                <dl>
+                                        <dt class="attachment-title">
+        <a href="https://jira.codehaus.org/secure/attachment/26755/annotations-project.zip" title="Latest  11/Apr/07 2:49 PM - Erik Putrycz" draggable="true" data-downloadurl="application/zip:annotations-project.zip:https://jira.codehaus.org/secure/attachment/26755/annotations-project.zip">annotations-project.zip
+        </a>
+    </dt>
+    <dd class="attachment-delete">
+                    <span class="icon"></span>
+            </dd>
+    <dd class="attachment-date"><time class="livestamp" datetime="2007-04-11T14:49-0500">11/Apr/07 2:49 PM</time></dd>
+    <dd class="attachment-size">557 kB</dd>
+    <dd class="attachment-author">Erik Putrycz</dd>
+                                    <dd class="zip-contents">
+                                        <ol>
+                                                                                                                                                <li>
+                                                        <div class="attachment-thumb">
+                                                            <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B0%5D/picocontainer-annotations/.classpath" draggable="true" data-downloadurl="${zipEntry.mimetype}:picocontainer-annotations/.classpath:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B0%5D/picocontainer-annotations/.classpath">
+                                                                    <img src="index_files/file.gif" alt="File" height="16" border="0" width="16">
+                                                            </a>
+                                                        </div>
+                                                        <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B0%5D/picocontainer-annotations/.classpath" title="picocontainer-annotations/.classpath" draggable="true" data-downloadurl="${zipEntry.mimetype}:picocontainer-annotations/.classpath:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B0%5D/picocontainer-annotations/.classpath">
+                                                            picocontainer-annotations/.classpath
+                                                        </a>
+                                                        <span class="attachment-size">
+                                                            0.4 kB
+                                                        </span>
+                                                    </li>
+                                                                                                                                                                                                <li>
+                                                        <div class="attachment-thumb">
+                                                            <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B1%5D/picocontainer-annotations/.project" draggable="true" data-downloadurl="${zipEntry.mimetype}:picocontainer-annotations/.project:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B1%5D/picocontainer-annotations/.project">
+                                                                    <img src="index_files/file.gif" alt="File" height="16" border="0" width="16">
+                                                            </a>
+                                                        </div>
+                                                        <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B1%5D/picocontainer-annotations/.project" title="picocontainer-annotations/.project" draggable="true" data-downloadurl="${zipEntry.mimetype}:picocontainer-annotations/.project:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B1%5D/picocontainer-annotations/.project">
+                                                            picocontainer-annotations/.project
+                                                        </a>
+                                                        <span class="attachment-size">
+                                                            0.5 kB
+                                                        </span>
+                                                    </li>
+                                                                                                                                                                                                <li>
+                                                        <div class="attachment-thumb">
+                                                            <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B2%5D/picocontainer-annotations/.settings/org.eclipse.jdt.core.prefs" draggable="true" data-downloadurl="${zipEntry.mimetype}:picocontainer-annotations/.settings/org.eclipse.jdt.core.prefs:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B2%5D/picocontainer-annotations/.settings/org.eclipse.jdt.core.prefs">
+                                                                    <img src="index_files/file.gif" alt="File" height="16" border="0" width="16">
+                                                            </a>
+                                                        </div>
+                                                        <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B2%5D/picocontainer-annotations/.settings/org.eclipse.jdt.core.prefs" title="picocontainer-annotations/.settings/org.eclipse.jdt.core.prefs" draggable="true" data-downloadurl="${zipEntry.mimetype}:picocontainer-annotations/.settings/org.eclipse.jdt.core.prefs:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B2%5D/picocontainer-annotations/.settings/org.eclipse.jdt.core.prefs">
+                                                            picocontainer-annotations/.../org.eclipse.jdt.core.prefs
+                                                        </a>
+                                                        <span class="attachment-size">
+                                                            21 kB
+                                                        </span>
+                                                    </li>
+                                                                                                                                                                                                <li>
+                                                        <div class="attachment-thumb">
+                                                            <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B3%5D/picocontainer-annotations/.settings/org.eclipse.jdt.ui.prefs" draggable="true" data-downloadurl="${zipEntry.mimetype}:picocontainer-annotations/.settings/org.eclipse.jdt.ui.prefs:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B3%5D/picocontainer-annotations/.settings/org.eclipse.jdt.ui.prefs">
+                                                                    <img src="index_files/file.gif" alt="File" height="16" border="0" width="16">
+                                                            </a>
+                                                        </div>
+                                                        <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B3%5D/picocontainer-annotations/.settings/org.eclipse.jdt.ui.prefs" title="picocontainer-annotations/.settings/org.eclipse.jdt.ui.prefs" draggable="true" data-downloadurl="${zipEntry.mimetype}:picocontainer-annotations/.settings/org.eclipse.jdt.ui.prefs:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B3%5D/picocontainer-annotations/.settings/org.eclipse.jdt.ui.prefs">
+                                                            picocontainer-annotations/.../org.eclipse.jdt.ui.prefs
+                                                        </a>
+                                                        <span class="attachment-size">
+                                                            5 kB
+                                                        </span>
+                                                    </li>
+                                                                                                                                                                                                <li>
+                                                        <div class="attachment-thumb">
+                                                            <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B4%5D/picocontainer-annotations/.settings/org.eclipse.ltk.core.refactoring.prefs" draggable="true" data-downloadurl="${zipEntry.mimetype}:picocontainer-annotations/.settings/org.eclipse.ltk.core.refactoring.prefs:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B4%5D/picocontainer-annotations/.settings/org.eclipse.ltk.core.refactoring.prefs">
+                                                                    <img src="index_files/file.gif" alt="File" height="16" border="0" width="16">
+                                                            </a>
+                                                        </div>
+                                                        <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B4%5D/picocontainer-annotations/.settings/org.eclipse.ltk.core.refactoring.prefs" title="picocontainer-annotations/.settings/org.eclipse.ltk.core.refactoring.prefs" draggable="true" data-downloadurl="${zipEntry.mimetype}:picocontainer-annotations/.settings/org.eclipse.ltk.core.refactoring.prefs:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B4%5D/picocontainer-annotations/.settings/org.eclipse.ltk.core.refactoring.prefs">
+                                                            picocontainer-annotations/.../org.eclipse.ltk.core.refactoring.prefs
+                                                        </a>
+                                                        <span class="attachment-size">
+                                                            0.1 kB
+                                                        </span>
+                                                    </li>
+                                                                                                                                                                                                <li>
+                                                        <div class="attachment-thumb">
+                                                            <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B5%5D/picocontainer-annotations/LICENSE.txt" draggable="true" data-downloadurl="text/plain:picocontainer-annotations/LICENSE.txt:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B5%5D/picocontainer-annotations/LICENSE.txt">
+                                                                    <img src="index_files/text.gif" alt="Text File" height="16" border="0" width="16">
+                                                            </a>
+                                                        </div>
+                                                        <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B5%5D/picocontainer-annotations/LICENSE.txt" title="picocontainer-annotations/LICENSE.txt" draggable="true" data-downloadurl="text/plain:picocontainer-annotations/LICENSE.txt:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B5%5D/picocontainer-annotations/LICENSE.txt">
+                                                            picocontainer-annotations/LICENSE.txt
+                                                        </a>
+                                                        <span class="attachment-size">
+                                                            1 kB
+                                                        </span>
+                                                    </li>
+                                                                                                                                                                                                <li>
+                                                        <div class="attachment-thumb">
+                                                            <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B6%5D/picocontainer-annotations/bin/org/picocontainer/Cat.class" draggable="true" data-downloadurl="application/java:picocontainer-annotations/bin/org/picocontainer/Cat.class:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B6%5D/picocontainer-annotations/bin/org/picocontainer/Cat.class">
+                                                                    <img src="index_files/file.gif" alt="File" height="16" border="0" width="16">
+                                                            </a>
+                                                        </div>
+                                                        <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B6%5D/picocontainer-annotations/bin/org/picocontainer/Cat.class" title="picocontainer-annotations/bin/org/picocontainer/Cat.class" draggable="true" data-downloadurl="application/java:picocontainer-annotations/bin/org/picocontainer/Cat.class:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B6%5D/picocontainer-annotations/bin/org/picocontainer/Cat.class">
+                                                            picocontainer-annotations/bin/.../Cat.class
+                                                        </a>
+                                                        <span class="attachment-size">
+                                                            0.7 kB
+                                                        </span>
+                                                    </li>
+                                                                                                                                                                                                <li>
+                                                        <div class="attachment-thumb">
+                                                            <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B7%5D/picocontainer-annotations/bin/org/picocontainer/CatSoul.class" draggable="true" data-downloadurl="application/java:picocontainer-annotations/bin/org/picocontainer/CatSoul.class:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B7%5D/picocontainer-annotations/bin/org/picocontainer/CatSoul.class">
+                                                                    <img src="index_files/file.gif" alt="File" height="16" border="0" width="16">
+                                                            </a>
+                                                        </div>
+                                                        <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B7%5D/picocontainer-annotations/bin/org/picocontainer/CatSoul.class" title="picocontainer-annotations/bin/org/picocontainer/CatSoul.class" draggable="true" data-downloadurl="application/java:picocontainer-annotations/bin/org/picocontainer/CatSoul.class:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B7%5D/picocontainer-annotations/bin/org/picocontainer/CatSoul.class">
+                                                            picocontainer-annotations/.../CatSoul.class
+                                                        </a>
+                                                        <span class="attachment-size">
+                                                            0.3 kB
+                                                        </span>
+                                                    </li>
+                                                                                                                                                                                                <li>
+                                                        <div class="attachment-thumb">
+                                                            <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B8%5D/picocontainer-annotations/bin/org/picocontainer/DefaultExtendedContainer.class" draggable="true" data-downloadurl="application/java:picocontainer-annotations/bin/org/picocontainer/DefaultExtendedContainer.class:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B8%5D/picocontainer-annotations/bin/org/picocontainer/DefaultExtendedContainer.class">
+                                                                    <img src="index_files/file.gif" alt="File" height="16" border="0" width="16">
+                                                            </a>
+                                                        </div>
+                                                        <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B8%5D/picocontainer-annotations/bin/org/picocontainer/DefaultExtendedContainer.class" title="picocontainer-annotations/bin/org/picocontainer/DefaultExtendedContainer.class" draggable="true" data-downloadurl="application/java:picocontainer-annotations/bin/org/picocontainer/DefaultExtendedContainer.class:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B8%5D/picocontainer-annotations/bin/org/picocontainer/DefaultExtendedContainer.class">
+                                                            picocontainer-annotations/.../DefaultExtendedContainer.class
+                                                        </a>
+                                                        <span class="attachment-size">
+                                                            4 kB
+                                                        </span>
+                                                    </li>
+                                                                                                                                                                                                <li>
+                                                        <div class="attachment-thumb">
+                                                            <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B9%5D/picocontainer-annotations/bin/org/picocontainer/ExtendedComponentAdapterFactory.class" draggable="true" data-downloadurl="application/java:picocontainer-annotations/bin/org/picocontainer/ExtendedComponentAdapterFactory.class:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B9%5D/picocontainer-annotations/bin/org/picocontainer/ExtendedComponentAdapterFactory.class">
+                                                                    <img src="index_files/file.gif" alt="File" height="16" border="0" width="16">
+                                                            </a>
+                                                        </div>
+                                                        <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B9%5D/picocontainer-annotations/bin/org/picocontainer/ExtendedComponentAdapterFactory.class" title="picocontainer-annotations/bin/org/picocontainer/ExtendedComponentAdapterFactory.class" draggable="true" data-downloadurl="application/java:picocontainer-annotations/bin/org/picocontainer/ExtendedComponentAdapterFactory.class:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B9%5D/picocontainer-annotations/bin/org/picocontainer/ExtendedComponentAdapterFactory.class">
+                                                            picocontainer-annotations/.../ExtendedComponentAdapterFactory.class
+                                                        </a>
+                                                        <span class="attachment-size">
+                                                            2 kB
+                                                        </span>
+                                                    </li>
+                                                                                                                                                                                                <li>
+                                                        <div class="attachment-thumb">
+                                                            <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B10%5D/picocontainer-annotations/bin/org/picocontainer/ExtendedPicoContainer.class" draggable="true" data-downloadurl="application/java:picocontainer-annotations/bin/org/picocontainer/ExtendedPicoContainer.class:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B10%5D/picocontainer-annotations/bin/org/picocontainer/ExtendedPicoContainer.class">
+                                                                    <img src="index_files/file.gif" alt="File" height="16" border="0" width="16">
+                                                            </a>
+                                                        </div>
+                                                        <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B10%5D/picocontainer-annotations/bin/org/picocontainer/ExtendedPicoContainer.class" title="picocontainer-annotations/bin/org/picocontainer/ExtendedPicoContainer.class" draggable="true" data-downloadurl="application/java:picocontainer-annotations/bin/org/picocontainer/ExtendedPicoContainer.class:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B10%5D/picocontainer-annotations/bin/org/picocontainer/ExtendedPicoContainer.class">
+                                                            picocontainer-annotations/.../ExtendedPicoContainer.class
+                                                        </a>
+                                                        <span class="attachment-size">
+                                                            0.4 kB
+                                                        </span>
+                                                    </li>
+                                                                                                                                                                                                <li>
+                                                        <div class="attachment-thumb">
+                                                            <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B11%5D/picocontainer-annotations/bin/org/picocontainer/InjectionConstructorComponentAdapter.class" draggable="true" data-downloadurl="application/java:picocontainer-annotations/bin/org/picocontainer/InjectionConstructorComponentAdapter.class:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B11%5D/picocontainer-annotations/bin/org/picocontainer/InjectionConstructorComponentAdapter.class">
+                                                                    <img src="index_files/file.gif" alt="File" height="16" border="0" width="16">
+                                                            </a>
+                                                        </div>
+                                                        <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B11%5D/picocontainer-annotations/bin/org/picocontainer/InjectionConstructorComponentAdapter.class" title="picocontainer-annotations/bin/org/picocontainer/InjectionConstructorComponentAdapter.class" draggable="true" data-downloadurl="application/java:picocontainer-annotations/bin/org/picocontainer/InjectionConstructorComponentAdapter.class:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B11%5D/picocontainer-annotations/bin/org/picocontainer/InjectionConstructorComponentAdapter.class">
+                                                            picocontainer-annotations/.../InjectionConstructorComponentAdapter.class
+                                                        </a>
+                                                        <span class="attachment-size">
+                                                            4 kB
+                                                        </span>
+                                                    </li>
+                                                                                                                                                                                                <li>
+                                                        <div class="attachment-thumb">
+                                                            <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B12%5D/picocontainer-annotations/bin/org/picocontainer/Mouse.class" draggable="true" data-downloadurl="application/java:picocontainer-annotations/bin/org/picocontainer/Mouse.class:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B12%5D/picocontainer-annotations/bin/org/picocontainer/Mouse.class">
+                                                                    <img src="index_files/file.gif" alt="File" height="16" border="0" width="16">
+                                                            </a>
+                                                        </div>
+                                                        <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B12%5D/picocontainer-annotations/bin/org/picocontainer/Mouse.class" title="picocontainer-annotations/bin/org/picocontainer/Mouse.class" draggable="true" data-downloadurl="application/java:picocontainer-annotations/bin/org/picocontainer/Mouse.class:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B12%5D/picocontainer-annotations/bin/org/picocontainer/Mouse.class">
+                                                            picocontainer-annotations/.../Mouse.class
+                                                        </a>
+                                                        <span class="attachment-size">
+                                                            0.3 kB
+                                                        </span>
+                                                    </li>
+                                                                                                                                                                                                <li>
+                                                        <div class="attachment-thumb">
+                                                            <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B13%5D/picocontainer-annotations/bin/org/picocontainer/SingleCat.class" draggable="true" data-downloadurl="application/java:picocontainer-annotations/bin/org/picocontainer/SingleCat.class:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B13%5D/picocontainer-annotations/bin/org/picocontainer/SingleCat.class">
+                                                                    <img src="index_files/file.gif" alt="File" height="16" border="0" width="16">
+                                                            </a>
+                                                        </div>
+                                                        <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B13%5D/picocontainer-annotations/bin/org/picocontainer/SingleCat.class" title="picocontainer-annotations/bin/org/picocontainer/SingleCat.class" draggable="true" data-downloadurl="application/java:picocontainer-annotations/bin/org/picocontainer/SingleCat.class:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B13%5D/picocontainer-annotations/bin/org/picocontainer/SingleCat.class">
+                                                            picocontainer-annotations/.../SingleCat.class
+                                                        </a>
+                                                        <span class="attachment-size">
+                                                            0.8 kB
+                                                        </span>
+                                                    </li>
+                                                                                                                                                                                                <li>
+                                                        <div class="attachment-thumb">
+                                                            <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B14%5D/picocontainer-annotations/bin/org/picocontainer/TestImplicitBindings.class" draggable="true" data-downloadurl="application/java:picocontainer-annotations/bin/org/picocontainer/TestImplicitBindings.class:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B14%5D/picocontainer-annotations/bin/org/picocontainer/TestImplicitBindings.class">
+                                                                    <img src="index_files/file.gif" alt="File" height="16" border="0" width="16">
+                                                            </a>
+                                                        </div>
+                                                        <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B14%5D/picocontainer-annotations/bin/org/picocontainer/TestImplicitBindings.class" title="picocontainer-annotations/bin/org/picocontainer/TestImplicitBindings.class" draggable="true" data-downloadurl="application/java:picocontainer-annotations/bin/org/picocontainer/TestImplicitBindings.class:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B14%5D/picocontainer-annotations/bin/org/picocontainer/TestImplicitBindings.class">
+                                                            picocontainer-annotations/.../TestImplicitBindings.class
+                                                        </a>
+                                                        <span class="attachment-size">
+                                                            0.9 kB
+                                                        </span>
+                                                    </li>
+                                                                                                                                                                                                <li>
+                                                        <div class="attachment-thumb">
+                                                            <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B15%5D/picocontainer-annotations/bin/org/picocontainer/TestInject.class" draggable="true" data-downloadurl="application/java:picocontainer-annotations/bin/org/picocontainer/TestInject.class:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B15%5D/picocontainer-annotations/bin/org/picocontainer/TestInject.class">
+                                                                    <img src="index_files/file.gif" alt="File" height="16" border="0" width="16">
+                                                            </a>
+                                                        </div>
+                                                        <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B15%5D/picocontainer-annotations/bin/org/picocontainer/TestInject.class" title="picocontainer-annotations/bin/org/picocontainer/TestInject.class" draggable="true" data-downloadurl="application/java:picocontainer-annotations/bin/org/picocontainer/TestInject.class:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B15%5D/picocontainer-annotations/bin/org/picocontainer/TestInject.class">
+                                                            picocontainer-annotations/.../TestInject.class
+                                                        </a>
+                                                        <span class="attachment-size">
+                                                            2 kB
+                                                        </span>
+                                                    </li>
+                                                                                                                                                                                                <li>
+                                                        <div class="attachment-thumb">
+                                                            <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B16%5D/picocontainer-annotations/bin/org/picocontainer/TestSingleton.class" draggable="true" data-downloadurl="application/java:picocontainer-annotations/bin/org/picocontainer/TestSingleton.class:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B16%5D/picocontainer-annotations/bin/org/picocontainer/TestSingleton.class">
+                                                                    <img src="index_files/file.gif" alt="File" height="16" border="0" width="16">
+                                                            </a>
+                                                        </div>
+                                                        <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B16%5D/picocontainer-annotations/bin/org/picocontainer/TestSingleton.class" title="picocontainer-annotations/bin/org/picocontainer/TestSingleton.class" draggable="true" data-downloadurl="application/java:picocontainer-annotations/bin/org/picocontainer/TestSingleton.class:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B16%5D/picocontainer-annotations/bin/org/picocontainer/TestSingleton.class">
+                                                            picocontainer-annotations/.../TestSingleton.class
+                                                        </a>
+                                                        <span class="attachment-size">
+                                                            1 kB
+                                                        </span>
+                                                    </li>
+                                                                                                                                                                                                <li>
+                                                        <div class="attachment-thumb">
+                                                            <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B17%5D/picocontainer-annotations/bin/org/picocontainer/annotations/ImplementedBy.class" draggable="true" data-downloadurl="application/java:picocontainer-annotations/bin/org/picocontainer/annotations/ImplementedBy.class:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B17%5D/picocontainer-annotations/bin/org/picocontainer/annotations/ImplementedBy.class">
+                                                                    <img src="index_files/file.gif" alt="File" height="16" border="0" width="16">
+                                                            </a>
+                                                        </div>
+                                                        <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B17%5D/picocontainer-annotations/bin/org/picocontainer/annotations/ImplementedBy.class" title="picocontainer-annotations/bin/org/picocontainer/annotations/ImplementedBy.class" draggable="true" data-downloadurl="application/java:picocontainer-annotations/bin/org/picocontainer/annotations/ImplementedBy.class:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B17%5D/picocontainer-annotations/bin/org/picocontainer/annotations/ImplementedBy.class">
+                                                            picocontainer-annotations/.../ImplementedBy.class
+                                                        </a>
+                                                        <span class="attachment-size">
+                                                            0.5 kB
+                                                        </span>
+                                                    </li>
+                                                                                                                                                                                                <li>
+                                                        <div class="attachment-thumb">
+                                                            <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B18%5D/picocontainer-annotations/bin/org/picocontainer/annotations/Inject.class" draggable="true" data-downloadurl="application/java:picocontainer-annotations/bin/org/picocontainer/annotations/Inject.class:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B18%5D/picocontainer-annotations/bin/org/picocontainer/annotations/Inject.class">
+                                                                    <img src="index_files/file.gif" alt="File" height="16" border="0" width="16">
+                                                            </a>
+                                                        </div>
+                                                        <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B18%5D/picocontainer-annotations/bin/org/picocontainer/annotations/Inject.class" title="picocontainer-annotations/bin/org/picocontainer/annotations/Inject.class" draggable="true" data-downloadurl="application/java:picocontainer-annotations/bin/org/picocontainer/annotations/Inject.class:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B18%5D/picocontainer-annotations/bin/org/picocontainer/annotations/Inject.class">
+                                                            picocontainer-annotations/.../Inject.class
+                                                        </a>
+                                                        <span class="attachment-size">
+                                                            0.4 kB
+                                                        </span>
+                                                    </li>
+                                                                                                                                                                                                <li>
+                                                        <div class="attachment-thumb">
+                                                            <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B19%5D/picocontainer-annotations/bin/org/picocontainer/annotations/Singleton.class" draggable="true" data-downloadurl="application/java:picocontainer-annotations/bin/org/picocontainer/annotations/Singleton.class:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B19%5D/picocontainer-annotations/bin/org/picocontainer/annotations/Singleton.class">
+                                                                    <img src="index_files/file.gif" alt="File" height="16" border="0" width="16">
+                                                            </a>
+                                                        </div>
+                                                        <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B19%5D/picocontainer-annotations/bin/org/picocontainer/annotations/Singleton.class" title="picocontainer-annotations/bin/org/picocontainer/annotations/Singleton.class" draggable="true" data-downloadurl="application/java:picocontainer-annotations/bin/org/picocontainer/annotations/Singleton.class:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B19%5D/picocontainer-annotations/bin/org/picocontainer/annotations/Singleton.class">
+                                                            picocontainer-annotations/.../Singleton.class
+                                                        </a>
+                                                        <span class="attachment-size">
+                                                            0.4 kB
+                                                        </span>
+                                                    </li>
+                                                                                                                                                                                                <li>
+                                                        <div class="attachment-thumb">
+                                                            <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B20%5D/picocontainer-annotations/lib/picocontainer-1.3.jar" draggable="true" data-downloadurl="application/java-archive:picocontainer-annotations/lib/picocontainer-1.3.jar:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B20%5D/picocontainer-annotations/lib/picocontainer-1.3.jar">
+                                                                    <img src="index_files/java.gif" alt="Java Archive File" height="16" border="0" width="16">
+                                                            </a>
+                                                        </div>
+                                                        <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B20%5D/picocontainer-annotations/lib/picocontainer-1.3.jar" title="picocontainer-annotations/lib/picocontainer-1.3.jar" draggable="true" data-downloadurl="application/java-archive:picocontainer-annotations/lib/picocontainer-1.3.jar:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B20%5D/picocontainer-annotations/lib/picocontainer-1.3.jar">
+                                                            picocontainer-annotations/.../picocontainer-1.3.jar
+                                                        </a>
+                                                        <span class="attachment-size">
+                                                            111 kB
+                                                        </span>
+                                                    </li>
+                                                                                                                                                                                                <li>
+                                                        <div class="attachment-thumb">
+                                                            <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B21%5D/picocontainer-annotations/libsrc/picocontainer-distribution-1.3-src.zip" draggable="true" data-downloadurl="application/zip:picocontainer-annotations/libsrc/picocontainer-distribution-1.3-src.zip:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B21%5D/picocontainer-annotations/libsrc/picocontainer-distribution-1.3-src.zip">
+                                                                    <img src="index_files/zip.gif" alt="Zip Archive" height="16" border="0" width="16">
+                                                            </a>
+                                                        </div>
+                                                        <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B21%5D/picocontainer-annotations/libsrc/picocontainer-distribution-1.3-src.zip" title="picocontainer-annotations/libsrc/picocontainer-distribution-1.3-src.zip" draggable="true" data-downloadurl="application/zip:picocontainer-annotations/libsrc/picocontainer-distribution-1.3-src.zip:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B21%5D/picocontainer-annotations/libsrc/picocontainer-distribution-1.3-src.zip">
+                                                            picocontainer-annotations/.../picocontainer-distribution-1.3-src.zip
+                                                        </a>
+                                                        <span class="attachment-size">
+                                                            336 kB
+                                                        </span>
+                                                    </li>
+                                                                                                                                                                                                <li>
+                                                        <div class="attachment-thumb">
+                                                            <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B22%5D/picocontainer-annotations/pom.xml" draggable="true" data-downloadurl="application/xml:picocontainer-annotations/pom.xml:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B22%5D/picocontainer-annotations/pom.xml">
+                                                                    <img src="index_files/xml.gif" alt="XML File" height="16" border="0" width="16">
+                                                            </a>
+                                                        </div>
+                                                        <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B22%5D/picocontainer-annotations/pom.xml" title="picocontainer-annotations/pom.xml" draggable="true" data-downloadurl="application/xml:picocontainer-annotations/pom.xml:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B22%5D/picocontainer-annotations/pom.xml">
+                                                            picocontainer-annotations/pom.xml
+                                                        </a>
+                                                        <span class="attachment-size">
+                                                            5 kB
+                                                        </span>
+                                                    </li>
+                                                                                                                                                                                                <li>
+                                                        <div class="attachment-thumb">
+                                                            <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B23%5D/picocontainer-annotations/src/main/java/org/picocontainer/DefaultExtendedContainer.java" draggable="true" data-downloadurl="text/plain:picocontainer-annotations/src/main/java/org/picocontainer/DefaultExtendedContainer.java:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B23%5D/picocontainer-annotations/src/main/java/org/picocontainer/DefaultExtendedContainer.java">
+                                                                    <img src="index_files/java.gif" alt="Java Source File" height="16" border="0" width="16">
+                                                            </a>
+                                                        </div>
+                                                        <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B23%5D/picocontainer-annotations/src/main/java/org/picocontainer/DefaultExtendedContainer.java" title="picocontainer-annotations/src/main/java/org/picocontainer/DefaultExtendedContainer.java" draggable="true" data-downloadurl="text/plain:picocontainer-annotations/src/main/java/org/picocontainer/DefaultExtendedContainer.java:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B23%5D/picocontainer-annotations/src/main/java/org/picocontainer/DefaultExtendedContainer.java">
+                                                            picocontainer-annotations/.../DefaultExtendedContainer.java
+                                                        </a>
+                                                        <span class="attachment-size">
+                                                            4 kB
+                                                        </span>
+                                                    </li>
+                                                                                                                                                                                                <li>
+                                                        <div class="attachment-thumb">
+                                                            <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B24%5D/picocontainer-annotations/src/main/java/org/picocontainer/ExtendedComponentAdapterFactory.java" draggable="true" data-downloadurl="text/plain:picocontainer-annotations/src/main/java/org/picocontainer/ExtendedComponentAdapterFactory.java:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B24%5D/picocontainer-annotations/src/main/java/org/picocontainer/ExtendedComponentAdapterFactory.java">
+                                                                    <img src="index_files/java.gif" alt="Java Source File" height="16" border="0" width="16">
+                                                            </a>
+                                                        </div>
+                                                        <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B24%5D/picocontainer-annotations/src/main/java/org/picocontainer/ExtendedComponentAdapterFactory.java" title="picocontainer-annotations/src/main/java/org/picocontainer/ExtendedComponentAdapterFactory.java" draggable="true" data-downloadurl="text/plain:picocontainer-annotations/src/main/java/org/picocontainer/ExtendedComponentAdapterFactory.java:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B24%5D/picocontainer-annotations/src/main/java/org/picocontainer/ExtendedComponentAdapterFactory.java">
+                                                            picocontainer-annotations/.../ExtendedComponentAdapterFactory.java
+                                                        </a>
+                                                        <span class="attachment-size">
+                                                            3 kB
+                                                        </span>
+                                                    </li>
+                                                                                                                                                                                                <li>
+                                                        <div class="attachment-thumb">
+                                                            <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B25%5D/picocontainer-annotations/src/main/java/org/picocontainer/ExtendedPicoContainer.java" draggable="true" data-downloadurl="text/plain:picocontainer-annotations/src/main/java/org/picocontainer/ExtendedPicoContainer.java:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B25%5D/picocontainer-annotations/src/main/java/org/picocontainer/ExtendedPicoContainer.java">
+                                                                    <img src="index_files/java.gif" alt="Java Source File" height="16" border="0" width="16">
+                                                            </a>
+                                                        </div>
+                                                        <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B25%5D/picocontainer-annotations/src/main/java/org/picocontainer/ExtendedPicoContainer.java" title="picocontainer-annotations/src/main/java/org/picocontainer/ExtendedPicoContainer.java" draggable="true" data-downloadurl="text/plain:picocontainer-annotations/src/main/java/org/picocontainer/ExtendedPicoContainer.java:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B25%5D/picocontainer-annotations/src/main/java/org/picocontainer/ExtendedPicoContainer.java">
+                                                            picocontainer-annotations/.../ExtendedPicoContainer.java
+                                                        </a>
+                                                        <span class="attachment-size">
+                                                            0.8 kB
+                                                        </span>
+                                                    </li>
+                                                                                                                                                                                                <li>
+                                                        <div class="attachment-thumb">
+                                                            <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B26%5D/picocontainer-annotations/src/main/java/org/picocontainer/InjectionConstructorComponentAdapter.java" draggable="true" data-downloadurl="text/plain:picocontainer-annotations/src/main/java/org/picocontainer/InjectionConstructorComponentAdapter.java:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B26%5D/picocontainer-annotations/src/main/java/org/picocontainer/InjectionConstructorComponentAdapter.java">
+                                                                    <img src="index_files/java.gif" alt="Java Source File" height="16" border="0" width="16">
+                                                            </a>
+                                                        </div>
+                                                        <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B26%5D/picocontainer-annotations/src/main/java/org/picocontainer/InjectionConstructorComponentAdapter.java" title="picocontainer-annotations/src/main/java/org/picocontainer/InjectionConstructorComponentAdapter.java" draggable="true" data-downloadurl="text/plain:picocontainer-annotations/src/main/java/org/picocontainer/InjectionConstructorComponentAdapter.java:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B26%5D/picocontainer-annotations/src/main/java/org/picocontainer/InjectionConstructorComponentAdapter.java">
+                                                            picocontainer-annotations/.../InjectionConstructorComponentAdapter.java
+                                                        </a>
+                                                        <span class="attachment-size">
+                                                            4 kB
+                                                        </span>
+                                                    </li>
+                                                                                                                                                                                                <li>
+                                                        <div class="attachment-thumb">
+                                                            <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B27%5D/picocontainer-annotations/src/main/java/org/picocontainer/annotations/ImplementedBy.java" draggable="true" data-downloadurl="text/plain:picocontainer-annotations/src/main/java/org/picocontainer/annotations/ImplementedBy.java:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B27%5D/picocontainer-annotations/src/main/java/org/picocontainer/annotations/ImplementedBy.java">
+                                                                    <img src="index_files/java.gif" alt="Java Source File" height="16" border="0" width="16">
+                                                            </a>
+                                                        </div>
+                                                        <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B27%5D/picocontainer-annotations/src/main/java/org/picocontainer/annotations/ImplementedBy.java" title="picocontainer-annotations/src/main/java/org/picocontainer/annotations/ImplementedBy.java" draggable="true" data-downloadurl="text/plain:picocontainer-annotations/src/main/java/org/picocontainer/annotations/ImplementedBy.java:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B27%5D/picocontainer-annotations/src/main/java/org/picocontainer/annotations/ImplementedBy.java">
+                                                            picocontainer-annotations/.../ImplementedBy.java
+                                                        </a>
+                                                        <span class="attachment-size">
+                                                            0.9 kB
+                                                        </span>
+                                                    </li>
+                                                                                                                                                                                                <li>
+                                                        <div class="attachment-thumb">
+                                                            <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B28%5D/picocontainer-annotations/src/main/java/org/picocontainer/annotations/Inject.java" draggable="true" data-downloadurl="text/plain:picocontainer-annotations/src/main/java/org/picocontainer/annotations/Inject.java:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B28%5D/picocontainer-annotations/src/main/java/org/picocontainer/annotations/Inject.java">
+                                                                    <img src="index_files/java.gif" alt="Java Source File" height="16" border="0" width="16">
+                                                            </a>
+                                                        </div>
+                                                        <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B28%5D/picocontainer-annotations/src/main/java/org/picocontainer/annotations/Inject.java" title="picocontainer-annotations/src/main/java/org/picocontainer/annotations/Inject.java" draggable="true" data-downloadurl="text/plain:picocontainer-annotations/src/main/java/org/picocontainer/annotations/Inject.java:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B28%5D/picocontainer-annotations/src/main/java/org/picocontainer/annotations/Inject.java">
+                                                            picocontainer-annotations/.../Inject.java
+                                                        </a>
+                                                        <span class="attachment-size">
+                                                            0.9 kB
+                                                        </span>
+                                                    </li>
+                                                                                                                                                                                                <li>
+                                                        <div class="attachment-thumb">
+                                                            <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B29%5D/picocontainer-annotations/src/main/java/org/picocontainer/annotations/Singleton.java" draggable="true" data-downloadurl="text/plain:picocontainer-annotations/src/main/java/org/picocontainer/annotations/Singleton.java:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B29%5D/picocontainer-annotations/src/main/java/org/picocontainer/annotations/Singleton.java">
+                                                                    <img src="index_files/java.gif" alt="Java Source File" height="16" border="0" width="16">
+                                                            </a>
+                                                        </div>
+                                                        <a href="https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B29%5D/picocontainer-annotations/src/main/java/org/picocontainer/annotations/Singleton.java" title="picocontainer-annotations/src/main/java/org/picocontainer/annotations/Singleton.java" draggable="true" data-downloadurl="text/plain:picocontainer-annotations/src/main/java/org/picocontainer/annotations/Singleton.java:https://jira.codehaus.org/secure/attachmentzip/unzip/49750/26755%5B29%5D/picocontainer-annotations/src/main/java/org/picocontainer/annotations/Singleton.java">
+                                                            picocontainer-annotations/.../Singleton.java
+                                                        </a>
+                                                        <span class="attachment-size">
+                                                            0.9 kB
+                                                        </span>
+                                                    </li>
+                                                                                                                                    </ol>
+                                        <span class="zip-contents-trailer">
+                                                                                            Showing 30 of 103 items
+                                                                                        <a href="https://jira.codehaus.org/secure/attachment/26755/annotations-project.zip" draggable="true" data-downloadurl="application/zip:annotations-project.zip:https://jira.codehaus.org/secure/attachment/26755/${fileAttachment.fileNameUrlEncoded}">Download Zip</a>
+                                        </span>
+                                    </dd>
+                                </dl>
+                            </div>
+                            <div class="twixi-wrap concise">
+                                <a href="#" class="twixi"><span class="icon twixi-closed"><span>Show</span></span></a>
+
+                                <div class="attachment-thumb">
+                                    <a href="https://jira.codehaus.org/secure/attachment/26755/annotations-project.zip" draggable="true" data-downloadurl="application/zip:annotations-project.zip:https://jira.codehaus.org/secure/attachment/26755/annotations-project.zip">
+                                            <img src="index_files/zip.gif" alt="Zip Archive" height="16" border="0" width="16">
+                                    </a>
+                                </div>
+                                <dl>
+                                        <dt class="attachment-title">
+        <a href="https://jira.codehaus.org/secure/attachment/26755/annotations-project.zip" title="Latest  11/Apr/07 2:49 PM - Erik Putrycz" draggable="true" data-downloadurl="application/zip:annotations-project.zip:https://jira.codehaus.org/secure/attachment/26755/annotations-project.zip">annotations-project.zip
+        </a>
+    </dt>
+    <dd class="attachment-delete">
+                    <span class="icon"></span>
+            </dd>
+    <dd class="attachment-date"><time class="livestamp" datetime="2007-04-11T14:49-0500">11/Apr/07 2:49 PM</time></dd>
+    <dd class="attachment-size">557 kB</dd>
+    <dd class="attachment-author">Erik Putrycz</dd>
+                                </dl>
+                            </div>
+                        </div>
+                                    </li>
+                            <li class="attachment-content">
+                                            <div class="attachment-thumb">
+                            <a href="https://jira.codehaus.org/secure/attachment/27179/picocontainer-src.patch" draggable="true" data-downloadurl="${fileAttachment.mimetype}:picocontainer-src.patch:https://jira.codehaus.org/secure/attachment/27179/picocontainer-src.patch">
+                                    <img src="index_files/text.gif" alt="Text File" height="16" border="0" width="16">
+                            </a>
+                        </div>
+                        <dl>
+                                <dt class="attachment-title">
+        <a href="https://jira.codehaus.org/secure/attachment/27179/picocontainer-src.patch" title="Latest  07/May/07 9:16 AM - Erik Putrycz" draggable="true" data-downloadurl="${attachment.mimetype}:picocontainer-src.patch:https://jira.codehaus.org/secure/attachment/27179/picocontainer-src.patch">picocontainer-src.patch
+        </a>
+    </dt>
+    <dd class="attachment-delete">
+                    <span class="icon"></span>
+            </dd>
+    <dd class="attachment-date"><time class="livestamp" datetime="2007-05-07T09:16-0500">07/May/07 9:16 AM</time></dd>
+    <dd class="attachment-size">44 kB</dd>
+    <dd class="attachment-author">Erik Putrycz</dd>
+                        </dl>
+                                    </li>
+                            <li class="attachment-content">
+                                            <div class="attachment-thumb">
+                            <a href="https://jira.codehaus.org/secure/attachment/27180/pom.xml.patch" draggable="true" data-downloadurl="${fileAttachment.mimetype}:pom.xml.patch:https://jira.codehaus.org/secure/attachment/27180/pom.xml.patch">
+                                    <img src="index_files/text.gif" alt="Text File" height="16" border="0" width="16">
+                            </a>
+                        </div>
+                        <dl>
+                                <dt class="attachment-title">
+        <a href="https://jira.codehaus.org/secure/attachment/27180/pom.xml.patch" title="Latest  07/May/07 9:16 AM - Erik Putrycz" draggable="true" data-downloadurl="${attachment.mimetype}:pom.xml.patch:https://jira.codehaus.org/secure/attachment/27180/pom.xml.patch">pom.xml.patch
+        </a>
+    </dt>
+    <dd class="attachment-delete">
+                    <span class="icon"></span>
+            </dd>
+    <dd class="attachment-date"><time class="livestamp" datetime="2007-05-07T09:16-0500">07/May/07 9:16 AM</time></dd>
+    <dd class="attachment-size">3 kB</dd>
+    <dd class="attachment-author">Erik Putrycz</dd>
+                        </dl>
+                                    </li>
+                    </ol>
+        </div></div><div id="activitymodule" class="module toggle-wrap collapsed"><div id="activitymodule_heading" class="mod-header"><ul class="ops"></ul><h2 class="toggle-title">Activity</h2></div><div class="mod-content">
+
+
+
+
+
+
+
+
+
+
+    <div class="tabwrap tabs2" style="display:none">
+                    <div class="sortwrap">
+                                    <a class="icon icon-sort-down ajax-activity-content" rel="nofollow" href="/Old_JIRA_Issues/293?actionOrder=desc" title="Ascending order - Click to sort in descending order"><span>Ascending order - Click to sort in descending order</span></a>
+                            </div>
+                <ul id="issue-tabs" class="tabs horizontal">
+                                
+            <li class="active" id="all-tabpanel" data-id="all-tabpanel" data-key="com.atlassian.jira.plugin.system.issuetabpanels:all-tabpanel" data-label="All" data-href="/browse/PICO-293">
+                            <strong>All</strong>
+                        </li>
+                                
+            <li data-id="comment-tabpanel" data-key="com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel" data-label="Comments" data-href="/browse/PICO-293">
+                            <a class="ajax-activity-content" id="comment-tabpanel" href="/Old_JIRA_Issues/293"><strong>Comments</strong></a>
+                        </li>
+                                
+            <li data-id="worklog-tabpanel" data-key="com.atlassian.jira.plugin.system.issuetabpanels:worklog-tabpanel" data-label="Work Log" data-href="/browse/PICO-293">
+                            <a class="ajax-activity-content" id="worklog-tabpanel" href="/Old_JIRA_Issues/293"><strong>Work Log</strong></a>
+                        </li>
+                                
+            <li data-id="changehistory-tabpanel" data-key="com.atlassian.jira.plugin.system.issuetabpanels:changehistory-tabpanel" data-label="History" data-href="/browse/PICO-293">
+                            <a class="ajax-activity-content" id="changehistory-tabpanel" href="/Old_JIRA_Issues/293"><strong>History</strong></a>
+                        </li>
+                                
+            <li data-id="activity-stream-issue-tab" data-key="com.atlassian.streams.streams-jira-plugin:activity-stream-issue-tab" data-label="Activity" data-href="/browse/PICO-293">
+                            <a class="ajax-activity-content" id="activity-stream-issue-tab" href="/Old_JIRA_Issues/293"><strong>Activity</strong></a>
+                        </li>
+                </ul>
+    </div>
+    <div class="issuePanelWrapper">
+        <div class="issuePanelProgress"></div>
+        <div class="issuePanelContainer" id="issue_actions_container">
+                                    
+
+<div class="issue-data-block" id="changehistory-114375">
+    <div class="actionContainer">
+        <div class="action-details" id="changehistorydetails_114375">
+                                
+
+    <a class="user-hover user-avatar" rel="maurotalevi" id="changehistoryauthor_114375" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=maurotalevi"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Mauro Talevi</a>
+ made changes  - <span class="date" title="13/Apr/07 8:35 AM"><time class="livestamp" datetime="2007-04-13T08:35-0500">13/Apr/07 8:35 AM</time></span>
+        </div>
+        <div class="changehistory action-body">
+            <table id="changehistory_114375" border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <thead>
+                    <tr>
+                        <th width="20%">Field</th>
+                        <th width="40%">Original Value</th>
+                        <th width="40%">New Value</th>
+                    </tr>
+                </thead>
+                            <tbody>
+                            <tr>
+                <td class="activity-name" width="20%">
+                                    Key
+                                </td>
+                <td class="activity-old-val" width="40%">
+                                                                <a href="#" title="Annotation extension for picocontainer" class="issue-link" data-issue-key="PICO-293"><strike>PICOPLUGINS-3</strike></a>
+                                                                    </td>
+                <td class="activity-new-val" width="40%">
+                                                               <a href="#" title="Annotation extension for picocontainer" class="issue-link" data-issue-key="PICO-293"><strike>PICO-293</strike></a>
+                                                                    </td>
+                </tr>
+                            <tr>
+                <td class="activity-name" width="20%">
+                                    Project
+                                </td>
+                <td class="activity-old-val" width="40%">
+                                                                PicoContainer Plugins
+                                                                                                <span class="hist-value">[    11080
+]</span>
+                                                    </td>
+                <td class="activity-new-val" width="40%">
+                                                               PicoContainer
+                                                                                               <span class="hist-value">[    10120
+]</span>
+                                                    </td>
+                </tr>
+                            </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+                             
+
+
+<div id="comment-92853" class="issue-data-block activity-comment twixi-block  expanded">
+    <div class="twixi-wrap verbose actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-opened"><span>Hide</span></span></a>
+            <div class="action-links">
+                <a href="/Old_JIRA_Issues/293?focusedCommentId=92853&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-92853" title="A permanent link to this comment." class="icon icon-perma activitymodule-link"><span>Permalink</span></a>
+                                            </div>
+            <div class="action-details">        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="maurotalevi" id="commentauthor_92853_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=maurotalevi"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Mauro Talevi</a>
+ added a comment  - <span class="commentdate_92853_verbose subText"><span class="date user-tz" title="13/Apr/07 8:42 AM"><time class="livestamp" datetime="2007-04-13T08:42-0500">13/Apr/07 8:42 AM</time></span></span>  </div>
+        </div>
+        <div class="action-body flooded"><p>Added to sandbox:   <a href="https://svn.codehaus.org/picocontainer/java/sandbox/picocontainer-annotations/" class="external-link" rel="nofollow">https://svn.codehaus.org/picocontainer/java/sandbox/picocontainer-annotations/</a></p>
+
+<p>A few changes: </p>
+<ul class="alternate" type="square">
+	<li>all classes moved to o.p.annotations package (the top-level package is reserved for the JDK1.3 compatible API).</li>
+	<li>Renamed interfaces and classes to be more in line with Pico standards.</li>
+</ul>
+
+
+<p>Comments on the actual implementation and annotations should be done on the mailing list. </p>
+ </div>
+    </div>
+    <div class="twixi-wrap concise actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-closed"><span>Show</span></span></a>
+            <div class="action-details flooded">
+                        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="maurotalevi" id="commentauthor_92853_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=maurotalevi"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Mauro Talevi</a>
+ added a comment  - <span class="commentdate_92853_concise subText"><span class="date user-tz" title="13/Apr/07 8:42 AM"><time class="livestamp" datetime="2007-04-13T08:42-0500">13/Apr/07 8:42 AM</time></span></span>                    Added to sandbox:    https://svn.codehaus.org/picocontainer/java/sandbox/picocontainer-annotations/  
+
+ A few changes:  
+ 
+	 all classes moved to o.p.annotations package (the top-level package is reserved for the JDK1.3 compatible API). 
+	 Renamed interfaces and classes to be more in line with Pico standards. 
+ 
+
+
+ Comments on the actual implementation and annotations should be done on the mailing list.  
+             </div>
+        </div>
+    </div>
+</div>
+                             
+
+
+<div id="comment-95288" class="issue-data-block activity-comment twixi-block  expanded">
+    <div class="twixi-wrap verbose actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-opened"><span>Hide</span></span></a>
+            <div class="action-links">
+                <a href="/Old_JIRA_Issues/293?focusedCommentId=95288&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-95288" title="A permanent link to this comment." class="icon icon-perma activitymodule-link"><span>Permalink</span></a>
+                                            </div>
+            <div class="action-details">        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="eputrycz" id="commentauthor_95288_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=eputrycz"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Erik Putrycz</a>
+ added a comment  - <span class="commentdate_95288_verbose subText"><span class="date user-tz" title="07/May/07 9:16 AM"><time class="livestamp" datetime="2007-05-07T09:16-0500">07/May/07 9:16 AM</time></span></span>  </div>
+        </div>
+        <div class="action-body flooded"><p>refactored the component adapter to allow chaining of adapters<br>
+@Singleton renamed to @Single<br>
+support for circular references in the annotations (cf test)</p> </div>
+    </div>
+    <div class="twixi-wrap concise actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-closed"><span>Show</span></span></a>
+            <div class="action-details flooded">
+                        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="eputrycz" id="commentauthor_95288_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=eputrycz"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Erik Putrycz</a>
+ added a comment  - <span class="commentdate_95288_concise subText"><span class="date user-tz" title="07/May/07 9:16 AM"><time class="livestamp" datetime="2007-05-07T09:16-0500">07/May/07 9:16 AM</time></span></span>                    refactored the component adapter to allow chaining of adapters 
+@Singleton renamed to @Single 
+support for circular references in the annotations (cf test)              </div>
+        </div>
+    </div>
+</div>
+                             
+
+<div class="issue-data-block" id="changehistory-117698">
+    <div class="actionContainer">
+        <div class="action-details" id="changehistorydetails_117698">
+                                
+
+    <a class="user-hover user-avatar" rel="eputrycz" id="changehistoryauthor_117698" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=eputrycz"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Erik Putrycz</a>
+ made changes  - <span class="date" title="07/May/07 9:16 AM"><time class="livestamp" datetime="2007-05-07T09:16-0500">07/May/07 9:16 AM</time></span>
+        </div>
+        <div class="changehistory action-body">
+            <table id="changehistory_117698" border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tbody>
+                            <tr>
+                <td class="activity-name" width="20%">
+                                    Attachment
+                                </td>
+                <td class="activity-old-val" width="40%">
+                                                </td>
+                <td class="activity-new-val" width="40%">
+                                                                                        <a href="https://jira.codehaus.org/secure/attachment/27179/picocontainer-src.patch">picocontainer-src.patch</a>
+                                                                                                                       <span class="hist-value">[    27179
+]</span>
+                                                    </td>
+                </tr>
+                            </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+                             
+
+
+<div id="comment-95289" class="issue-data-block activity-comment twixi-block  expanded">
+    <div class="twixi-wrap verbose actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-opened"><span>Hide</span></span></a>
+            <div class="action-links">
+                <a href="/Old_JIRA_Issues/293?focusedCommentId=95289&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-95289" title="A permanent link to this comment." class="icon icon-perma activitymodule-link"><span>Permalink</span></a>
+                                            </div>
+            <div class="action-details">        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="eputrycz" id="commentauthor_95289_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=eputrycz"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Erik Putrycz</a>
+ added a comment  - <span class="commentdate_95289_verbose subText"><span class="date user-tz" title="07/May/07 9:16 AM"><time class="livestamp" datetime="2007-05-07T09:16-0500">07/May/07 9:16 AM</time></span></span>  </div>
+        </div>
+        <div class="action-body flooded"><p>misc fixes and reorg src to match pico/gem and other projects</p> </div>
+    </div>
+    <div class="twixi-wrap concise actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-closed"><span>Show</span></span></a>
+            <div class="action-details flooded">
+                        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="eputrycz" id="commentauthor_95289_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=eputrycz"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Erik Putrycz</a>
+ added a comment  - <span class="commentdate_95289_concise subText"><span class="date user-tz" title="07/May/07 9:16 AM"><time class="livestamp" datetime="2007-05-07T09:16-0500">07/May/07 9:16 AM</time></span></span>                    misc fixes and reorg src to match pico/gem and other projects              </div>
+        </div>
+    </div>
+</div>
+                             
+
+<div class="issue-data-block" id="changehistory-117699">
+    <div class="actionContainer">
+        <div class="action-details" id="changehistorydetails_117699">
+                                
+
+    <a class="user-hover user-avatar" rel="eputrycz" id="changehistoryauthor_117699" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=eputrycz"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Erik Putrycz</a>
+ made changes  - <span class="date" title="07/May/07 9:16 AM"><time class="livestamp" datetime="2007-05-07T09:16-0500">07/May/07 9:16 AM</time></span>
+        </div>
+        <div class="changehistory action-body">
+            <table id="changehistory_117699" border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tbody>
+                            <tr>
+                <td class="activity-name" width="20%">
+                                    Attachment
+                                </td>
+                <td class="activity-old-val" width="40%">
+                                                </td>
+                <td class="activity-new-val" width="40%">
+                                                                                        <a href="https://jira.codehaus.org/secure/attachment/27180/pom.xml.patch">pom.xml.patch</a>
+                                                                                                                       <span class="hist-value">[    27180
+]</span>
+                                                    </td>
+                </tr>
+                            </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+                             
+
+<div class="issue-data-block" id="changehistory-257684">
+    <div class="actionContainer">
+        <div class="action-details" id="changehistorydetails_257684">
+                                
+
+    <a class="user-hover user-avatar" rel="maurotalevi" id="changehistoryauthor_257684" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=maurotalevi"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Mauro Talevi</a>
+ made changes  - <span class="date" title="11/Nov/09 3:17 PM"><time class="livestamp" datetime="2009-11-11T15:17-0600">11/Nov/09 3:17 PM</time></span>
+        </div>
+        <div class="changehistory action-body">
+            <table id="changehistory_257684" border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tbody>
+                            <tr>
+                <td class="activity-name" width="20%">
+                                    Assignee
+                                </td>
+                <td class="activity-old-val" width="40%">
+                                                                Mauro Talevi
+                                                                                                <span class="hist-value">[    maurotalevi
+]</span>
+                                                    </td>
+                <td class="activity-new-val" width="40%">
+                                                </td>
+                </tr>
+                            </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+                             
+
+
+<div id="comment-328966" class="issue-data-block activity-comment twixi-block  expanded">
+    <div class="twixi-wrap verbose actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-opened"><span>Hide</span></span></a>
+            <div class="action-links">
+                <a href="/Old_JIRA_Issues/293?focusedCommentId=328966&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-328966" title="A permanent link to this comment." class="icon icon-perma activitymodule-link"><span>Permalink</span></a>
+                                            </div>
+            <div class="action-details">        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="rimovm" id="commentauthor_328966_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=rimovm"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Michael Rimov</a>
+ added a comment  - <span class="commentdate_328966_verbose subText"><span class="date user-tz" title="19/Jul/13 12:19 AM"><time class="livestamp" datetime="2013-07-19T00:19-0500">19/Jul/13 12:19 AM</time></span></span>  </div>
+        </div>
+        <div class="action-body flooded"><p>I'm going to close this since the code base for Pico-3 passes the JSR-330 TCK.  I THINK it does everything you need.</p>
+
+<p>If the JSR isn't sufficient for what you were thinking of, feel free to reopen this issue, but please let me know what additional features you need.</p>
+
+<p>Thanks.</p> </div>
+    </div>
+    <div class="twixi-wrap concise actionContainer">
+        <div class="action-head">
+            <a href="#" class="twixi"><span class="icon twixi-closed"><span>Show</span></span></a>
+            <div class="action-details flooded">
+                        
+    
+    
+    
+                
+
+    <a class="user-hover user-avatar" rel="rimovm" id="commentauthor_328966_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=rimovm"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Michael Rimov</a>
+ added a comment  - <span class="commentdate_328966_concise subText"><span class="date user-tz" title="19/Jul/13 12:19 AM"><time class="livestamp" datetime="2013-07-19T00:19-0500">19/Jul/13 12:19 AM</time></span></span>                    I'm going to close this since the code base for Pico-3 passes the JSR-330 TCK.  I THINK it does everything you need. 
+
+ If the JSR isn't sufficient for what you were thinking of, feel free to reopen this issue, but please let me know what additional features you need. 
+
+ Thanks.              </div>
+        </div>
+    </div>
+</div>
+                             
+
+<div class="issue-data-block" id="changehistory-432611">
+    <div class="actionContainer">
+        <div class="action-details" id="changehistorydetails_432611">
+                                
+
+    <a class="user-hover user-avatar" rel="rimovm" id="changehistoryauthor_432611" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=rimovm"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Michael Rimov</a>
+ made changes  - <span class="date" title="19/Jul/13 12:19 AM"><time class="livestamp" datetime="2013-07-19T00:19-0500">19/Jul/13 12:19 AM</time></span>
+        </div>
+        <div class="changehistory action-body">
+            <table id="changehistory_432611" border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tbody>
+                            <tr>
+                <td class="activity-name" width="20%">
+                                    Status
+                                </td>
+                <td class="activity-old-val" width="40%">
+                                                                Open
+                                                                                                <span class="hist-value">[    1
+]</span>
+                                                    </td>
+                <td class="activity-new-val" width="40%">
+                                                               Closed
+                                                                                               <span class="hist-value">[    6
+]</span>
+                                                    </td>
+                </tr>
+                            <tr>
+                <td class="activity-name" width="20%">
+                                    Fix Version/s
+                                </td>
+                <td class="activity-old-val" width="40%">
+                                                </td>
+                <td class="activity-new-val" width="40%">
+                                                               3.0
+                                                                                               <span class="hist-value">[    14410
+]</span>
+                                                    </td>
+                </tr>
+                            <tr>
+                <td class="activity-name" width="20%">
+                                    Resolution
+                                </td>
+                <td class="activity-old-val" width="40%">
+                                                </td>
+                <td class="activity-new-val" width="40%">
+                                                               Fixed
+                                                                                               <span class="hist-value">[    1
+]</span>
+                                                    </td>
+                </tr>
+                            </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+                             </div>
+    </div>
+</div></div></div><div id="viewissuesidebar" class="aui-item issue-side-column"><div id="peoplemodule" class="module toggle-wrap"><div id="peoplemodule_heading" class="mod-header"><ul class="ops"></ul><h2 class="toggle-title">People</h2></div><div class="mod-content"><ul class="item-details" id="peopledetails">
+    <li class="people-details">
+                <dl>
+            <dt>Assignee:</dt>
+            <dd>
+                <span id="assignee-val" class="view-issue-field">
+
+    <span class="aui-avatar aui-avatar-small"><span class="aui-avatar-inner"><img src="index_files/useravatar-1.png"></span></span>
+    Unassigned
+</span>
+                            </dd>
+        </dl>
+                        <dl>
+            <dt>Reporter:</dt>
+            <dd>
+                <span id="reporter-val" class="view-issue-field">
+
+            <span class="user-hover" id="issue_summary_reporter_eputrycz" rel="eputrycz">
+            <span class="aui-avatar aui-avatar-small"><span class="aui-avatar-inner"><img src="index_files/useravatar-2.png"></span></span>
+            Erik Putrycz
+        </span>
+    </span>
+            </dd>
+        </dl>
+                    </li>
+</ul>
+    <ul class="item-details">
+        <li>
+                            <dl>
+                    <dt>Votes:</dt>
+                    <dd>
+                                                                            <span id="vote-data" class="aui-badge vote-state-off">0</span>
+                        
+                                                                                                        <span id="vote-label" title="You have to be logged in to vote for an issue.">Vote for this issue</span>
+                                            </dd>
+                </dl>
+                                        <dl>
+                    <dt>Watchers:</dt>
+                    <dd>
+                                                                        
+                                                                            <span id="watcher-data" class="aui-badge watch-state-off">2</span>
+                        
+                                                                                <span id="watch-label" title="You have to be logged in to watch an issue.">Start watching this issue</span>
+                                            </dd>
+                </dl>
+                    </li>
+    </ul>
+</div></div><div id="datesmodule" class="module toggle-wrap"><div id="datesmodule_heading" class="mod-header"><ul class="ops"></ul><h2 class="toggle-title">Dates</h2></div><div class="mod-content"><ul class="item-details">
+    <li>
+            <dl class="dates">
+            <dt>Created:</dt>
+            <dd class="date user-tz" title="11/Apr/07 2:49 PM">
+
+                <span data-name="Created" id="create-date" data-fieldtype="datetime">
+                                                                        <time class="livestamp" datetime="2007-04-11T14:49-0500">11/Apr/07 2:49 PM</time>                                                             </span>
+            </dd>
+        </dl>
+            <dl class="dates">
+            <dt>Updated:</dt>
+            <dd class="date user-tz" title="19/Jul/13 12:19 AM">
+
+                <span data-name="Updated" id="updated-date" data-fieldtype="datetime">
+                                                                        <time class="livestamp" datetime="2013-07-19T00:19-0500">19/Jul/13 12:19 AM</time>                                                             </span>
+            </dd>
+        </dl>
+            <dl class="dates">
+            <dt>Resolved:</dt>
+            <dd class="date user-tz" title="19/Jul/13 12:19 AM">
+
+                <span data-name="Resolved" id="resolved-date" data-fieldtype="datetime">
+                                                                        <time class="livestamp" datetime="2013-07-19T00:19-0500">19/Jul/13 12:19 AM</time>                                                             </span>
+            </dd>
+        </dl>
+        </li>
+</ul>
+</div></div></div></div>
+                    </div>
+                </div>
+                        </div>
+
+    <fieldset class="hidden parameters">
+        <input title="autocompleteEnabled" value="true" type="hidden">
+    </fieldset>
+    
+    </section>
+    <footer id="footer" role="contentinfo">
+        
+        
+
+
+
+<div class="footer-body">
+    <ul>
+        <li>
+                        <a href="http://www.atlassian.com/software/jira">Atlassian JIRA</a>
+
+                                                    
+                        
+            <span id="footer-build-information">(v6.1.6#6162-<span title="7af547ce7c84dbb7c1e345a65437ed7b85efffa2" data-commit-id="7af547ce7c84dbb7c1e345a65437ed7b85efffa2}">sha1:7af547c</span>)</span>
+        </li>
+        <li>
+            <a id="about-link" href="https://jira.codehaus.org/secure/AboutPage.jspa">About JIRA</a>
+        </li>
+        <li>
+                                    <a id="footer-report-problem-link" href="https://jira.codehaus.org/secure/CreateIssue%21default.jspa">Report a problem</a>
+        </li>
+    </ul>
+            <ul>
+            <li class="licensemessage">
+                                    Powered by a free Atlassian <a href="http://www.atlassian.com/software/jira">JIRA</a> open source license for Codehaus. Try JIRA - <a href="http://www.atlassian.com/software/jira">bug tracking software</a> for <i>your</i> team.
+
+                            </li>
+        </ul>
+    </div>
+
+<form id="jira_request_timing_info" class="dont-default-focus">
+	<fieldset class="parameters hidden">
+
+
+
+
+		<input title="jira.session.expiry.in.mins" value="299" type="hidden">
+
+	</fieldset>
+</form>
+<!--
+	                 
+	          
+	               
+	                 
+	        CONCURRENT REQUESTS : 4
+
+
+
+-->
+
+
+
+
+
+
+
+
+
+
+<fieldset class="hidden parameters">
+    <input title="loggedInUser" value="" type="hidden">
+    <input title="ajaxTimeout" value="The call to the JIRA server did not complete within the timeout period.  We are unsure of the result of this operation." type="hidden">
+    <input title="JiraVersion" value="6.1.6" type="hidden">
+    <input title="ajaxUnauthorised" value="You are not authorised to perform this operation.  Please log in." type="hidden">
+    <input title="baseURL" value="https://jira.codehaus.org:443" type="hidden">
+    <input title="ajaxCommsError" value="The JIRA server could not be contacted.  This may be a temporary glitch or the server may be down." type="hidden">
+    <input title="ajaxServerError" value="The JIRA server was contacted but has returned an error response. We are unsure of the result of this operation." type="hidden">
+    <input title="ajaxErrorCloseDialog" value="Close this dialog and press refresh in your browser" type="hidden">
+    <input title="ajaxErrorDialogHeading" value="Communications Breakdown" type="hidden">
+
+    <input title="dirtyMessage" value="You have entered new data on this page. If you navigate away from this page without first saving your data, the changes will be lost." type="hidden">
+    <input title="dirtyDialogMessage" value="You have entered new data in this dialog. If you navigate away from this dialog without first saving your data, the changes will be lost. Click cancel to return to the dialog." type="hidden">
+    <input title="keyType" value="Type" type="hidden">
+    <input title="keyThen" value="then" type="hidden">
+    <input title="dblClickToExpand" value="Double click to expand" type="hidden">
+    <input title="actions" value="Actions" type="hidden">
+    <input title="removeItem" value="Remove" type="hidden">
+    <input title="workflow" value="Workflow" type="hidden">
+    <input title="labelNew" value="New Label" type="hidden">
+    <input title="issueActionsHint" value="Begin typing for available operations or press down to see all" type="hidden">
+    <input title="closelink" value="Close" type="hidden">
+    <input title="dotOperations" value="Operations" type="hidden">
+    <input title="dotLoading" value="Loading..." type="hidden">
+    <input title="frotherSuggestions" value="Suggestions" type="hidden">
+    <input title="frotherNomatches" value="No Matches" type="hidden">
+    <input title="multiselectVersionsError" value="{0} is not a valid version." type="hidden">
+    <input title="multiselectComponentsError" value="{0} is not a valid component." type="hidden">
+    <input title="multiselectGenericError" value="The value {0} is invalid." type="hidden">
+</fieldset>
+
+    </footer>
+</div>
+
+
+<div id="fancybox-tmp"></div><div id="fancybox-loading"><div></div></div><div id="fancybox-overlay"></div><div id="fancybox-wrap"><div id="fancybox-outer"><div class="fancybox-bg" id="fancybox-bg-n"></div><div class="fancybox-bg" id="fancybox-bg-ne"></div><div class="fancybox-bg" id="fancybox-bg-e"></div><div class="fancybox-bg" id="fancybox-bg-se"></div><div class="fancybox-bg" id="fancybox-bg-s"></div><div class="fancybox-bg" id="fancybox-bg-sw"></div><div class="fancybox-bg" id="fancybox-bg-w"></div><div class="fancybox-bg" id="fancybox-bg-nw"></div><div id="fancybox-content"></div><a id="fancybox-close"></a><div id="fancybox-title"></div><a href="javascript:void(0);" id="fancybox-left"><span class="fancy-ico" id="fancybox-left-ico"></span></a><a href="javascript:void(0);" id="fancybox-right"><span class="fancy-ico" id="fancybox-right-ico"></span></a></div></div><div class="navigator-sidebar collapsed ui-popout ui-popout-detached ui-popout-collapsed" id="navigator-sidebar"><a class="toggle-filter-panel" href="#" title="Dock the filters panel ([)"></a></div><div style="display: none;" class="jira-dialog box-shadow" id="edit-issue-dialog"><div class="jira-dialog-content"></div></div><div style="display: none;" class="jira-dialog box-shadow" id="create-subtask-dialog"><div class="jira-dialog-content"></div></div></body></html>
