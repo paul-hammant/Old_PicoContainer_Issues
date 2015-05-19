@@ -972,7 +972,7 @@ The current xwork direction (picocontainer) breaks Serialization which I think i
     
                 
 
-    <a class="user-hover user-avatar" rel="paul" id="commentauthor_12710_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=paul"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Paul Hammant</a>
+    <a class="user-hover user-avatar" rel="paul" id="commentauthor_12710_verbose" href="https://github.com/paul-hammant"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Paul Hammant</a>
  added a comment  - <span class="commentdate_12710_verbose subText"><span class="date user-tz" title="04/Aug/03 8:50 PM"><time class="livestamp" datetime="2003-08-04T20:50-0500">04/Aug/03 8:50 PM</time></span></span>  </div>
         </div>
         <div class="action-body flooded"><p>I have implemented basic serializability to DefaultPicoContainer.</p>
@@ -993,7 +993,7 @@ The current xwork direction (picocontainer) breaks Serialization which I think i
     
                 
 
-    <a class="user-hover user-avatar" rel="paul" id="commentauthor_12710_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=paul"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Paul Hammant</a>
+    <a class="user-hover user-avatar" rel="paul" id="commentauthor_12710_concise" href="https://github.com/paul-hammant"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Paul Hammant</a>
  added a comment  - <span class="commentdate_12710_concise subText"><span class="date user-tz" title="04/Aug/03 8:50 PM"><time class="livestamp" datetime="2003-08-04T20:50-0500">04/Aug/03 8:50 PM</time></span></span>                    I have implemented basic serializability to DefaultPicoContainer. 
 
  I'd like to propose that we solve the non-serializable issue by asking component mfrs to honor serialization.  As all containers become serilaible ... the developer coding the serialization of the container should (depending on which container they are using) end/stop lifecycle of comps hosted by the container, serialize the container with components in situ.  One deserilaization, they whould (depending on impl), deserialize, then 'start' the container. 
