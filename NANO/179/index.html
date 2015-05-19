@@ -406,7 +406,7 @@
     
                 
 
-    <a class="user-hover user-avatar" rel="rimovm" id="commentauthor_66231_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=rimovm"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Michael Rimov</a>
+    <a class="user-hover user-avatar" rel="rimovm" id="commentauthor_66231_verbose" href="https://github.com/mikerimov"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Michael Rimov</a>
  added a comment  - <span class="commentdate_66231_verbose subText"><span class="date user-tz" title="30/May/06 3:06 PM"><time class="livestamp" datetime="2006-05-30T15:06-0500">30/May/06 3:06 PM</time></span></span>  </div>
         </div>
         <div class="action-body flooded"><p>Well, I implemented something that would do these things locally, but it was nasty as all getout because since the hierarchies are isolated by proxies, it is impossible to determine if the container you just received actually exists in the parent's children collection or not <img class="emoticon" src="index_files/sad.gif" alt="" height="16" align="absmiddle" border="0" width="16"></p>
@@ -425,7 +425,7 @@
     
                 
 
-    <a class="user-hover user-avatar" rel="rimovm" id="commentauthor_66231_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=rimovm"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Michael Rimov</a>
+    <a class="user-hover user-avatar" rel="rimovm" id="commentauthor_66231_concise" href="https://github.com/mikerimov"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Michael Rimov</a>
  added a comment  - <span class="commentdate_66231_concise subText"><span class="date user-tz" title="30/May/06 3:06 PM"><time class="livestamp" datetime="2006-05-30T15:06-0500">30/May/06 3:06 PM</time></span></span>                    Well, I implemented something that would do these things locally, but it was nasty as all getout because since the hierarchies are isolated by proxies, it is impossible to determine if the container you just received actually exists in the parent's children collection or not   
 
  I ultimately had to create a "container counting visitor" that would count the hierarchy before and after a container was built via script and if there was no difference, add the newly created container to the parent.  Messy!   
@@ -494,7 +494,7 @@
     
                 
 
-    <a class="user-hover user-avatar" rel="rimovm" id="commentauthor_66942_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=rimovm"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Michael Rimov</a>
+    <a class="user-hover user-avatar" rel="rimovm" id="commentauthor_66942_verbose" href="https://github.com/mikerimov"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Michael Rimov</a>
  added a comment  - <span class="commentdate_66942_verbose subText"><span class="date user-tz" title="08/Jun/06 10:16 AM"><time class="livestamp" datetime="2006-06-08T10:16-0500">08/Jun/06 10:16 AM</time></span></span>  </div>
         </div>
         <div class="action-body flooded"><p>Yes, adding a child container to a parent container  the usage scenario is sort of along the lines of a Microcontainer.  So from the root container, I need to be able to manage all my child containers and perform a lifecycle on an entire hierarchy of containers.</p>
@@ -514,7 +514,7 @@
     
                 
 
-    <a class="user-hover user-avatar" rel="rimovm" id="commentauthor_66942_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=rimovm"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Michael Rimov</a>
+    <a class="user-hover user-avatar" rel="rimovm" id="commentauthor_66942_concise" href="https://github.com/mikerimov"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Michael Rimov</a>
  added a comment  - <span class="commentdate_66942_concise subText"><span class="date user-tz" title="08/Jun/06 10:16 AM"><time class="livestamp" datetime="2006-06-08T10:16-0500">08/Jun/06 10:16 AM</time></span></span>                    Yes, adding a child container to a parent container  the usage scenario is sort of along the lines of a Microcontainer.  So from the root container, I need to be able to manage all my child containers and perform a lifecycle on an entire hierarchy of containers. 
 
  Thanks for giving it some thought! 
