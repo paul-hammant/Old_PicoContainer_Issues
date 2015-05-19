@@ -1,5 +1,5 @@
 <!DOCTYPE html><html class="mozilla"><head>
-<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
     
 
 
@@ -325,7 +325,7 @@
     <div class="user-content-block">
                     <p>Here's my start at a container builder using JRuby.  No doco yet and there are still improvements to be made, but Paul was asking for it <img class="emoticon" src="index_files/smile.gif" alt="" height="16" align="absmiddle" border="0" width="16"></p>
 
-<p>Have a look at the test cases for an idea of how it works.  The basic idea is this – executing a piece of Ruby script always returns the last result.  So the last top-level "container" expression is what gets returned to the builder.  The parent container and assembly scope arguments are assigned to global variables "$parent" and "$assembly_scope" inside the ruby interpreter.</p>
+<p>Have a look at the test cases for an idea of how it works.  The basic idea is this Â– executing a piece of Ruby script always returns the last result.  So the last top-level "container" expression is what gets returned to the builder.  The parent container and assembly scope arguments are assigned to global variables "$parent" and "$assembly_scope" inside the ruby interpreter.</p>
 
 <p>AFAIK there is no jruby.jar on ibiblio.org yet so to try this you'll have to download the jar attached to the ticket and manually install with:</p>
 

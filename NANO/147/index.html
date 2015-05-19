@@ -1,5 +1,5 @@
 <!DOCTYPE html><html class="mozilla"><head>
-<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
     
 
 
@@ -357,7 +357,7 @@
 
 <p>3 - Added test cases for badly formed jar files and badly named scripts.  (malformed-deployment.jar and badbuildscriptdeploy.jar respectively)  </p>
 
-<p>4 - Added a constructor to NanoContainerDeployer to not have to hard code the configuration script name. (before hardcoded to 'nanocontainer') – the old default is provided.</p>
+<p>4 - Added a constructor to NanoContainerDeployer to not have to hard code the configuration script name. (before hardcoded to 'nanocontainer') Â– the old default is provided.</p>
 
 <p>The entire zip file should be able to drop into nanocontainer-sandbox\trunk\deployer\src and test case jars and patch files should match up.  I'll be happy to modify the exceptio handling as per my post to the list and/or modify anything else in the design mods.</p>
             </div>
@@ -598,7 +598,7 @@
 
 <p>Index: project.properties<br>
 ===================================================================<br>
-— project.properties	(revision 2060)<br>
+Â— project.properties	(revision 2060)<br>
 +++ project.properties	(working copy)<br>
 @@ -32,7 +32,7 @@<br>
  maven.multiproject.aggregateDir=components/<br>
@@ -627,7 +627,7 @@
 
  Index: project.properties 
 =================================================================== 
-— project.properties	(revision 2060) 
+Â— project.properties	(revision 2060) 
 +++ project.properties	(working copy) 
 @@ -32,7 +32,7 @@ 
  maven.multiproject.aggregateDir=components/ 
@@ -809,11 +809,11 @@
 It would:<br>
 <br>
 1 - Search indefinitely deep and only return the first in the array.  So something in the lines of:<br>
-    <br>
+Â Â Â Â <br>
 META-INF<br>
-   |-nanocontainer.groovy<br>
-   |-.svn<br>
-       |--nanocontainer.svn.props-base<br>
+Â Â Â |-nanocontainer.groovy<br>
+Â Â Â |-.svn<br>
+Â Â Â Â Â Â Â |--nanocontainer.svn.props-base<br>
 <br>
 Would return nanocontainer.svn.props-base instead of the correct file.  Fix only searches one layer deep.  (Tested against VFS's SVN source base)<br>
 <br>
@@ -831,11 +831,11 @@ The entire zip file should be able to drop into nanocontainer-sandbox\trunk\depl
 It would:<br>
 <br>
 1 - Search indefinitely deep and only return the first in the array.  So something in the lines of:<br>
-    <br>
+Â Â Â Â <br>
 META-INF<br>
-   |-nanocontainer.groovy<br>
-   |-.svn<br>
-       |--nanocontainer.svn.props-base<br>
+Â Â Â |-nanocontainer.groovy<br>
+Â Â Â |-.svn<br>
+Â Â Â Â Â Â Â |--nanocontainer.svn.props-base<br>
 <br>
 Would return nanocontainer.svn.props-base instead of the correct file.  Fix only searches one layer deep.  (Tested against VFS's SVN source base)<br>
 <br>
@@ -1024,7 +1024,7 @@ pico = builder.container(parent:parent) </p>
  component(key:'zap', class:'foo.bar.Zap')  //Added single quotes around classname
 }
 
-<p>at least got further.  Instead of complaining about unknown property 'foo' (I assume groovy/nano/somewhere is trying to resolve foo as a property of nano – if this is the case then are the onsite docs regarding groovy configuration out of date if quotes have to be around the  classnames when configuring?) </p>
+<p>at least got further.  Instead of complaining about unknown property 'foo' (I assume groovy/nano/somewhere is trying to resolve foo as a property of nano Â– if this is the case then are the onsite docs regarding groovy configuration out of date if quotes have to be around the  classnames when configuring?) </p>
 
 <p>But it then complains about class not found, foo.bar.Zap.</p>
 
@@ -1074,7 +1074,7 @@ pico = builder.container(parent:parent)
  component(key:'zap', class:'foo.bar.Zap')  //Added single quotes around classname
 }
 
- at least got further.  Instead of complaining about unknown property 'foo' (I assume groovy/nano/somewhere is trying to resolve foo as a property of nano – if this is the case then are the onsite docs regarding groovy configuration out of date if quotes have to be around the  classnames when configuring?)  
+ at least got further.  Instead of complaining about unknown property 'foo' (I assume groovy/nano/somewhere is trying to resolve foo as a property of nano Â– if this is the case then are the onsite docs regarding groovy configuration out of date if quotes have to be around the  classnames when configuring?)  
 
  But it then complains about class not found, foo.bar.Zap. 
 
@@ -1274,7 +1274,7 @@ pico = builder.container(parent:parent)
         <div class="action-details" id="changehistorydetails_46886">
                                 
 
-    <a class="user-hover user-avatar" rel="joehni" id="changehistoryauthor_46886" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jörg Schaible</a>
+    <a class="user-hover user-avatar" rel="joehni" id="changehistoryauthor_46886" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> JÃ¶rg Schaible</a>
  made changes  - <span class="date" title="16/Aug/05 2:48 PM"><time class="livestamp" datetime="2005-08-16T14:48-0500">16/Aug/05 2:48 PM</time></span>
         </div>
         <div class="changehistory action-body">
@@ -1457,7 +1457,7 @@ pico = builder.container(parent:parent)
 
             <span class="user-hover" id="issue_summary_assignee_joehni" rel="joehni">
             <span class="aui-avatar aui-avatar-small"><span class="aui-avatar-inner"><img src="index_files/useravatar-1.png"></span></span>
-            Jörg Schaible
+            JÃ¶rg Schaible
         </span>
     </span>
                             </dd>

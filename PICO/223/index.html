@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html class="mozilla"><head>
-<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
     
 
 
@@ -420,7 +420,7 @@
     
                 
 
-    <a class="user-hover user-avatar" rel="joehni" id="commentauthor_26152_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jörg Schaible</a>
+    <a class="user-hover user-avatar" rel="joehni" id="commentauthor_26152_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> JÃ¶rg Schaible</a>
  added a comment  - <span class="commentdate_26152_verbose subText"><span class="date user-tz" title="06/Nov/04 10:08 AM"><time class="livestamp" datetime="2004-11-06T10:08-0600">06/Nov/04 10:08 AM</time></span></span>  </div>
         </div>
         <div class="action-body flooded"><p>Current behaviour is due to <a href="/Old_JIRA_Issues/157" title="CICA always reports all dependencies instead of only the missing ones" class="issue-link" data-issue-key="PICO-157"><del>PICO-157</del></a> and <a href="/Old_JIRA_Issues/134" title="Report unsatisfiable dependencies as lists of parameter types, instead of the non-matching type" class="issue-link" data-issue-key="PICO-134"><del>PICO-134</del></a>. <a href="/Old_JIRA_Issues/157" title="CICA always reports all dependencies instead of only the missing ones" class="issue-link" data-issue-key="PICO-157"><del>PICO-157</del></a> proposes an improvement in the following comments, that was never implemented.</p> </div>
@@ -435,7 +435,7 @@
     
                 
 
-    <a class="user-hover user-avatar" rel="joehni" id="commentauthor_26152_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jörg Schaible</a>
+    <a class="user-hover user-avatar" rel="joehni" id="commentauthor_26152_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> JÃ¶rg Schaible</a>
  added a comment  - <span class="commentdate_26152_concise subText"><span class="date user-tz" title="06/Nov/04 10:08 AM"><time class="livestamp" datetime="2004-11-06T10:08-0600">06/Nov/04 10:08 AM</time></span></span>                    Current behaviour is due to   PICO-157   and   PICO-134  .   PICO-157   proposes an improvement in the following comments, that was never implemented.              </div>
         </div>
     </div>
@@ -447,7 +447,7 @@
         <div class="action-details" id="changehistorydetails_27625">
                                 
 
-    <a class="user-hover user-avatar" rel="joehni" id="changehistoryauthor_27625" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jörg Schaible</a>
+    <a class="user-hover user-avatar" rel="joehni" id="changehistoryauthor_27625" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> JÃ¶rg Schaible</a>
  made changes  - <span class="date" title="06/Nov/04 10:10 AM"><time class="livestamp" datetime="2004-11-06T10:10-0600">06/Nov/04 10:10 AM</time></span>
         </div>
         <div class="changehistory action-body">
@@ -484,7 +484,7 @@
         <div class="action-details" id="changehistorydetails_43454">
                                 
 
-    <a class="user-hover user-avatar" rel="joehni" id="changehistoryauthor_43454" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jörg Schaible</a>
+    <a class="user-hover user-avatar" rel="joehni" id="changehistoryauthor_43454" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> JÃ¶rg Schaible</a>
  made changes  - <span class="date" title="26/Jul/05 3:43 PM"><time class="livestamp" datetime="2005-07-26T15:43-0500">26/Jul/05 3:43 PM</time></span>
         </div>
         <div class="changehistory action-body">
@@ -547,25 +547,25 @@
                                 </td>
                 <td class="activity-old-val" width="40%">
                                                                 Currently in ConstructorInjectionComponentAdapter, when there are unsatisfiable dependencies found, the thrown exception contains all constructor parameters:<br>
- <br>
+Â <br>
 Line 97: <br>
-                unsatisfiableDependencyTypes.add(Arrays.asList(parameterTypes));<br>
- <br>
+Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â unsatisfiableDependencyTypes.add(Arrays.asList(parameterTypes));<br>
+Â <br>
 This is very unfriendly when somethings goes wrong in components wiring, and i would find it much more convenient to have the unsatisfiableDependencyTypes set to contain only the unsatisfiable dependencies.<br>
- <br>
+Â <br>
 This can apparently be fixed by (for example...) simply replacing the line by:<br>
-                unsatisfiableDependencyTypes.add(parameterTypes[j]);
+Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â unsatisfiableDependencyTypes.add(parameterTypes[j]);
                                                                     </td>
                 <td class="activity-new-val" width="40%">
                                                                Currently in ConstructorInjectionComponentAdapter, when there are unsatisfiable dependencies found, the thrown exception contains all constructor parameters:<br>
- <br>
+Â <br>
 Line 97: <br>
-                unsatisfiableDependencyTypes.add(Arrays.asList(parameterTypes));<br>
- <br>
+Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â unsatisfiableDependencyTypes.add(Arrays.asList(parameterTypes));<br>
+Â <br>
 This is very unfriendly when somethings goes wrong in components wiring, and i would find it much more convenient to have the unsatisfiableDependencyTypes set to contain only the unsatisfiable dependencies.<br>
- <br>
+Â <br>
 This can apparently be fixed by (for example...) simply replacing the line by:<br>
-                unsatisfiableDependencyTypes.add(parameterTypes[j]);
+Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â unsatisfiableDependencyTypes.add(parameterTypes[j]);
                                                                     </td>
                 </tr>
                             <tr>

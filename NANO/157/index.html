@@ -1,5 +1,5 @@
 <!DOCTYPE html><html class="mozilla"><head>
-<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
     
 
 
@@ -662,7 +662,7 @@
     <a class="user-hover user-avatar" rel="rimovm" id="commentauthor_52981_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=rimovm"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Michael Rimov</a>
  added a comment  - <span class="commentdate_52981_verbose subText"><span class="date user-tz" title="07/Dec/05 9:07 AM"><time class="livestamp" datetime="2005-12-07T09:07-0600">07/Dec/05 9:07 AM</time></span></span>  </div>
         </div>
-        <div class="action-body flooded"><p>Whoops – wrong issue I commented on last  time.  Patch is applied and committed.</p> </div>
+        <div class="action-body flooded"><p>Whoops Â– wrong issue I commented on last  time.  Patch is applied and committed.</p> </div>
     </div>
     <div class="twixi-wrap concise actionContainer">
         <div class="action-head">
@@ -675,7 +675,7 @@
                 
 
     <a class="user-hover user-avatar" rel="rimovm" id="commentauthor_52981_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=rimovm"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Michael Rimov</a>
- added a comment  - <span class="commentdate_52981_concise subText"><span class="date user-tz" title="07/Dec/05 9:07 AM"><time class="livestamp" datetime="2005-12-07T09:07-0600">07/Dec/05 9:07 AM</time></span></span>                    Whoops – wrong issue I commented on last  time.  Patch is applied and committed.              </div>
+ added a comment  - <span class="commentdate_52981_concise subText"><span class="date user-tz" title="07/Dec/05 9:07 AM"><time class="livestamp" datetime="2005-12-07T09:07-0600">07/Dec/05 9:07 AM</time></span></span>                    Whoops Â– wrong issue I commented on last  time.  Patch is applied and committed.              </div>
         </div>
     </div>
 </div>
@@ -796,8 +796,8 @@
    handleError(ex);
 }
 
-<p>//Old Behavior – No Chance of error occuring on function call.<br>
-//New Behavior – BuilderClassNotFoundException could be thrown here.<br>
+<p>//Old Behavior Â– No Chance of error occuring on function call.<br>
+//New Behavior Â– BuilderClassNotFoundException could be thrown here.<br>
 ScriptedContainerBuilder builder = factory.getContainerBuilder();</p>
 
 <p>So somebody that wrote code like that above could have their code fail on them suddenly when they thought they had it all taken care of. (Its a rare case, mind you!)</p>
@@ -835,8 +835,8 @@ ScriptedContainerBuilder builder = factory.getContainerBuilder();</p>
    handleError(ex);
 }
 
- //Old Behavior – No Chance of error occuring on function call. 
-//New Behavior – BuilderClassNotFoundException could be thrown here. 
+ //Old Behavior Â– No Chance of error occuring on function call. 
+//New Behavior Â– BuilderClassNotFoundException could be thrown here. 
 ScriptedContainerBuilder builder = factory.getContainerBuilder(); 
 
  So somebody that wrote code like that above could have their code fail on them suddenly when they thought they had it all taken care of. (Its a rare case, mind you!) 
@@ -940,7 +940,7 @@ I would +1 unless someone can state a reason for keeping static.
     
                 
 
-    <a class="user-hover user-avatar" rel="joehni" id="commentauthor_53089_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jörg Schaible</a>
+    <a class="user-hover user-avatar" rel="joehni" id="commentauthor_53089_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> JÃ¶rg Schaible</a>
  added a comment  - <span class="commentdate_53089_verbose subText"><span class="date user-tz" title="08/Dec/05 1:31 PM"><time class="livestamp" datetime="2005-12-08T13:31-0600">08/Dec/05 1:31 PM</time></span></span>  </div>
         </div>
         <div class="action-body flooded"><p>With lazy initialization we have more code, that might fail at runtime (e.g. the pool is exhausted, the connection to the EJB failed). Therefore I'm fine with less statics.</p> </div>
@@ -955,7 +955,7 @@ I would +1 unless someone can state a reason for keeping static.
     
                 
 
-    <a class="user-hover user-avatar" rel="joehni" id="commentauthor_53089_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jörg Schaible</a>
+    <a class="user-hover user-avatar" rel="joehni" id="commentauthor_53089_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> JÃ¶rg Schaible</a>
  added a comment  - <span class="commentdate_53089_concise subText"><span class="date user-tz" title="08/Dec/05 1:31 PM"><time class="livestamp" datetime="2005-12-08T13:31-0600">08/Dec/05 1:31 PM</time></span></span>                    With lazy initialization we have more code, that might fail at runtime (e.g. the pool is exhausted, the connection to the EJB failed). Therefore I'm fine with less statics.              </div>
         </div>
     </div>

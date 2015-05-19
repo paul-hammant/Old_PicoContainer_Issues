@@ -1,5 +1,5 @@
 <!DOCTYPE html><html class="mozilla"><head>
-<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
     
 
 
@@ -419,7 +419,7 @@
     
                 
 
-    <a class="user-hover user-avatar" rel="joehni" id="commentauthor_21948_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jörg Schaible</a>
+    <a class="user-hover user-avatar" rel="joehni" id="commentauthor_21948_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> JÃ¶rg Schaible</a>
  added a comment  - <span class="commentdate_21948_verbose subText"><span class="date user-tz" title="19/Jul/04 3:43 PM"><time class="livestamp" datetime="2004-07-19T15:43-0500">19/Jul/04 3:43 PM</time></span></span>  </div>
         </div>
         <div class="action-body flooded"><p>JDK? OS? I've tested this with Sun's 1.4.2 on Windows and Linux and also with Blackdown 1.4.1 on Linux and do not have problems ...</p>
@@ -436,7 +436,7 @@
     
                 
 
-    <a class="user-hover user-avatar" rel="joehni" id="commentauthor_21948_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jörg Schaible</a>
+    <a class="user-hover user-avatar" rel="joehni" id="commentauthor_21948_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> JÃ¶rg Schaible</a>
  added a comment  - <span class="commentdate_21948_concise subText"><span class="date user-tz" title="19/Jul/04 3:43 PM"><time class="livestamp" datetime="2004-07-19T15:43-0500">19/Jul/04 3:43 PM</time></span></span>                    JDK? OS? I've tested this with Sun's 1.4.2 on Windows and Linux and also with Blackdown 1.4.1 on Linux and do not have problems ... 
 
  Well, before removing it, I'll have a look at commons-pool. We will still have to integrate this somehow into a CA and we will still have the different approaches. Why hurry now?              </div>
@@ -459,7 +459,7 @@
     
                 
 
-    <a class="user-hover user-avatar" rel="joehni" id="commentauthor_24540_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jörg Schaible</a>
+    <a class="user-hover user-avatar" rel="joehni" id="commentauthor_24540_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> JÃ¶rg Schaible</a>
  added a comment  - <span class="commentdate_24540_verbose subText"><span class="date user-tz" title="24/Sep/04 2:37 PM"><time class="livestamp" datetime="2004-09-24T14:37-0500">24/Sep/04 2:37 PM</time></span></span>  </div>
         </div>
         <div class="action-body flooded"><p>I had a look at commons-pool, but I am not convinced, that it solves really our problem. If we want to provide pooling capabilities with a DecoratorCA, we'll always have the problem releasing the components. Commons-pool also always expects the invocation of a release method.</p>
@@ -476,7 +476,7 @@
     
                 
 
-    <a class="user-hover user-avatar" rel="joehni" id="commentauthor_24540_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jörg Schaible</a>
+    <a class="user-hover user-avatar" rel="joehni" id="commentauthor_24540_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> JÃ¶rg Schaible</a>
  added a comment  - <span class="commentdate_24540_concise subText"><span class="date user-tz" title="24/Sep/04 2:37 PM"><time class="livestamp" datetime="2004-09-24T14:37-0500">24/Sep/04 2:37 PM</time></span></span>                    I had a look at commons-pool, but I am not convinced, that it solves really our problem. If we want to provide pooling capabilities with a DecoratorCA, we'll always have the problem releasing the components. Commons-pool also always expects the invocation of a release method. 
 
  Therefore I would like to implement a solution, that is similar to the AutoReleasingPoolComponentAdapter of pool2, but is based on the AutoPool implementation, that waits in   PTOYS-4   for approval.              </div>
@@ -490,7 +490,7 @@
         <div class="action-details" id="changehistorydetails_25738">
                                 
 
-    <a class="user-hover user-avatar" rel="joehni" id="changehistoryauthor_25738" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jörg Schaible</a>
+    <a class="user-hover user-avatar" rel="joehni" id="changehistoryauthor_25738" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> JÃ¶rg Schaible</a>
  made changes  - <span class="date" title="24/Sep/04 2:38 PM"><time class="livestamp" datetime="2004-09-24T14:38-0500">24/Sep/04 2:38 PM</time></span>
         </div>
         <div class="changehistory action-body">
@@ -536,7 +536,7 @@
     
                 
 
-    <a class="user-hover user-avatar" rel="joehni" id="commentauthor_24671_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jörg Schaible</a>
+    <a class="user-hover user-avatar" rel="joehni" id="commentauthor_24671_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> JÃ¶rg Schaible</a>
  added a comment  - <span class="commentdate_24671_verbose subText"><span class="date user-tz" title="27/Sep/04 5:24 PM"><time class="livestamp" datetime="2004-09-27T17:24-0500">27/Sep/04 5:24 PM</time></span></span>  </div>
         </div>
         <div class="action-body flooded"><p>Both issues emphasis a consolidation of the pools.</p> </div>
@@ -551,7 +551,7 @@
     
                 
 
-    <a class="user-hover user-avatar" rel="joehni" id="commentauthor_24671_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jörg Schaible</a>
+    <a class="user-hover user-avatar" rel="joehni" id="commentauthor_24671_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> JÃ¶rg Schaible</a>
  added a comment  - <span class="commentdate_24671_concise subText"><span class="date user-tz" title="27/Sep/04 5:24 PM"><time class="livestamp" datetime="2004-09-27T17:24-0500">27/Sep/04 5:24 PM</time></span></span>                    Both issues emphasis a consolidation of the pools.              </div>
         </div>
     </div>
@@ -563,7 +563,7 @@
         <div class="action-details" id="changehistorydetails_25876">
                                 
 
-    <a class="user-hover user-avatar" rel="joehni" id="changehistoryauthor_25876" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jörg Schaible</a>
+    <a class="user-hover user-avatar" rel="joehni" id="changehistoryauthor_25876" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> JÃ¶rg Schaible</a>
  made changes  - <span class="date" title="27/Sep/04 5:24 PM"><time class="livestamp" datetime="2004-09-27T17:24-0500">27/Sep/04 5:24 PM</time></span>
         </div>
         <div class="changehistory action-body">
@@ -670,7 +670,7 @@
     
                 
 
-    <a class="user-hover user-avatar" rel="joehni" id="commentauthor_44580_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jörg Schaible</a>
+    <a class="user-hover user-avatar" rel="joehni" id="commentauthor_44580_verbose" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> JÃ¶rg Schaible</a>
  added a comment  - <span class="commentdate_44580_verbose subText"><span class="date user-tz" title="16/Aug/05 2:50 PM"><time class="livestamp" datetime="2005-08-16T14:50-0500">16/Aug/05 2:50 PM</time></span></span>  </div>
         </div>
         <div class="action-body flooded"><p>I think I finally fixed this yesterday synchronizing the concurrent threads with synchronization points.</p> </div>
@@ -685,7 +685,7 @@
     
                 
 
-    <a class="user-hover user-avatar" rel="joehni" id="commentauthor_44580_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jörg Schaible</a>
+    <a class="user-hover user-avatar" rel="joehni" id="commentauthor_44580_concise" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> JÃ¶rg Schaible</a>
  added a comment  - <span class="commentdate_44580_concise subText"><span class="date user-tz" title="16/Aug/05 2:50 PM"><time class="livestamp" datetime="2005-08-16T14:50-0500">16/Aug/05 2:50 PM</time></span></span>                    I think I finally fixed this yesterday synchronizing the concurrent threads with synchronization points.              </div>
         </div>
     </div>
@@ -697,7 +697,7 @@
         <div class="action-details" id="changehistorydetails_46887">
                                 
 
-    <a class="user-hover user-avatar" rel="joehni" id="changehistoryauthor_46887" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> Jörg Schaible</a>
+    <a class="user-hover user-avatar" rel="joehni" id="changehistoryauthor_46887" href="https://jira.codehaus.org/secure/ViewProfile.jspa?name=joehni"><span class="aui-avatar aui-avatar-xsmall"><span class="aui-avatar-inner"><img src="index_files/useravatar.png"></span></span> JÃ¶rg Schaible</a>
  made changes  - <span class="date" title="16/Aug/05 2:50 PM"><time class="livestamp" datetime="2005-08-16T14:50-0500">16/Aug/05 2:50 PM</time></span>
         </div>
         <div class="changehistory action-body">
@@ -758,7 +758,7 @@
 
             <span class="user-hover" id="issue_summary_assignee_joehni" rel="joehni">
             <span class="aui-avatar aui-avatar-small"><span class="aui-avatar-inner"><img src="index_files/useravatar-1.png"></span></span>
-            Jörg Schaible
+            JÃ¶rg Schaible
         </span>
     </span>
                             </dd>
@@ -770,7 +770,7 @@
 
             <span class="user-hover" id="issue_summary_reporter_rinkrank" rel="rinkrank">
             <span class="aui-avatar aui-avatar-small"><span class="aui-avatar-inner"><img src="index_files/useravatar-1.png"></span></span>
-            Aslak Hellesøy
+            Aslak HellesÃ¸y
         </span>
     </span>
             </dd>
